@@ -150,6 +150,22 @@ ul.tasks{list-style:none;margin:0;padding:0}
 .urg-toggle b{color:var(--red)}
 .ar-row{display:flex;gap:8px}.ar-row input,.ar-row textarea{flex:1;min-width:0;font-family:"Noto Sans Arabic",var(--body)}.ar-row .btn{padding:8px 12px}
 .ar-hint{display:block;font-size:12px;margin-top:4px;color:var(--muted)}.ar-hint.ok{color:var(--green)}.ar-hint.warn{color:#9A6B14}
+.loc-btn{width:100%;display:flex;align-items:center;gap:8px;text-align:left;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);font-size:15px;min-height:44px}
+.loc-btn:disabled{cursor:default;opacity:.85}.loc-btn span{flex:1;min-width:0}.loc-btn span.ph{color:var(--muted)}.loc-btn i{font-style:normal;color:var(--muted)}
+.loc-btn.open{border-color:var(--ink)}
+.loc-panel{border:1px solid var(--ink);border-radius:10px;margin-top:6px;padding:10px 12px;background:var(--panel);max-height:52vh;overflow:auto}
+.loc-tools{display:flex;align-items:center;gap:10px;position:sticky;top:-10px;background:var(--panel);padding:4px 0 8px;margin-top:-4px;border-bottom:1px solid var(--line);font-size:13px;color:var(--muted);z-index:1}
+.loc-tools .grow{flex:1}.loc-tools .btn{padding:6px 14px}
+.lk{background:none;border:0;padding:2px 4px;font-size:12px;font-weight:600;text-decoration:underline;color:var(--ink)}
+.loc-grp{padding:8px 0 4px}.loc-gh{display:flex;justify-content:space-between;align-items:center;font-size:12px;letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px}
+.loc-items{display:flex;flex-wrap:wrap;gap:6px}
+.chip{position:relative;cursor:pointer}.chip input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.chip span{display:inline-block;padding:6px 11px;border:1px solid var(--line);border-radius:16px;font-size:13px;background:var(--bg);min-width:44px;text-align:center}
+.f .chip input:checked+span{background:var(--taupe);border-color:var(--taupe-dark);font-weight:700}
+.f .chip span,.f .loc-btn span,.f .loc-tools span{text-transform:none;letter-spacing:0;margin:0;color:var(--ink)}
+.f .loc-btn span{display:block;font-size:15px;font-weight:500}.f .loc-btn span.ph{color:var(--muted);font-weight:400}
+.f .chip span{display:inline-block;font-size:13px;font-weight:500}.f .loc-tools span{display:inline;font-size:13px;color:var(--muted)}
+.chip input:focus-visible+span{outline:2px solid var(--ink);outline-offset:1px}
 .sec-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:600;margin:16px 0 8px;padding-top:12px;border-top:1px solid var(--line)}
 .actions{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap}
 .actions .grow{flex:1}
@@ -338,11 +354,22 @@ const LOC_GROUPS = [
   {label:"Back of house & technical", items:["Room Service Kitchen", "Laundry Room", "Store", "Maintenance Store", "Pool Stores", "Pool Technical Room"]}
 ];
 const LOC_ORDER = LOC_GROUPS.flatMap(g=>g.items);
+const GROUP_AR = {"Floor 1":"الطابق الأول","Floor 2":"الطابق الثاني","Floor 3":"الطابق الثالث","Public & outdoor areas":"المساحات العامة والخارجية","Parking":"المواقف","Back of house & technical":"الأقسام الخلفية والفنية"};
 const LOC_AR = {"Hallway Floor 1":"ممر الطابق الأول","Hallway Floor 2":"ممر الطابق الثاني","Hallway Floor 3":"ممر الطابق الثالث",
   "Spa Room M":"غرفة السبا M","Lobby GF":"اللوبي – الطابق الأرضي","Parking -1":"الموقف – الطابق ‎-1","Breakfast Area":"منطقة الفطور",
-  "Pool / Outdoor Area":"المسبح / المساحة الخارجية",
+  "Pool / Outdoor Area":"المسبح / المساحة الخارجية","Multiple places":"عدة أماكن",
   "Parking GF":"الموقف – الطابق الأرضي","Hotel Front Area":"واجهة الفندق","Room Service Kitchen":"مطبخ خدمة الغرف","Store":"المخزن",
   "Laundry Room":"غرفة الغسيل","Maintenance Store":"مخزن الصيانة","Pool Stores":"مخازن المسبح","Pool Technical Room":"الغرفة الفنية للمسبح","Roof":"السطح","No place set":"بدون مكان","Not assigned":"غير محدد"};
+/* A task can have several places. Old tasks stored one place in `location`. */
+const locsOf = t => Array.isArray(t.locations) && t.locations.length ? t.locations : (t.location ? [t.location] : []);
+const shortLoc = l => { const m = /^Room (\d+)$/.exec(l); return m ? m[1] : l; };
+/* "All Floor 1 · Room 203 · Lobby GF" — whole groups are shortened */
+function locSummary(list, arabic){
+  const left = new Set(list), out = [];
+  LOC_GROUPS.forEach(g=>{ if (g.items.length>1 && g.items.every(i=>left.has(i))){ out.push(arabic ? `كل ${GROUP_AR[g.label]||g.label}` : `All ${g.label}`); g.items.forEach(i=>left.delete(i)); } });
+  [...left].sort((a,b)=>locRank(a)-locRank(b)).forEach(l=>out.push(arabic ? (locAr(l)||l) : l));
+  return out.join(arabic ? "، " : " · ");
+}
 const locAr = l => { const m = /^Room (\d+)$/.exec(l||""); return m ? `غرفة ${m[1]}` : (LOC_AR[l] || ""); };
 
 /* ----- Preventive checks (edit this list to add or rename checks) ----- */
@@ -503,7 +530,7 @@ function renderDay(){
       isUrgent(t) ? `<span class="pill urg">Urgent · عاجل</span>` : "",
       isPrev(t) ? `<span class="pill prev">Preventive</span>` : "",
       t.time ? `<span>${esc(t.time)}</span>` : "",
-      t.location ? `<span>${esc(t.location)}</span>` : "",
+      locsOf(t).length ? `<span>${esc(locSummary(locsOf(t)))}</span>` : "",
       `<span class="tag"><b style="background:${color(t.category)}"></b>${esc(catLabel(t.category))}</span>`,
       t.repeat && t.repeat!=="none" ? `<span>${esc(REPEAT[t.repeat])}</span>` : ""
     ].join("");
@@ -555,10 +582,14 @@ function openSheet(task, kind){
   const ro = task ? !canEdit(task) : !canAdd();
   const dis = ro ? "disabled" : "";
   const opts = (obj,val,lab) => Object.entries(obj).map(([k,v])=>`<option value="${k}" ${k===val?"selected":""}>${esc(lab?v[lab]:v)}</option>`).join("");
-  const loc = t.location || "";
-  const locOpts = `<option value="">Choose a place…</option>` +
-    (loc && !LOC_ORDER.includes(loc) ? `<option value="${esc(loc)}" selected>${esc(loc)}</option>` : "") +
-    LOC_GROUPS.map(g=>`<optgroup label="${esc(g.label)}">${g.items.map(i=>`<option value="${esc(i)}" ${i===loc?"selected":""}>${esc(i)}</option>`).join("")}</optgroup>`).join("");
+  const chosen = new Set(locsOf(t));
+  const extra = [...chosen].filter(l=>!LOC_ORDER.includes(l));
+  const pickGroups = [...LOC_GROUPS, ...(extra.length ? [{label:"Other", items:extra}] : [])];
+  const locPicker = `<div class="loc-panel hidden" id="locPanel">
+      <div class="loc-tools"><span id="locCount"></span><span class="grow"></span><button type="button" class="lk" id="locClear">Clear</button><button type="button" class="btn btn-y" id="locDone">Done</button></div>
+      ${pickGroups.map((g,gi)=>`<div class="loc-grp"><div class="loc-gh"><b>${esc(g.label)}</b><button type="button" class="lk" data-grp="${gi}">Select all</button></div>
+        <div class="loc-items">${g.items.map(i=>`<label class="chip"><input type="checkbox" value="${esc(i)}" data-g="${gi}" ${chosen.has(i)?"checked":""}><span>${esc(shortLoc(i))}</span></label>`).join("")}</div></div>`).join("")}
+    </div>`;
   const prevOpts = `<option value="">Choose a preventive check…</option>` +
     (t.title && !PREV_MAP[t.title] ? `<option value="${esc(t.title)}" selected>${esc(t.title)}</option>` : "") +
     PREVENTIVE.map(g=>`<optgroup label="${esc(g.group)}">${g.items.map(([en,ar])=>`<option value="${esc(en)}" ${en===t.title?"selected":""}>${esc(en)}</option>`).join("")}</optgroup>`).join("");
@@ -575,18 +606,19 @@ function openSheet(task, kind){
     <h3>${heading}</h3>
     ${titleField}
     <label class="urg-toggle"><input type="checkbox" name="urgent" ${isUrgent(t)?"checked":""} ${dis}><span><b>Mark as urgent · عاجل</b><br><small style="color:var(--muted)">Shown in red at the top of the board and the daily report</small></span></label>
+    <div class="f"><span>Where <small>— choose one or more places</small></span>
+      <button type="button" class="loc-btn" id="locBtn" ${dis}><span id="locSum"></span><i>▾</i></button>
+      ${locPicker}
+    </div>
     <div class="row">
-      <label class="f"><span>Where</span><select name="location" ${dis}>${locOpts}</select></label>
       <label class="f"><span>Type</span><select name="category" ${dis}>${opts(CATS,t.category,"label")}</select></label>
+      <label class="f"><span>Priority</span><select name="priority" ${dis}>${opts(PRIO,t.priority||"normal")}</select></label>
     </div>
     <div class="row">
       <label class="f"><span>${t.repeat&&t.repeat!=="none"?"Starts on":"Date"}</span><input type="date" name="date" required value="${esc(t.date)}" ${dis}></label>
       <label class="f"><span>Time <small>(optional)</small></span><input type="time" name="time" value="${esc(t.time)}" ${dis}></label>
     </div>
-    <div class="row">
-      <label class="f"><span>Repeat</span><select name="repeat" ${dis}>${opts(REPEAT,t.repeat||"none")}</select></label>
-      <label class="f"><span>Priority</span><select name="priority" ${dis}>${opts(PRIO,t.priority||"normal")}</select></label>
-    </div>
+    <label class="f"><span>Repeat</span><select name="repeat" ${dis}>${opts(REPEAT,t.repeat||"none")}</select></label>
     <label class="f"><span>Notes</span><textarea name="notes" dir="auto" rows="3" maxlength="600" placeholder="Details, parts needed… / تفاصيل" ${dis}>${esc(t.notes)}</textarea></label>
     <div class="f ar-box ${t.notes&&!hasArabic(t.notes)?"":"hidden"}" id="notesArBox"><span>Notes in Arabic for the report</span>
       <div class="ar-row"><textarea name="notesAr" dir="rtl" rows="2" maxlength="800" placeholder="الملاحظات بالعربية" ${dis}>${esc(t.notesAr||"")}</textarea>${ro?"":`<button type="button" class="btn" id="trNotes" title="Suggest Arabic again">↻</button>`}</div>
@@ -612,6 +644,22 @@ function openSheet(task, kind){
   // Urgent tick box and Priority stay in sync
   f.urgent.onchange = ()=>{ f.priority.value = f.urgent.checked ? "urgent" : (f.priority.value==="urgent" ? "normal" : f.priority.value); };
   f.priority.onchange = ()=>{ f.urgent.checked = f.priority.value==="urgent"; };
+  // Where: multi-place picker
+  const panel = $("locPanel"), boxes = [...panel.querySelectorAll('input[type=checkbox]')];
+  const picked = () => boxes.filter(b=>b.checked).map(b=>b.value);
+  function syncLoc(){
+    const list = picked();
+    $("locSum").textContent = list.length ? locSummary(list) : "Choose places…";
+    $("locSum").classList.toggle("ph", !list.length);
+    $("locCount").textContent = list.length ? `${list.length} selected` : "Nothing selected";
+    panel.querySelectorAll('[data-grp]').forEach(btn=>{ const gb = boxes.filter(b=>b.dataset.g===btn.dataset.grp); btn.textContent = gb.every(b=>b.checked) ? "Clear group" : "Select all"; });
+  }
+  syncLoc();
+  $("locBtn").onclick = ()=>{ if (!ro){ panel.classList.toggle("hidden"); $("locBtn").classList.toggle("open"); } };
+  $("locDone").onclick = ()=>{ panel.classList.add("hidden"); $("locBtn").classList.remove("open"); };
+  $("locClear").onclick = ()=>{ boxes.forEach(b=>b.checked=false); syncLoc(); };
+  panel.addEventListener("change", syncLoc);
+  panel.querySelectorAll('[data-grp]').forEach(btn=>btn.onclick = ()=>{ const gb = boxes.filter(b=>b.dataset.g===btn.dataset.grp), all = gb.every(b=>b.checked); gb.forEach(b=>b.checked=!all); syncLoc(); });
   // Preventive checks fill in the Type automatically
   if (prev && !ro) f.title.onchange = ()=>{ const p = PREV_MAP[f.title.value]; if (p){ f.category.value = p.cat; $("prevAr").textContent = p.ar; } };
   // Arabic suggestions for the report (dictionary first, machine translation as a fallback)
@@ -649,7 +697,7 @@ function openSheet(task, kind){
     if (!title){ f.title.focus(); toast(prev ? "Choose a preventive check." : "Give the task a name."); return; }
     if (!f.date.value){ f.date.focus(); toast("Pick a date."); return; }
     const body = { title, taskType: prev?"preventive":"task", category:f.category.value, priority:f.priority.value,
-      location:f.location.value, assignee:canonName(f.assignee.value, S.workers), checkedBy:canonName(f.checkedBy.value, checkers()),
+      locations:picked(), location:locSummary(picked()), assignee:canonName(f.assignee.value, S.workers), checkedBy:canonName(f.checkedBy.value, checkers()),
       titleAr: (!prev && f.titleAr && !hasArabic(title)) ? f.titleAr.value.trim() : "",
       notesAr: (!prev && f.notesAr && f.notes.value.trim() && !hasArabic(f.notes.value)) ? f.notesAr.value.trim() : "",
       date:f.date.value, time:f.time.value, repeat:f.repeat.value, notes:f.notes.value.trim() };
@@ -856,10 +904,10 @@ function reportData(k){
 }
 function groupTasks(list, by){
   const map = new Map();
-  for (const t of list){ const g = by==="worker" ? (t.assignee||"Not assigned") : (t.location||"No place set"); if(!map.has(g)) map.set(g,[]); map.get(g).push(t); }
+  for (const t of list){ const L = locsOf(t), g = by==="worker" ? (t.assignee||"Not assigned") : (L.length===1 ? L[0] : L.length ? "Multiple places" : "No place set"); if(!map.has(g)) map.set(g,[]); map.get(g).push(t); }
   const keys = [...map.keys()].sort((a,b)=> by==="worker"
     ? (a==="Not assigned")-(b==="Not assigned") || a.localeCompare(b)
-    : locRank(a)-locRank(b) || a.localeCompare(b));
+    : (a==="Multiple places")-(b==="Multiple places") || (a==="No place set")-(b==="No place set") || locRank(a)-locRank(b) || a.localeCompare(b));
   return keys.map(g=>[g, map.get(g)]);
 }
 function reportHTML(k, by, AR){
@@ -867,10 +915,10 @@ function reportHTML(k, by, AR){
   const d = fromKey(k), ar = s => AR[s] || "";
   const urgCount = urgent.length + carry.filter(isUrgent).length;
   const li = (t, ok, dateTag) => {
-    const enMeta = [dateTag, t.time, by==="worker" ? t.location : "", catLabel(t.category), t.repeat&&t.repeat!=="none" ? REPEAT[t.repeat] : ""].filter(Boolean).map(esc).join(" · ");
-    const arMeta = [dateTag, t.time, by==="worker" ? (locAr(t.location)||ar(t.location)) : "", catAr(t.category), REPEAT_AR[t.repeat]||""].filter(Boolean).map(esc).join(" · ");
+    const enMeta = [dateTag, t.time, (by==="worker" || locsOf(t).length>1) ? locSummary(locsOf(t)) : "", catLabel(t.category), t.repeat&&t.repeat!=="none" ? REPEAT[t.repeat] : ""].filter(Boolean).map(esc).join(" · ");
+    const arMeta = [dateTag, t.time, (by==="worker" || locsOf(t).length>1) ? locSummary(locsOf(t), true) : "", catAr(t.category), REPEAT_AR[t.repeat]||""].filter(Boolean).map(esc).join(" · ");
     const pills = (isUrgent(t)?`<span class="pill urg">URGENT · عاجل</span> `:"") + (isPrev(t)?`<span class="pill prev">Preventive · وقائي</span> `:"");
-    const titleAr = hasArabic(t.title) ? "" : (t.titleAr || ar(t.title));
+    const titleAr = hasArabic(t.title) ? "" : (t.titleAr || (PREV_MAP[t.title] && PREV_MAP[t.title].ar) || ar(t.title));
     const notesAr = t.notes && !hasArabic(t.notes) ? (t.notesAr || ar(t.notes)) : "";
     const ex = ok ? execName(t,k) : t.assignee;
     const sig = `<div class="r-sig">
@@ -916,16 +964,16 @@ function reportText(k, by, AR){
   L.push(d.toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long",year:"numeric"}) + (S.who ? ` – ${S.who==="__none"?"No one chosen":S.who}` : ""));
   L.push(`Urgent/عاجل: ${urgent.length} | To do/مطلوب: ${open.length} | Done/منجز: ${done.length}${carry.length?` | Overdue/متأخر: ${carry.length}`:""}`);
   const line = (t, dateTag) => {
-    const where = t.location ? ` @ ${bil(t.location, locAr(t.location)||ar(t.location))}` : "";
+    const where = locsOf(t).length ? ` @ ${bil(locSummary(locsOf(t)), locSummary(locsOf(t), true))}` : "";
     const who = [t.assignee?`Executed by/المنفّذ: ${t.assignee}`:"", t.checkedBy?`Checked by/المدقّق: ${t.checkedBy}`:""].filter(Boolean).join(", ");
-    return `${isUrgent(t)?"🔴 URGENT عاجل – ":"- "}${dateTag?`[${dateTag}] `:""}${bil(t.title, hasArabic(t.title)?"":(t.titleAr||ar(t.title)))}${t.time?` (${t.time})`:""}${where}${who?`\n   ${who}`:""}${t.notes?`\n   ${bil(t.notes, hasArabic(t.notes)?"":(t.notesAr||ar(t.notes)))}`:""}`;
+    return `${isUrgent(t)?"🔴 URGENT عاجل – ":"- "}${dateTag?`[${dateTag}] `:""}${bil(t.title, hasArabic(t.title)?"":(t.titleAr||(PREV_MAP[t.title]&&PREV_MAP[t.title].ar)||ar(t.title)))}${t.time?` (${t.time})`:""}${where}${who?`\n   ${who}`:""}${t.notes?`\n   ${bil(t.notes, hasArabic(t.notes)?"":(t.notesAr||ar(t.notes)))}`:""}`;
   };
   if (urgent.length){ L.push("", "*URGENT | عاجل*"); urgent.forEach(t=>L.push(line(t))); }
   if (carry.length){ L.push("", "*OVERDUE | متأخر*"); carry.forEach(t=>L.push(line(t, fromKey(t.date).toLocaleDateString(undefined,{day:"numeric",month:"short"})))); }
   L.push("", "*TO DO | المطلوب*");
   if (!normal.length) L.push("- Nothing else to do | لا توجد مهام أخرى");
   groupTasks(normal, by).forEach(([g,ts])=>{ L.push(`• ${bil(g, by==="worker"?"":(locAr(g)||ar(g)))}`); ts.forEach(t=>L.push(line(t))); });
-  if (done.length){ L.push("", "*DONE | منجز*"); done.forEach(t=>L.push(`✓ ${bil(t.title, hasArabic(t.title)?"":(t.titleAr||ar(t.title)))} – ${execName(t,k)}${t.checkedBy?`, checked by ${t.checkedBy}`:""}`)); }
+  if (done.length){ L.push("", "*DONE | منجز*"); done.forEach(t=>L.push(`✓ ${bil(t.title, hasArabic(t.title)?"":(t.titleAr||(PREV_MAP[t.title]&&PREV_MAP[t.title].ar)||ar(t.title)))} – ${execName(t,k)}${t.checkedBy?`, checked by ${t.checkedBy}`:""}`)); }
   return L.join("\n");
 }
 async function openReport(){
@@ -953,7 +1001,7 @@ async function openReport(){
   [...all, ...carry].forEach(t=>{
     if (t.title && !t.titleAr && !hasArabic(t.title) && !PREV_MAP[t.title]) texts.push(t.title);
     if (t.notes && !t.notesAr && !hasArabic(t.notes)) texts.push(t.notes);
-    if (t.location && !locAr(t.location)) texts.push(t.location);
+    locsOf(t).forEach(l=>{ if (!locAr(l)) texts.push(l); });
   });
   const res = await translateMany(texts);
   AR = res.map;
