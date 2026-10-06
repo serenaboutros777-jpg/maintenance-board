@@ -3,171 +3,211 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Maintenance Board</title>
+<meta name="theme-color" content="#141414">
+<title>Maintenance Board · Serab Residencia</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#E8EBEE; --panel:#FFFFFF; --ink:#18212B; --muted:#5E6975; --line:#CDD3D9;
-  --yellow:#F5C400; --yellow-ink:#18212B; --red:#C8361E; --green:#2E7D4F;
-  --c-plumbing:#2F6FB3; --c-electrical:#D99A00; --c-hvac:#2A9A9A; --c-cleaning:#7A5BB5; --c-grounds:#4E8A3A; --c-safety:#C8361E; --c-general:#6B7682;
-  --display:"Barlow Condensed","Noto Sans Arabic","Arial Narrow",Arial,sans-serif; --body:"Barlow","Noto Sans Arabic",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --bg:#F4EEE3; --panel:#FFFDF8; --soft:#EDE4D4; --ink:#141414; --muted:#6E655A; --line:#E0D5C3;
+  --accent:#141414; --accent-ink:#F4EEE3; --red:#A8322A; --red-soft:#F6E3DF; --green:#3D6B4A;
+  --c-general:#8A8178; --c-plumbing:#3E5C76; --c-electrical:#B08D3C; --c-hvac:#4F7A78; --c-cleaning:#7B6A8E;
+  --c-grounds:#6B7F4A; --c-safety:#A6463A; --c-pool:#3F7F95; --c-pest:#8A5A3C;
+  --display:"Playfair Display","Noto Sans Arabic",Georgia,serif;
+  --body:"Inter","Noto Sans Arabic",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
   box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
 }
-@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
-  --bg:#12171D; --panel:#1C232B; --ink:#E6EAEE; --muted:#9AA5B0; --line:#2E3842; --yellow-ink:#12171D; --red:#F06A4F; --green:#5CC28A;
-}}
-:root[data-theme="dark"]{ --bg:#12171D; --panel:#1C232B; --ink:#E6EAEE; --muted:#9AA5B0; --line:#2E3842; --yellow-ink:#12171D; --red:#F06A4F; --green:#5CC28A; }
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *,*::before,*::after{box-sizing:inherit}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
-:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .hidden{display:none!important}
-.tape{height:10px;background:repeating-linear-gradient(-45deg,var(--yellow) 0 14px,var(--ink) 14px 28px)}
+.eyebrow{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);font-weight:600}
 
 /* Gate */
 #gate{min-height:100vh;display:flex;flex-direction:column}
+.gate-top,.gate-bot{height:6px;background:var(--ink)}
 .gate-body{flex:1;display:flex;align-items:center;justify-content:center;padding:32px 20px}
-.gate-card{width:100%;max-width:420px}
-.gate-card h1{font-family:var(--display);font-weight:700;font-size:clamp(48px,13vw,72px);line-height:.92;margin:0 0 12px;letter-spacing:-.5px}
-.gate-card .f input{background:var(--panel)}
-.gate-card p{color:var(--muted);margin:0 0 28px;max-width:34ch}
-.btn{border:0;border-radius:8px;padding:12px 18px;font-weight:600;background:var(--panel);border:1px solid var(--line)}
-.btn-main{background:var(--yellow);color:var(--yellow-ink);border:0;font-family:var(--display);font-size:22px;letter-spacing:.3px;width:100%;padding:14px}
+.gate-card{width:100%;max-width:400px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:32px 28px}
+.gate-card h1{font-family:var(--display);font-weight:600;font-size:clamp(36px,10vw,46px);line-height:1.05;margin:8px 0 10px}
+.gate-card p{color:var(--muted);margin:0 0 24px}
+.btn{border-radius:8px;padding:11px 18px;font-weight:600;background:var(--panel);border:1px solid var(--line)}
+.btn:hover{border-color:var(--ink)}
+.btn-y,.btn-main{background:var(--accent);color:var(--accent-ink);border:1px solid var(--accent)}
+.btn-main{width:100%;padding:13px;font-size:16px;letter-spacing:.3px}
 .btn-main:disabled{opacity:.5;cursor:default}
-.btn-y{background:var(--yellow);color:var(--yellow-ink);border:0}
-.note{font-size:14px;color:var(--muted);margin-top:14px}
+.note{font-size:13px;color:var(--muted);margin-top:14px}
 
 /* App shell */
-header.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--ink);color:var(--bg)}
-.bar-in{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:10px;padding:10px 16px}
-.bar h2{font-family:var(--display);font-size:24px;margin:0;flex:1;font-weight:700;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.live{display:inline-flex;align-items:center;gap:6px;font-size:13px;opacity:.85}
-.live i{width:8px;height:8px;border-radius:50%;background:var(--yellow);animation:pulse 2s infinite}
+header.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--ink);color:var(--accent-ink)}
+.bar-in{max-width:1140px;margin:0 auto;display:flex;align-items:center;gap:10px;padding:12px 16px}
+.brand{flex:1;min-width:0;line-height:1.15}
+.brand small{display:block;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;opacity:.7}
+.brand h2{font-family:var(--display);font-size:22px;margin:0;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.live{display:inline-flex;align-items:center;gap:6px;font-size:12px;opacity:.8}
+.live i{width:7px;height:7px;border-radius:50%;background:#CBB993;animation:pulse 2s infinite}
 @media (prefers-reduced-motion:reduce){.live i{animation:none}}
-@media (max-width:480px){.live{display:none}}
+@media (max-width:520px){.live{display:none}}
 @keyframes pulse{50%{opacity:.3}}
-.me-btn{display:flex;align-items:center;gap:8px;background:transparent;border:1px solid rgba(255,255,255,.25);color:inherit;border-radius:20px;padding:5px 12px;font-size:14px;white-space:nowrap}
-main{max-width:1100px;margin:0 auto;padding:16px;display:grid;gap:16px;grid-template-columns:1fr}
-@media (min-width:900px){ main{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);align-items:start} .day{position:sticky;top:76px} }
-section.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.me-btn{display:flex;align-items:center;gap:8px;background:transparent;border:1px solid rgba(244,238,227,.3);color:inherit;border-radius:20px;padding:5px 12px;font-size:13px;white-space:nowrap;max-width:46vw;overflow:hidden;text-overflow:ellipsis}
+.me-btn:hover{border-color:var(--accent-ink)}
+main{max-width:1140px;margin:0 auto;padding:18px 16px;display:grid;gap:18px;grid-template-columns:1fr}
+@media (min-width:920px){ main{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);align-items:start} .day{position:sticky;top:84px} }
+section.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 
 /* Calendar */
-.cal-head{display:flex;align-items:center;gap:8px;padding:14px 14px 8px}
-.cal-head h3{font-family:var(--display);font-size:28px;margin:0;flex:1;font-weight:600}
-.nav{width:40px;height:40px;border-radius:8px;border:1px solid var(--line);background:transparent;font-size:20px;line-height:1}
-.today-btn{height:40px;padding:0 12px;border-radius:8px;border:1px solid var(--line);background:transparent;font-weight:600;font-size:14px}
+.cal-head{display:flex;align-items:center;gap:8px;padding:16px 16px 10px}
+.cal-head h3{font-family:var(--display);font-size:26px;margin:0;flex:1;font-weight:600}
+.nav{width:38px;height:38px;border-radius:8px;border:1px solid var(--line);background:transparent;font-size:18px;line-height:1}
+.today-btn{height:38px;padding:0 12px;border-radius:8px;border:1px solid var(--line);background:transparent;font-weight:600;font-size:13px}
+.nav:hover,.today-btn:hover{border-color:var(--ink)}
 .grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
-.dow{background:var(--panel);text-align:center;font-size:12px;color:var(--muted);padding:6px 0;font-weight:600}
-.cell{background:var(--panel);border:0;min-height:64px;padding:6px 4px 6px;text-align:left;display:flex;flex-direction:column;gap:4px;position:relative;border-radius:0}
+.dow{background:var(--soft);text-align:center;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:7px 0;font-weight:600}
+.cell{background:var(--panel);border:0;min-height:64px;padding:6px 4px;text-align:left;display:flex;flex-direction:column;gap:4px;position:relative;border-radius:0}
+.cell:hover{background:#FBF6EC}
 @media (min-width:600px){.cell{min-height:86px;padding:8px 6px}}
-.cell.out{opacity:.38}
-.cell .n{font-family:var(--display);font-size:18px;font-weight:600;line-height:1;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:50%}
-.cell.today .n{background:var(--yellow);color:var(--yellow-ink)}
-.cell.sel{box-shadow:inset 0 0 0 3px var(--ink)}
+.cell.out{opacity:.4}
+.cell .n{font-size:14px;font-weight:600;line-height:1;width:26px;height:26px;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.cell.today .n{background:var(--ink);color:var(--accent-ink)}
+.cell.sel{box-shadow:inset 0 0 0 2px var(--ink)}
 .bars{display:flex;flex-wrap:wrap;gap:2px}
 .bars b{display:block;height:5px;width:10px;border-radius:2px}
 .bars b.done{opacity:.3}
+.bars b.urg{outline:1.5px solid var(--red);outline-offset:1px}
 .cnt{font-size:11px;color:var(--muted);margin-top:auto}
 .cell.late .cnt{color:var(--red);font-weight:600}
 .cell.clear .cnt{color:var(--green);font-weight:600}
-.legend{display:flex;flex-wrap:wrap;gap:6px 14px;padding:10px 14px 14px;font-size:13px;color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;padding:12px 16px 16px;font-size:12px;color:var(--muted)}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .legend b{width:10px;height:10px;border-radius:2px;display:inline-block}
 
 /* Day panel */
-.day-head{padding:16px 16px 10px;display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap}
-.day-head h3{font-family:var(--display);font-size:30px;line-height:1;margin:0;font-weight:700}
-.day-head p{margin:4px 0 0;color:var(--muted);font-size:14px}
-.day-acts{margin-left:auto;display:flex;gap:8px}
-.add{background:var(--yellow);color:var(--yellow-ink);border:0;border-radius:8px;padding:10px 14px;font-weight:600;white-space:nowrap}
+.day-head{padding:18px 16px 10px;display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.day-head h3{font-family:var(--display);font-size:30px;line-height:1;margin:0;font-weight:600}
+.day-head p{margin:6px 0 0;color:var(--muted);font-size:13px}
+.day-acts{display:flex;gap:8px;flex-wrap:wrap;padding:0 16px 12px}
+.day-acts button{flex:1 1 auto}
+.add{background:var(--accent);color:var(--accent-ink);border:1px solid var(--accent);border-radius:8px;padding:10px 14px;font-weight:600;white-space:nowrap}
+.add.alt{background:transparent;color:var(--ink);border-color:var(--ink)}
 .rep{background:transparent;border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-weight:600;white-space:nowrap}
-.meter{height:6px;background:var(--line);margin:0 16px 8px;border-radius:3px;overflow:hidden}
-.meter i{display:block;height:100%;background:var(--green);transition:width .3s}
-.tabs{display:flex;gap:6px;padding:4px 16px 10px;flex-wrap:wrap;align-items:center}
-.tabs button{border:1px solid var(--line);background:transparent;border-radius:16px;padding:4px 12px;font-size:14px}
-.tabs button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.who-sel{margin-left:auto;border:1px solid var(--line);background:transparent;border-radius:16px;padding:4px 10px;font-size:14px;max-width:48%}
+.rep:hover{border-color:var(--ink)}
+.meter{height:4px;background:var(--soft);margin:0 16px 10px;border-radius:2px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--ink);transition:width .3s}
+.tabs{display:flex;gap:6px;padding:4px 16px 12px;flex-wrap:wrap;align-items:center}
+.tabs button{border:1px solid var(--line);background:transparent;border-radius:16px;padding:4px 12px;font-size:13px}
+.tabs button[aria-pressed="true"]{background:var(--ink);color:var(--accent-ink);border-color:var(--ink)}
+.who-sel{margin-left:auto;border:1px solid var(--line);background:transparent;border-radius:16px;padding:4px 10px;font-size:13px;max-width:52%}
 ul.tasks{list-style:none;margin:0;padding:0}
-.task{display:flex;gap:12px;padding:12px 16px;border-top:1px solid var(--line);align-items:flex-start}
+.task{display:flex;gap:12px;padding:13px 16px;border-top:1px solid var(--line);align-items:flex-start}
+.task.urgent-row{background:linear-gradient(90deg,var(--red-soft),transparent 60%);box-shadow:inset 3px 0 0 var(--red)}
 .task.is-done .t-title{text-decoration:line-through;color:var(--muted)}
-.chk{flex:none;width:30px;height:30px;border-radius:6px;border:2px solid var(--muted);background:transparent;display:flex;align-items:center;justify-content:center;padding:0;margin-top:1px}
-.chk svg{width:18px;height:18px;opacity:0}
-.task.is-done .chk{background:var(--green);border-color:var(--green);color:#fff}
+.chk{flex:none;width:28px;height:28px;border-radius:6px;border:1.5px solid var(--ink);background:transparent;display:flex;align-items:center;justify-content:center;padding:0;margin-top:1px}
+.chk:disabled{border-color:var(--line);cursor:default}
+.chk svg{width:16px;height:16px;opacity:0}
+.task.is-done .chk{background:var(--ink);border-color:var(--ink);color:var(--accent-ink)}
 .task.is-done .chk svg{opacity:1}
 .t-main{flex:1;min-width:0;background:transparent;border:0;text-align:start;padding:0}
 .t-title{font-weight:600;display:block}
-.t-meta{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:13px;color:var(--muted);margin-top:2px}
-.t-notes{display:block;font-size:13px;color:var(--muted);margin-top:2px}
+.t-meta{display:flex;flex-wrap:wrap;gap:3px 10px;font-size:12.5px;color:var(--muted);margin-top:3px}
+.t-notes{display:block;font-size:12.5px;color:var(--muted);margin-top:3px}
 .tag{display:inline-flex;align-items:center;gap:5px}
 .tag b{width:8px;height:8px;border-radius:2px;display:inline-block}
 .person{color:var(--ink);font-weight:600}
-.urgent{color:var(--red);font-weight:600}
-.by{font-size:13px;color:var(--green);margin-top:3px}
+.pill{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.3px;border-radius:10px;padding:1px 8px;line-height:1.6}
+.pill.urg{background:var(--red);color:#fff}
+.pill.prev{background:var(--soft);color:var(--ink);border:1px solid var(--line)}
+.by{font-size:12.5px;color:var(--green);margin-top:4px}
 .empty{padding:28px 16px 32px;color:var(--muted);border-top:1px solid var(--line)}
-.empty strong{display:block;color:var(--ink);font-size:17px;margin-bottom:4px}
-.ro{margin:0 16px 12px;padding:10px 12px;border-radius:8px;background:var(--bg);font-size:14px;color:var(--muted)}
+.empty strong{display:block;color:var(--ink);font-size:16px;margin-bottom:4px;font-family:var(--display)}
+.ro{margin:0 16px 12px;padding:10px 12px;border-radius:8px;background:var(--soft);font-size:13px;color:var(--muted)}
 
 /* Sheet */
-.scrim{position:fixed;inset:0;background:rgba(10,14,18,.55);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.scrim{position:fixed;inset:0;background:rgba(20,20,20,.5);z-index:20;display:flex;align-items:flex-end;justify-content:center}
 @media (min-width:640px){.scrim{align-items:center}}
-.sheet{background:var(--panel);width:100%;max-width:520px;max-height:92vh;overflow:auto;border-radius:14px 14px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom,0px))}
-.sheet.wide{max-width:720px}
-@media (min-width:640px){.sheet{border-radius:14px}}
-.sheet h3{font-family:var(--display);font-size:28px;margin:0 0 14px;font-weight:700}
-.sheet .lead{color:var(--muted);font-size:14px;margin:-8px 0 14px}
+.sheet{background:var(--panel);width:100%;max-width:540px;max-height:92vh;overflow:auto;border-radius:16px 16px 0 0;padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px))}
+.sheet.wide{max-width:820px}
+@media (min-width:640px){.sheet{border-radius:16px}}
+.sheet h3{font-family:var(--display);font-size:28px;margin:2px 0 16px;font-weight:600}
+.sheet .lead{color:var(--muted);font-size:13px;margin:-8px 0 14px}
 .f{display:block;margin-bottom:12px}
-.f span{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.f span{display:block;font-size:12px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.f span small{text-transform:none;letter-spacing:0;font-weight:400}
 .f input,.f select,.f textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);font-size:16px}
+.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--ink);outline:none}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.actions{display:flex;gap:10px;margin-top:6px;flex-wrap:wrap}
+.urg-toggle{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;margin-bottom:12px;cursor:pointer;background:var(--bg)}
+.urg-toggle input{width:18px;height:18px;accent-color:var(--red)}
+.urg-toggle b{color:var(--red)}
+.sec-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:600;margin:16px 0 8px;padding-top:12px;border-top:1px solid var(--line)}
+.actions{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap}
 .actions .grow{flex:1}
 .del{background:transparent;border:1px solid var(--red);color:var(--red)}
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;z-index:30;font-size:14px;max-width:90vw}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--accent-ink);padding:10px 16px;border-radius:8px;z-index:30;font-size:14px;max-width:90vw}
 
 /* Team */
-.w-add{display:flex;gap:8px;margin-bottom:12px}
-.w-add input{flex:1;min-width:0;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);font-size:16px}
 ul.wlist{list-style:none;margin:0 0 12px;padding:0;border-top:1px solid var(--line)}
 ul.wlist li{display:flex;align-items:center;gap:10px;padding:10px 2px;border-bottom:1px solid var(--line)}
-ul.wlist li span{flex:1;font-weight:600}
-ul.wlist li small{color:var(--muted);font-size:13px}
-.x{background:transparent;border:1px solid var(--line);border-radius:6px;padding:4px 10px;font-size:13px;color:var(--red)}
+.x{background:transparent;border:1px solid var(--line);border-radius:6px;padding:4px 10px;font-size:12px;color:var(--red)}
+.p-form{border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:14px;background:var(--bg)}
+.p-form .f input,.p-form .f select{background:var(--panel)}
+.p-info{flex:1;min-width:0}
+.p-info span{display:block;font-weight:600}
+.p-info small{display:block;color:var(--muted);font-size:12px;overflow:hidden;text-overflow:ellipsis}
+.badge{display:inline-block;font-size:11px;font-weight:600;border-radius:10px;padding:1px 8px;margin-left:6px;vertical-align:1px;background:var(--soft);color:var(--ink)}
+.badge.worker{background:var(--ink);color:var(--accent-ink)}.badge.reporter{background:#8A8178;color:#fff}.badge.admin{background:#CBB993;color:var(--ink)}
+.noacc{max-width:520px;margin:40px auto;padding:24px;background:var(--panel);border:1px solid var(--line);border-radius:14px}
+.noacc h3{font-family:var(--display);font-size:26px;margin:0 0 8px}
+.noacc p{color:var(--muted);margin:0 0 16px}
 
 /* Report */
-.r-ctrl{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px;font-size:14px}
+.r-ctrl{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px;font-size:13px}
 .r-ctrl select{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:6px 10px}
-.report{border:1px solid var(--line);border-radius:10px;padding:16px}
-.r-hotel{font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-weight:600}
-.r-title{font-family:var(--display);font-size:30px;font-weight:700;line-height:1.05;margin:2px 0}
-.r-date{color:var(--muted);font-size:15px}
-.r-sum{display:flex;gap:16px;flex-wrap:wrap;margin:12px 0 4px;font-size:14px}
-.r-sum b{font-family:var(--display);font-size:22px;margin-right:4px}
-.r-sec{font-family:var(--display);font-size:22px;font-weight:700;margin:18px 0 4px;padding-bottom:4px;border-bottom:2px solid var(--ink)}
-.r-grp{font-weight:700;font-size:15px;margin:12px 0 2px}
+.report{border:1px solid var(--line);border-radius:12px;padding:22px;background:#fff}
+.r-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-end;border-bottom:2px solid var(--ink);padding-bottom:12px}
+.r-title{font-family:var(--display);font-size:28px;font-weight:600;line-height:1.1;margin:4px 0 2px}
+.r-title-ar{font-size:20px;font-weight:600;direction:rtl;text-align:right}
+.r-date{color:var(--muted);font-size:13px}
+.r-sum{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:14px 0 6px}
+.r-sum div{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12px;color:var(--muted)}
+.r-sum b{display:block;font-family:var(--display);font-size:24px;color:var(--ink);line-height:1.1}
+.r-sum .u b{color:var(--red)}
+.r-sec{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-family:var(--display);font-size:19px;font-weight:600;margin:22px 0 6px;padding-bottom:5px;border-bottom:1px solid var(--ink)}
+.r-sec .ar{font-family:"Noto Sans Arabic",sans-serif;font-size:16px;direction:rtl}
+.r-sec.u{color:var(--red);border-color:var(--red)}
+.r-grp{display:flex;justify-content:space-between;gap:10px;font-weight:700;font-size:13px;margin:12px 0 2px;color:var(--ink);background:var(--soft);padding:4px 8px;border-radius:4px}
 .report ul{list-style:none;margin:0;padding:0}
-.r-item{display:flex;gap:10px;padding:6px 0;border-bottom:1px dashed var(--line)}
-.r-box{flex:none;width:16px;height:16px;border:2px solid var(--muted);border-radius:3px;margin-top:3px}
-.r-item.ok .r-box{background:var(--green);border-color:var(--green)}
+.r-item{display:flex;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line)}
+.r-box{flex:none;width:15px;height:15px;border:1.5px solid var(--ink);border-radius:3px;margin-top:3px}
+.r-item.ok .r-box{background:var(--ink)}
+.r-body{flex:1;min-width:0}
+.r-two{display:grid;grid-template-columns:1fr 1fr;gap:4px 16px}
+.r-ar{direction:rtl;text-align:right}
 .r-t{font-weight:600}
-.r-m{font-size:13px;color:var(--muted)}
-.r-none{color:var(--muted);font-size:14px;padding:6px 0}
-.r-sign{display:flex;gap:24px;margin-top:28px;font-size:13px;color:var(--muted)}
-.r-sign div{flex:1;border-top:1px solid var(--muted);padding-top:4px}
+.r-m{font-size:12px;color:var(--muted)}
+.r-sig{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:5px}
+.r-sig span b{color:var(--ink);font-weight:600}
+.r-sig .blank{display:inline-block;min-width:110px;border-bottom:1px solid var(--muted);height:12px;vertical-align:-2px}
+.r-none{color:var(--muted);font-size:13px;padding:6px 0}
+.r-foot{display:flex;gap:24px;margin-top:34px;font-size:12px;color:var(--muted)}
+.r-foot div{flex:1;border-top:1px solid var(--ink);padding-top:5px;display:flex;justify-content:space-between}
+.r-wait{padding:30px;text-align:center;color:var(--muted)}
+@media (max-width:560px){ .r-two{grid-template-columns:1fr} .r-sum{grid-template-columns:repeat(2,1fr)} .r-head{flex-direction:column;align-items:flex-start} .r-title-ar{text-align:left} }
 
 @media print{
-  @page{margin:14mm}
+  @page{margin:12mm}
   body{background:#fff!important}
   #gate,#app,#toast,.no-print{display:none!important}
   .scrim{position:static;background:none;display:block}
   .sheet{max-width:none!important;max-height:none;overflow:visible;padding:0;border-radius:0;background:#fff}
-  .report{border:0;padding:0;color:#000}
-  .report .r-m,.report .r-date,.report .r-hotel,.report .r-none,.report .r-sign{color:#444}
-  .r-sec{border-color:#000}
-  .r-item{break-inside:avoid}
+  .report{border:0;padding:0}
+  .r-two{grid-template-columns:1fr 1fr!important}
+  .r-item,.r-grp{break-inside:avoid}
+  .r-grp{background:#f1ece2!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .r-item.ok .r-box,.r-sec.u{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
 </style>
 </head>
@@ -175,11 +215,12 @@ ul.wlist li small{color:var(--muted);font-size:13px}
 
 <!-- Sign-in gate -->
 <div id="gate">
-  <div class="tape"></div>
+  <div class="gate-top"></div>
   <div class="gate-body">
     <div class="gate-card">
-      <h1>Maintenance<br>Board</h1>
-      <p>Daily jobs, checks and repairs for the whole team, on one live calendar.</p>
+      <div class="eyebrow">Serab Residencia</div>
+      <h1>Maintenance Board</h1>
+      <p>Daily jobs, preventive checks and repairs for the whole team, on one live calendar.</p>
       <form id="login" novalidate>
         <label class="f"><span>Email</span><input type="email" name="email" autocomplete="username" required></label>
         <label class="f"><span>Password</span><input type="password" name="pw" autocomplete="current-password" required></label>
@@ -189,18 +230,23 @@ ul.wlist li small{color:var(--muted);font-size:13px}
       <div class="note" id="gateNote">Ask your manager for an account if you don't have one.</div>
     </div>
   </div>
-  <div class="tape"></div>
+  <div class="gate-bot"></div>
 </div>
 
 <!-- App -->
 <div id="app" class="hidden">
   <header class="bar"><div class="bar-in">
-    <h2>Maintenance Board</h2>
+    <div class="brand"><small>Serab Residencia</small><h2>Maintenance Board</h2></div>
     <span class="live"><i></i>Live</span>
-    <button class="me-btn" id="teamBtn">Team</button>
+    <button class="me-btn hidden" id="teamBtn">Team</button>
     <button class="me-btn" id="meBtn" title="Log out"><span id="meName"></span></button>
   </div></header>
-  <main>
+  <div class="noacc hidden" id="noAcc">
+    <h3>Account not set up yet</h3>
+    <p id="noAccMsg">Your login works, but your manager hasn't given you access to the board yet. Ask them to add your email under Team.</p>
+    <button class="btn" id="noAccOut">Log out</button>
+  </div>
+  <main id="mainArea">
     <section class="card">
       <div class="cal-head">
         <h3 id="monthLabel"></h3>
@@ -213,19 +259,21 @@ ul.wlist li small{color:var(--muted);font-size:13px}
     </section>
     <section class="card day">
       <div class="day-head">
-        <div><h3 id="dayTitle"></h3><p id="daySub"></p></div>
-        <div class="day-acts">
-          <button class="rep" id="reportBtn">Daily report</button>
-          <button class="add" id="addBtn">+ Add task</button>
-        </div>
+        <div><div class="eyebrow" id="dayEyebrow">Schedule</div><h3 id="dayTitle"></h3><p id="daySub"></p></div>
+      </div>
+      <div class="day-acts">
+        <button class="add" id="addBtn">+ Add task</button>
+        <button class="add alt" id="addPrevBtn">+ Add preventive</button>
+        <button class="rep" id="reportBtn">Daily report</button>
       </div>
       <div class="meter"><i id="meter" style="width:0"></i></div>
-      <div class="ro hidden" id="roNote">You can view tasks but not change them. Ask the board owner to give you Contributor access.</div>
+      <div class="ro hidden" id="roNote"></div>
       <div class="tabs" role="group" aria-label="Filter">
         <button data-f="all" aria-pressed="true">All</button>
         <button data-f="open" aria-pressed="false">To do</button>
+        <button data-f="urgent" aria-pressed="false">Urgent</button>
         <button data-f="done" aria-pressed="false">Done</button>
-        <select class="who-sel" id="whoSel" aria-label="Show tasks for"></select>
+        <select class="who-sel" id="whoSel" aria-label="Show tasks executed by"></select>
       </div>
       <ul class="tasks" id="list"></ul>
     </section>
@@ -239,7 +287,7 @@ ul.wlist li small{color:var(--muted);font-size:13px}
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
-/* ===== PASTE YOUR FIREBASE CONFIG HERE (Project settings > Your apps > Web app) ===== */
+/* ===== FIREBASE CONFIG (Project settings > Your apps > Web app) ===== */
 const firebaseConfig = {
   apiKey: "AIzaSyAlZb7QoRqHYz1YBuvTwnK6nCnldv-nwbo",
   authDomain: "maintenance-board-f3157.firebaseapp.com",
@@ -248,15 +296,24 @@ const firebaseConfig = {
   messagingSenderId: "493843988836",
   appId: "1:493843988836:web:de34d3d0fcd4bccfe97a71"
 };
-/* ================================================================================== */
-const HOTEL = "Serab Residencia";
+/* ==================================================================== */
+const HOTEL = "Serab Residencia", HOTEL_AR = "سراب ريزيدنسيا";
+const OWNER_NAME = "Serena";
+
 const CATS = {
-  general:{label:"General",c:"--c-general"}, plumbing:{label:"Plumbing",c:"--c-plumbing"},
-  electrical:{label:"Electrical",c:"--c-electrical"}, hvac:{label:"Heating & AC",c:"--c-hvac"},
-  cleaning:{label:"Cleaning",c:"--c-cleaning"}, grounds:{label:"Grounds",c:"--c-grounds"},
-  safety:{label:"Safety check",c:"--c-safety"}
+  general:{label:"General",ar:"عام",c:"--c-general"},
+  plumbing:{label:"Plumbing",ar:"سباكة",c:"--c-plumbing"},
+  electrical:{label:"Electrical",ar:"كهرباء",c:"--c-electrical"},
+  hvac:{label:"Heating & AC",ar:"تدفئة وتكييف",c:"--c-hvac"},
+  pool:{label:"Pool & Jacuzzi",ar:"المسبح والجاكوزي",c:"--c-pool"},
+  grounds:{label:"Garden & Grounds",ar:"الحديقة والمساحات الخارجية",c:"--c-grounds"},
+  pest:{label:"Pest Control",ar:"مكافحة الحشرات",c:"--c-pest"},
+  cleaning:{label:"Cleaning",ar:"تنظيف",c:"--c-cleaning"},
+  safety:{label:"Safety & Utilities",ar:"السلامة والمرافق",c:"--c-safety"}
 };
 const REPEAT = {none:"Does not repeat", daily:"Every day", weekdays:"Weekdays (Mon–Fri)", weekly:"Every week", monthly:"Every month"};
+const REPEAT_AR = {none:"", daily:"كل يوم", weekdays:"أيام العمل", weekly:"كل أسبوع", monthly:"كل شهر"};
+const PRIO = {low:"Low · منخفضة", normal:"Normal · عادية", urgent:"Urgent · عاجل"};
 
 /* ----- Places (edit this list to add or rename rooms) ----- */
 const rooms = f => Array.from({length:10}, (_,i)=>`Room ${f}${String(i+1).padStart(2,"0")}`);
@@ -264,15 +321,70 @@ const LOC_GROUPS = [
   {label:"Floor 1", items:[...rooms(1), "Hallway Floor 1"]},
   {label:"Floor 2", items:[...rooms(2), "Hallway Floor 2"]},
   {label:"Floor 3", items:[...rooms(3), "Hallway Floor 3"]},
-  {label:"Other areas", items:["Spa Room M", "Lobby GF", "Parking -1", "Breakfast Area", "Pool / Outdoor Area"]}
+  {label:"Public & outdoor areas", items:["Lobby GF", "Hotel Front Area", "Breakfast Area", "Spa Room M", "Pool / Outdoor Area", "Roof"]},
+  {label:"Parking", items:["Parking GF", "Parking -1"]},
+  {label:"Back of house & technical", items:["Room Service Kitchen", "Laundry Room", "Store", "Maintenance Store", "Pool Stores", "Pool Technical Room"]}
 ];
 const LOC_ORDER = LOC_GROUPS.flatMap(g=>g.items);
+const LOC_AR = {"Hallway Floor 1":"ممر الطابق الأول","Hallway Floor 2":"ممر الطابق الثاني","Hallway Floor 3":"ممر الطابق الثالث",
+  "Spa Room M":"غرفة السبا M","Lobby GF":"اللوبي – الطابق الأرضي","Parking -1":"الموقف – الطابق ‎-1","Breakfast Area":"منطقة الفطور",
+  "Pool / Outdoor Area":"المسبح / المساحة الخارجية",
+  "Parking GF":"الموقف – الطابق الأرضي","Hotel Front Area":"واجهة الفندق","Room Service Kitchen":"مطبخ خدمة الغرف","Store":"المخزن",
+  "Laundry Room":"غرفة الغسيل","Maintenance Store":"مخزن الصيانة","Pool Stores":"مخازن المسبح","Pool Technical Room":"الغرفة الفنية للمسبح","Roof":"السطح","No place set":"بدون مكان","Not assigned":"غير محدد"};
+const locAr = l => { const m = /^Room (\d+)$/.exec(l||""); return m ? `غرفة ${m[1]}` : (LOC_AR[l] || ""); };
 
-/* The team list is stored as one special document inside the "tasks" collection,
-   so it works with the Firestore rules you already have. */
+/* ----- Preventive checks (edit this list to add or rename checks) ----- */
+const PREVENTIVE = [
+  {group:"Rooms & Bathrooms", items:[
+    ["Door Stopper","مصدّ الباب","general"], ["Net Door","باب الناموسية","general"], ["Hangers","علّاقات الملابس","general"],
+    ["Laundry Wire","حبل الغسيل","general"], ["Shampoo Bottles","عبوات الشامبو","cleaning"], ["Mattress Turning","قلب الفرشات","cleaning"],
+    ["WC Drainage","تصريف المرحاض","plumbing"], ["WC Aspirator","شفّاط المرحاض","plumbing"], ["Sink Drainage","تصريف المغسلة","plumbing"],
+    ["Shower Head Silicone","سيليكون رأس الدوش","plumbing"], ["Water Hose","خرطوم المياه","plumbing"], ["Water Hose Filter","فلتر خرطوم المياه","plumbing"]]},
+  {group:"Heating & AC", items:[
+    ["AC Filter","فلتر المكيّف","hvac"], ["AC Radiator","رادياتير المكيّف","hvac"]]},
+  {group:"Pool & Jacuzzi", items:[
+    ["Pool Water Test","فحص مياه المسبح","pool"], ["Chlorine Filters","فلاتر الكلور","pool"],
+    ["Jacuzzi Indoor Test","فحص الجاكوزي الداخلي","pool"], ["Jacuzzi Outdoor Hot Water Test","فحص المياه الساخنة للجاكوزي الخارجي","pool"],
+    ["Jacuzzi Outdoor Leak Check","فحص تسرّب الجاكوزي الخارجي","pool"], ["Jacuzzi Paint Condition","حالة دهان الجاكوزي","pool"]]},
+  {group:"Outdoor Drainage", items:[
+    ["Outdoor Drainage","التصريف الخارجي","plumbing"], ["Terrace Drainage","تصريف التراس","plumbing"]]},
+  {group:"Garden & Plants", items:[
+    ["Watering – Indoor","ريّ النباتات – داخلي","grounds"], ["Watering – Outdoor","ريّ النباتات – خارجي","grounds"],
+    ["Plant Vitamins – Indoor","فيتامينات النباتات – داخلي","grounds"], ["Plant Vitamins – Outdoor","فيتامينات النباتات – خارجي","grounds"],
+    ["Plant Pesticide – Indoor","مبيد النباتات – داخلي","grounds"], ["Plant Pesticide – Outdoor","مبيد النباتات – خارجي","grounds"],
+    ["Tree Trimming","تقليم الأشجار","grounds"]]},
+  {group:"Pest Control", items:[
+    ["Pest Control","مكافحة الحشرات","pest"], ["Mosquito Fogging","رشّ البعوض (تدخين)","pest"]]},
+  {group:"Utilities & Levels", items:[
+    ["Fuel Level","مستوى الوقود","safety"], ["Gas Bottles","قوارير الغاز","safety"], ["Hot Water","المياه الساخنة","safety"],
+    ["Water Level","مستوى المياه","safety"], ["Water Pressure","ضغط المياه","safety"]]},
+  {group:"Finishes & Retouching", items:[
+    ["Epoxy","الإيبوكسي","general"], ["Paint Retouch – Indoor","ترميم الدهان – داخلي","general"], ["Paint Retouch – Outdoor","ترميم الدهان – خارجي","general"],
+    ["Wood Retouch – Indoor","ترميم الخشب – داخلي","general"], ["Wood Retouch – Outdoor","ترميم الخشب – خارجي","general"]]}
+];
+const PREV_MAP = {}; PREVENTIVE.forEach(g=>g.items.forEach(([en,ar,cat])=>PREV_MAP[en]={ar,cat,group:g.group}));
+
+/* The team list is stored as one special document inside the "tasks" collection. */
 const TEAM_ID = "_team_settings";
 
-const S = { db:null, user:null, uid:null, tasks:[], workers:[], month:null, sel:null, filter:"all", who:"", canWrite:true, ready:false };
+/* ----- Who is the owner (full access, always). Must match the Firestore rules. ----- */
+const OWNERS = ["serenaboutros777@gmail.com"];
+const ROLES = {
+  worker:   {label:"Maintenance worker", hint:"Sees only tasks they execute and ticks them done"},
+  reporter: {label:"Staff",              hint:"Can report new tasks, can't tick or delete"},
+  admin:    {label:"Manager",            hint:"Full access"}
+};
+
+const S = { db:null, user:null, uid:null, email:"", tasks:[], workers:[], legacy:[], members:{}, role:null, me:null,
+  month:null, sel:null, filter:"all", who:"", ready:false };
+
+/* ----- Permissions ----- */
+const isAdmin    = () => S.role==="admin";
+const isWorker   = () => S.role==="worker";
+const isReporter = () => S.role==="reporter";
+const canAdd     = () => isAdmin() || isReporter();
+const canTick    = t => isAdmin() || (isWorker() && !!S.me && t.assignee===S.me.name);
+const canEdit    = t => isAdmin() || (isReporter() && t.createdBy===S.uid);
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -282,7 +394,15 @@ const fromKey = k => { const [y,m,d] = k.split("-").map(Number); return new Date
 const todayKey = () => keyOf(new Date());
 const color = cat => `var(${(CATS[cat]||CATS.general).c})`;
 const catLabel = cat => (CATS[cat]||CATS.general).label;
+const catAr = cat => (CATS[cat]||CATS.general).ar;
 const locRank = l => { const i = LOC_ORDER.indexOf(l); return i<0 ? 999 : i; };
+const isPrev = t => t.taskType==="preventive";
+const isUrgent = t => t.priority==="urgent";
+const fmtTime = iso => new Date(iso).toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"});
+/* Everyone who can be picked as "Checked by" */
+const checkers = () => [...new Set([OWNER_NAME, ...Object.values(S.members).map(m=>m.name), ...S.legacy])].filter(Boolean);
+/* Who executed it: the chosen person, or whoever ticked it done */
+const execName = (t,k) => t.assignee || (isDone(t,k) ? (t.done[k].name||"") : "");
 
 function toast(msg){ const t=$("toast"); t.textContent=msg; t.classList.remove("hidden"); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.add("hidden"),3200); }
 
@@ -299,7 +419,7 @@ function occurs(t, k){
 }
 const isDone = (t,k) => !!(t.done && t.done[k]);
 const byTime = (a,b) => { const rank={urgent:0,normal:1,low:2};
-  return (a.time||"99")<(b.time||"99")?-1:(a.time||"99")>(b.time||"99")?1:(rank[a.priority]??1)-(rank[b.priority]??1); };
+  return (rank[a.priority]??1)-(rank[b.priority]??1) || ((a.time||"99")<(b.time||"99")?-1:(a.time||"99")>(b.time||"99")?1:0); };
 function tasksOn(k){ return S.tasks.filter(t=>occurs(t,k)).sort(byTime); }
 const forWho = t => !S.who || (S.who==="__none" ? !t.assignee : t.assignee===S.who);
 
@@ -320,7 +440,7 @@ function renderCalendar(){
     if (k===S.sel) cls.push("sel");
     if (list.length && k<today && done<list.length) cls.push("late");
     if (list.length && done===list.length) cls.push("clear");
-    const bars = list.slice(0,8).map(t=>`<b class="${isDone(t,k)?"done":""}" style="background:${color(t.category)}"></b>`).join("");
+    const bars = list.slice(0,8).map(t=>`<b class="${isDone(t,k)?"done":""} ${isUrgent(t)&&!isDone(t,k)?"urg":""}" style="background:${color(t.category)}"></b>`).join("");
     const cnt = list.length ? (done===list.length ? "✓ all done" : `${done}/${list.length}`) : "";
     html += `<button class="${cls.join(" ")}" data-k="${k}" aria-label="${d.toDateString()}, ${list.length} tasks, ${done} done"><span class="n">${d.getDate()}</span><span class="bars">${bars}</span><span class="cnt">${cnt}</span></button>`;
   }
@@ -334,7 +454,7 @@ function renderWhoSel(){
   if (S.who && S.who!=="__none" && !S.workers.includes(S.who)) S.who = "";
   s.innerHTML = `<option value="">Everyone</option>` +
     S.workers.map(w=>`<option value="${esc(w)}" ${w===S.who?"selected":""}>${esc(w)}</option>`).join("") +
-    `<option value="__none" ${S.who==="__none"?"selected":""}>Not assigned</option>`;
+    `<option value="__none" ${S.who==="__none"?"selected":""}>No one chosen</option>`;
   s.value = S.who;
 }
 
@@ -344,33 +464,44 @@ function renderDay(){
   const rel = k===today ? "Today" : (k===keyOf(new Date(Date.now()+864e5)) ? "Tomorrow" : (k===keyOf(new Date(Date.now()-864e5)) ? "Yesterday" : null));
   $("dayTitle").textContent = rel || d.toLocaleDateString(undefined,{weekday:"long"});
   const all = tasksOn(k).filter(forWho), done = all.filter(t=>isDone(t,k)).length;
-  $("daySub").textContent = d.toLocaleDateString(undefined,{weekday:rel?"long":undefined,day:"numeric",month:"long"}) + (all.length ? `, ${done} of ${all.length} done` : "");
+  const urg = all.filter(t=>isUrgent(t) && !isDone(t,k)).length;
+  $("daySub").textContent = d.toLocaleDateString(undefined,{weekday:rel?"long":undefined,day:"numeric",month:"long"}) +
+    (all.length ? ` · ${done} of ${all.length} done` : "") + (urg ? ` · ${urg} urgent` : "");
   $("meter").style.width = all.length ? (done/all.length*100)+"%" : "0";
-  $("addBtn").classList.toggle("hidden", !S.canWrite);
-  $("roNote").classList.toggle("hidden", S.canWrite);
+  $("addBtn").classList.toggle("hidden", !canAdd());
+  $("addPrevBtn").classList.toggle("hidden", !canAdd());
+  const note = isWorker() ? "These are the tasks you execute. Tick each one when it's done."
+    : isReporter() ? "Tap “+ Add task” to report a job. Maintenance will tick it off when it's done." : "";
+  $("roNote").textContent = note;
+  $("roNote").classList.toggle("hidden", !note);
+  $("whoSel").classList.toggle("hidden", isWorker());
   document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-pressed", b.dataset.f===S.filter));
-  const list = all.filter(t => S.filter==="all" || (S.filter==="done" ? isDone(t,k) : !isDone(t,k)));
+  const list = all.filter(t => S.filter==="all" || (S.filter==="done" ? isDone(t,k) : S.filter==="urgent" ? isUrgent(t)&&!isDone(t,k) : !isDone(t,k)));
   if (!S.ready){ $("list").innerHTML = `<li class="empty">Loading tasks…</li>`; return; }
   if (!list.length){
-    const msg = all.length ? (S.filter==="done" ? "<strong>Nothing finished yet</strong>Tick a task when it's done." : "<strong>Everything is done</strong>Nice work, team.")
-      : (S.canWrite ? "<strong>No tasks on this day</strong>Tap “Add task” to schedule a job or a daily check." : "<strong>No tasks on this day</strong>");
+    const msg = all.length ? (S.filter==="done" ? "<strong>Nothing finished yet</strong>Tick a task when it's done." : S.filter==="urgent" ? "<strong>No urgent tasks</strong>Nothing urgent is waiting." : "<strong>Everything is done</strong>Nice work, team.")
+      : (canAdd() ? "<strong>No tasks on this day</strong>Use “+ Add task” or “+ Add preventive” to schedule work." : "<strong>No tasks for you on this day</strong>");
     $("list").innerHTML = `<li class="empty">${msg}</li>`; return;
   }
   $("list").innerHTML = list.map(t=>{
     const dn = isDone(t,k), info = dn ? t.done[k] : null;
     const meta = [
+      isUrgent(t) ? `<span class="pill urg">Urgent · عاجل</span>` : "",
+      isPrev(t) ? `<span class="pill prev">Preventive</span>` : "",
       t.time ? `<span>${esc(t.time)}</span>` : "",
       t.location ? `<span>${esc(t.location)}</span>` : "",
-      t.assignee ? `<span class="person" dir="auto">${esc(t.assignee)}</span>` : "",
       `<span class="tag"><b style="background:${color(t.category)}"></b>${esc(catLabel(t.category))}</span>`,
-      t.repeat && t.repeat!=="none" ? `<span>${esc(REPEAT[t.repeat])}</span>` : "",
-      t.priority==="urgent" ? `<span class="urgent">Urgent</span>` : ""
+      t.repeat && t.repeat!=="none" ? `<span>${esc(REPEAT[t.repeat])}</span>` : ""
     ].join("");
-    const by = info ? `<div class="by">Done by <bdi>${esc(info.by===S.uid ? "you" : (info.name || "a teammate"))}</bdi> at ${new Date(info.at).toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"})}</div>` : "";
-    return `<li class="task ${dn?"is-done":""}">
-      <button class="chk" data-done="${t.id}" aria-label="${dn?"Mark not done":"Mark done"}: ${esc(t.title)}" ${S.canWrite?"":"disabled"}>
+    const people = [
+      t.assignee ? `Executed by <span class="person" dir="auto">${esc(t.assignee)}</span>` : "",
+      t.checkedBy ? `Checked by <span class="person" dir="auto">${esc(t.checkedBy)}</span>` : ""
+    ].filter(Boolean).join(" · ");
+    const by = info ? `<div class="by">✓ Done by <bdi>${esc(info.by===S.uid ? "you" : (info.name || "a teammate"))}</bdi> at ${fmtTime(info.at)}</div>` : "";
+    return `<li class="task ${dn?"is-done":""} ${isUrgent(t)&&!dn?"urgent-row":""}">
+      <button class="chk" data-done="${t.id}" aria-label="${dn?"Mark not done":"Mark done"}: ${esc(t.title)}" ${canTick(t)?"":"disabled"}>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></button>
-      <button class="t-main" data-open="${t.id}"><span class="t-title" dir="auto">${esc(t.title)}</span><span class="t-meta">${meta}</span>${t.notes?`<span class="t-notes" dir="auto">${esc(t.notes)}</span>`:""}${by}</button>
+      <button class="t-main" data-open="${t.id}"><span class="t-title" dir="auto">${esc(t.title)}</span><span class="t-meta">${meta}</span>${people?`<span class="t-meta">${people}</span>`:""}${t.notes?`<span class="t-notes" dir="auto">${esc(t.notes)}</span>`:""}${by}</button>
     </li>`;
   }).join("");
 }
@@ -383,12 +514,13 @@ function writeFailed(e){
 }
 async function toggleDone(id){
   const t = S.tasks.find(x=>x.id===id); if (!t) return;
+  if (!canTick(t)){ toast(isReporter() ? "Only maintenance can mark tasks done." : "This task isn't yours to execute."); return; }
   const k = S.sel, done = Object.assign({}, t.done||{});
   if (done[k]) delete done[k]; else done[k] = {by:S.uid, name:S.name, at:new Date().toISOString()};
   try{ await S.db.collection("tasks").doc(id).update({done}); }catch(e){ writeFailed(e); }
 }
-async function saveWorkers(list){
-  try{ await S.db.collection("tasks").doc(TEAM_ID).set({kind:"team", workers:list, updatedAt:new Date().toISOString()}); return true; }
+async function saveTeam(legacy, members){
+  try{ await S.db.collection("tasks").doc(TEAM_ID).set({kind:"team", workers:legacy, members, updatedAt:new Date().toISOString()}); return true; }
   catch(e){ writeFailed(e); return false; }
 }
 
@@ -398,121 +530,200 @@ function wireSheet(){
   $("scrim").addEventListener("click", e=>{ if (e.target.id==="scrim") closeSheet(); });
   document.addEventListener("keydown", function esc_(e){ if(e.key==="Escape"){ closeSheet(); document.removeEventListener("keydown",esc_);} });
 }
+const optList = (list, val, empty) => (empty!==undefined ? `<option value="">${esc(empty)}</option>` : "") +
+  (val && !list.includes(val) ? `<option value="${esc(val)}" selected>${esc(val)}</option>` : "") +
+  list.map(x=>`<option value="${esc(x)}" ${x===val?"selected":""}>${esc(x)}</option>`).join("");
 
-/* ---------- Add / edit task ---------- */
-function openSheet(task){
-  const t = task || {title:"",category:"general",location:"",assignee:"",date:S.sel,time:"",repeat:"none",priority:"normal",notes:""};
-  const ro = !S.canWrite;
+/* ---------- Add / edit task (normal or preventive) ---------- */
+function openSheet(task, kind){
+  const prev = task ? isPrev(task) : kind==="preventive";
+  const t = task || {title:"",taskType:prev?"preventive":"task",category:"general",location:"",assignee:"",checkedBy:"",date:S.sel,time:"",repeat:"none",priority:"normal",notes:""};
+  const ro = task ? !canEdit(task) : !canAdd();
+  const dis = ro ? "disabled" : "";
   const opts = (obj,val,lab) => Object.entries(obj).map(([k,v])=>`<option value="${k}" ${k===val?"selected":""}>${esc(lab?v[lab]:v)}</option>`).join("");
   const loc = t.location || "";
   const locOpts = `<option value="">Choose a place…</option>` +
     (loc && !LOC_ORDER.includes(loc) ? `<option value="${esc(loc)}" selected>${esc(loc)}</option>` : "") +
     LOC_GROUPS.map(g=>`<optgroup label="${esc(g.label)}">${g.items.map(i=>`<option value="${esc(i)}" ${i===loc?"selected":""}>${esc(i)}</option>`).join("")}</optgroup>`).join("");
-  const who = t.assignee || "";
-  const whoOpts = `<option value="">Not assigned</option>` +
-    (who && !S.workers.includes(who) ? `<option value="${esc(who)}" selected>${esc(who)}</option>` : "") +
-    S.workers.map(w=>`<option value="${esc(w)}" ${w===who?"selected":""}>${esc(w)}</option>`).join("");
+  const prevOpts = `<option value="">Choose a preventive check…</option>` +
+    (t.title && !PREV_MAP[t.title] ? `<option value="${esc(t.title)}" selected>${esc(t.title)}</option>` : "") +
+    PREVENTIVE.map(g=>`<optgroup label="${esc(g.group)}">${g.items.map(([en,ar])=>`<option value="${esc(en)}" ${en===t.title?"selected":""}>${esc(en)}</option>`).join("")}</optgroup>`).join("");
+  const titleField = prev
+    ? `<label class="f"><span>Preventive check</span><select name="title" required ${dis}>${prevOpts}</select></label>`
+    : `<label class="f"><span>What needs doing? <small>English or العربية</small></span><input name="title" dir="auto" required maxlength="120" value="${esc(t.title)}" placeholder="e.g. Fix shower leak / تصليح تسريب الدوش" ${dis}></label>`;
+  const heading = task ? (ro ? (prev?"Preventive check":"Task details") : (prev?"Edit preventive check":"Edit task")) : (prev?"New preventive check":"New task");
   $("sheetHost").innerHTML = `<div class="scrim" id="scrim"><form class="sheet" id="form" novalidate>
-    <h3>${task ? (ro?"Task details":"Edit task") : "New task"}</h3>
-    <label class="f"><span>What needs doing? <small style="font-weight:400;color:var(--muted)">English or العربية</small></span><input name="title" dir="auto" required maxlength="120" value="${esc(t.title)}" placeholder="e.g. Fix shower leak / تصليح تسريب الدوش" ${ro?"disabled":""}></label>
+    <div class="eyebrow">${prev?"Preventive maintenance":"Maintenance task"}</div>
+    <h3>${heading}</h3>
+    ${titleField}
+    <label class="urg-toggle"><input type="checkbox" name="urgent" ${isUrgent(t)?"checked":""} ${dis}><span><b>Mark as urgent · عاجل</b><br><small style="color:var(--muted)">Shown in red at the top of the board and the daily report</small></span></label>
     <div class="row">
-      <label class="f"><span>Where</span><select name="location" ${ro?"disabled":""}>${locOpts}</select></label>
-      <label class="f"><span>Assigned to</span><select name="assignee" ${ro?"disabled":""}>${whoOpts}</select></label>
-    </div>
-    ${!S.workers.length && !ro ? `<p class="note" style="margin:-6px 0 12px">No workers yet. Tap <b>Team</b> at the top to add their names.</p>` : ""}
-    <div class="row">
-      <label class="f"><span>Type</span><select name="category" ${ro?"disabled":""}>${opts(CATS,t.category,"label")}</select></label>
-      <label class="f"><span>Priority</span><select name="priority" ${ro?"disabled":""}>${opts({low:"Low",normal:"Normal",urgent:"Urgent"},t.priority)}</select></label>
+      <label class="f"><span>Where</span><select name="location" ${dis}>${locOpts}</select></label>
+      <label class="f"><span>Type</span><select name="category" ${dis}>${opts(CATS,t.category,"label")}</select></label>
     </div>
     <div class="row">
-      <label class="f"><span>${t.repeat&&t.repeat!=="none"?"Starts on":"Date"}</span><input type="date" name="date" required value="${esc(t.date)}" ${ro?"disabled":""}></label>
-      <label class="f"><span>Time (optional)</span><input type="time" name="time" value="${esc(t.time)}" ${ro?"disabled":""}></label>
+      <label class="f"><span>${t.repeat&&t.repeat!=="none"?"Starts on":"Date"}</span><input type="date" name="date" required value="${esc(t.date)}" ${dis}></label>
+      <label class="f"><span>Time <small>(optional)</small></span><input type="time" name="time" value="${esc(t.time)}" ${dis}></label>
     </div>
-    <label class="f"><span>Repeat</span><select name="repeat" ${ro?"disabled":""}>${opts(REPEAT,t.repeat||"none")}</select></label>
-    <label class="f"><span>Notes</span><textarea name="notes" dir="auto" rows="3" maxlength="600" placeholder="Details, parts needed… / تفاصيل" ${ro?"disabled":""}>${esc(t.notes)}</textarea></label>
+    <div class="row">
+      <label class="f"><span>Repeat</span><select name="repeat" ${dis}>${opts(REPEAT,t.repeat||"none")}</select></label>
+      <label class="f"><span>Priority</span><select name="priority" ${dis}>${opts(PRIO,t.priority||"normal")}</select></label>
+    </div>
+    <label class="f"><span>Notes</span><textarea name="notes" dir="auto" rows="3" maxlength="600" placeholder="Details, parts needed… / تفاصيل" ${dis}>${esc(t.notes)}</textarea></label>
+    <div class="sec-label">Responsibility</div>
+    <div class="row">
+      <label class="f"><span>Executed by</span><select name="assignee" ${dis}>${optList(S.workers, t.assignee||"", "Choose who does it…")}</select></label>
+      <label class="f"><span>Checked by</span><select name="checkedBy" ${dis}>${optList(checkers(), t.checkedBy||"", "Choose who checks it…")}</select></label>
+    </div>
+    ${!S.workers.length && isAdmin() ? `<p class="note" style="margin:-4px 0 12px">No maintenance workers yet. Tap <b>Team</b> at the top to add them.</p>` : ""}
     <div class="actions">
-      ${task && !ro ? `<button type="button" class="btn del" id="delBtn">Delete</button>` : ""}
+      ${task && isAdmin() ? `<button type="button" class="btn del" id="delBtn">Delete</button>` : ""}
       <span class="grow"></span>
       <button type="button" class="btn" id="cancel">${ro?"Close":"Cancel"}</button>
-      ${ro ? "" : `<button type="submit" class="btn btn-y">${task?"Save changes":"Add task"}</button>`}
+      ${ro ? "" : `<button type="submit" class="btn btn-y">${task?"Save changes":(prev?"Add preventive":"Add task")}</button>`}
     </div></form></div>`;
   wireSheet();
+  const f = $("form");
   $("cancel").onclick = closeSheet;
-  setTimeout(()=>{ const i=$("form").title; if(i && !ro) i.focus(); }, 50);
+  setTimeout(()=>{ if(!ro) f.title.focus(); }, 50);
+  // Urgent tick box and Priority stay in sync
+  f.urgent.onchange = ()=>{ f.priority.value = f.urgent.checked ? "urgent" : (f.priority.value==="urgent" ? "normal" : f.priority.value); };
+  f.priority.onchange = ()=>{ f.urgent.checked = f.priority.value==="urgent"; };
+  // Preventive checks fill in the Type automatically
+  if (prev && !ro) f.title.onchange = ()=>{ const p = PREV_MAP[f.title.value]; if (p) f.category.value = p.cat; };
   if ($("delBtn")) $("delBtn").onclick = async ()=>{
     const msg = task.repeat && task.repeat!=="none" ? "Delete this repeating task from every day?" : "Delete this task?";
     if (!confirm(msg)) return;
     try{ await S.db.collection("tasks").doc(task.id).delete(); closeSheet(); toast("Task deleted"); }catch(e){ writeFailed(e); }
   };
-  $("form").onsubmit = async e=>{
+  f.onsubmit = async e=>{
     e.preventDefault();
-    const f = e.target, title = f.title.value.trim();
-    if (!title){ f.title.focus(); toast("Give the task a name."); return; }
+    const title = f.title.value.trim();
+    if (!title){ f.title.focus(); toast(prev ? "Choose a preventive check." : "Give the task a name."); return; }
     if (!f.date.value){ f.date.focus(); toast("Pick a date."); return; }
-    const body = { title, category:f.category.value, priority:f.priority.value, location:f.location.value, assignee:f.assignee.value,
+    const body = { title, taskType: prev?"preventive":"task", category:f.category.value, priority:f.priority.value,
+      location:f.location.value, assignee:f.assignee.value, checkedBy:f.checkedBy.value,
       date:f.date.value, time:f.time.value, repeat:f.repeat.value, notes:f.notes.value.trim() };
     try{
       if (task) await S.db.collection("tasks").doc(task.id).update(body);
       else await S.db.collection("tasks").add({...body, done:{}, createdBy:S.uid, createdAt:new Date().toISOString()});
-      closeSheet(); toast(task ? "Changes saved" : "Task added");
+      closeSheet(); toast(task ? "Changes saved" : (prev ? "Preventive check added" : "Task added"));
       if (!task && body.date !== S.sel){ S.sel = body.date; const d=fromKey(body.date); S.month=new Date(d.getFullYear(),d.getMonth(),1); render(); }
     }catch(err){ writeFailed(err); }
   };
 }
 
-/* ---------- Team (worker names) ---------- */
+/* ---------- Team (people, roles, logins) ---------- */
 function openTeam(){
-  const ro = !S.canWrite;
+  if (!isAdmin()) return;
+  const roleOpts = Object.entries(ROLES).map(([k,v])=>`<option value="${k}">${esc(v.label)} – ${esc(v.hint)}</option>`).join("");
   $("sheetHost").innerHTML = `<div class="scrim" id="scrim"><div class="sheet" id="teamSheet">
     <h3>Team</h3>
-    <p class="lead">The names of your maintenance workers. You can type them in English or Arabic.</p>
-    ${ro ? "" : `<form class="w-add" id="wForm" novalidate>
-      <input name="w" dir="auto" maxlength="40" placeholder="Worker name / اسم العامل" autocomplete="off">
-      <button class="btn btn-y" type="submit">Add</button></form>`}
+    <p class="lead">Add each person once. To let them log in, first create their email + password in Firebase (Authentication › Users), then add the same email here.</p>
+    <form class="p-form" id="pForm" novalidate>
+      <label class="f"><span>Name</span><input name="name" dir="auto" maxlength="40" placeholder="e.g. Ahmad / أحمد" autocomplete="off"></label>
+      <label class="f"><span>Login email <small style="font-weight:400;color:var(--muted)">(leave empty for a name only, no login)</small></span><input name="email" type="email" maxlength="80" placeholder="name@example.com" autocomplete="off"></label>
+      <label class="f"><span>Type of access</span><select name="role">${roleOpts}</select></label>
+      <button class="btn btn-y" type="submit" style="width:100%">Add person</button>
+    </form>
     <ul class="wlist" id="wList"></ul>
     <div class="actions"><span class="grow"></span><button type="button" class="btn" id="cancel">Done</button></div>
   </div></div>`;
   wireSheet();
   $("cancel").onclick = closeSheet;
   renderTeamList();
-  if (!ro){
-    const f = $("wForm"); setTimeout(()=>f.w.focus(), 50);
-    f.onsubmit = async e=>{
-      e.preventDefault();
-      const name = f.w.value.trim().replace(/\s+/g," ");
-      if (!name){ f.w.focus(); return; }
-      if (S.workers.some(w=>w.toLowerCase()===name.toLowerCase())){ toast(`${name} is already on the team.`); return; }
-      const list = [...S.workers, name];
-      if (await saveWorkers(list)){ S.workers = list; f.w.value=""; f.w.focus(); renderTeamList(); renderWhoSel(); toast(`${name} added`); }
-    };
-  }
+  const f = $("pForm"); setTimeout(()=>f.name.focus(), 50);
+  f.role.onchange = ()=>{ if (f.role.value!=="worker" && !f.email.value.trim()) f.email.focus(); };
+  f.onsubmit = async e=>{
+    e.preventDefault();
+    const name = f.name.value.trim().replace(/\s+/g," "), email = f.email.value.trim().toLowerCase(), role = f.role.value;
+    if (!name){ f.name.focus(); toast("Type the person's name."); return; }
+    if (role!=="worker" && !email){ f.email.focus(); toast("Staff and managers need a login email."); return; }
+    if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ f.email.focus(); toast("That email doesn't look right."); return; }
+    if (email && S.members[email]){ toast("That email is already on the team."); return; }
+    const allNames = [...S.legacy, ...Object.values(S.members).map(m=>m.name)];
+    if (allNames.some(n=>n.toLowerCase()===name.toLowerCase())){ toast(`${name} is already on the team. Use a different name.`); return; }
+    const members = {...S.members}, legacy = [...S.legacy];
+    if (email) members[email] = {name, role}; else legacy.push(name);
+    if (await saveTeam(legacy, members)){ applyTeam({workers:legacy, members}); f.reset(); f.name.focus(); toast(`${name} added`); }
+  };
 }
 function renderTeamList(){
   const ul = $("wList"); if (!ul) return;
-  if (!S.workers.length){ ul.innerHTML = `<li><small>No workers added yet.</small></li>`; return; }
+  const people = [
+    ...Object.entries(S.members).map(([email,m])=>({key:"m:"+email, name:m.name, role:m.role, email})),
+    ...S.legacy.map(n=>({key:"l:"+n, name:n, role:"worker", email:""}))
+  ].sort((a,b)=>a.name.localeCompare(b.name));
+  if (!people.length){ ul.innerHTML = `<li><small>Nobody added yet.</small></li>`; return; }
   const today = todayKey();
-  ul.innerHTML = S.workers.map((w,i)=>{
-    const n = tasksOn(today).filter(t=>t.assignee===w && !isDone(t,today)).length;
-    return `<li><span dir="auto">${esc(w)}</span><small>${n} open today</small>${S.canWrite?`<button class="x" data-rm="${i}">Remove</button>`:""}</li>`;
+  ul.innerHTML = people.map(p=>{
+    const n = p.role==="worker" ? tasksOn(today).filter(t=>t.assignee===p.name && !isDone(t,today)).length : null;
+    const sub = [p.email || "No login (name only)", n!==null ? `${n} open today` : ""].filter(Boolean).join(" · ");
+    return `<li><div class="p-info"><span dir="auto">${esc(p.name)}<em class="badge ${p.role}" style="font-style:normal">${esc((ROLES[p.role]||ROLES.worker).label)}</em></span><small>${esc(sub)}</small></div><button class="x" data-rm="${esc(p.key)}">Remove</button></li>`;
   }).join("");
   ul.onclick = async e=>{
     const b = e.target.closest("[data-rm]"); if (!b) return;
-    const name = S.workers[+b.dataset.rm];
-    if (!confirm(`Remove ${name} from the team? Their existing tasks keep their name.`)) return;
-    const list = S.workers.filter((_,i)=>i!==+b.dataset.rm);
-    if (await saveWorkers(list)){ S.workers = list; renderTeamList(); renderWhoSel(); render(); }
+    const key = b.dataset.rm, isM = key.startsWith("m:"), id = key.slice(2);
+    const name = isM ? S.members[id].name : id;
+    if (!confirm(`Remove ${name}? ${isM?"They won't be able to see the board anymore. ":""}Their existing tasks keep their name.`)) return;
+    const members = {...S.members}, legacy = S.legacy.filter(n=>!( !isM && n===id ));
+    if (isM) delete members[id];
+    if (await saveTeam(legacy, members)){ applyTeam({workers:legacy, members}); }
   };
+}
+/* Read the team document and work out names + this user's role */
+function applyTeam(data){
+  data = data || {};
+  S.legacy = Array.isArray(data.workers) ? data.workers : [];
+  S.members = (data.members && typeof data.members==="object") ? data.members : {};
+  const memberWorkers = Object.values(S.members).filter(m=>m.role==="worker").map(m=>m.name);
+  S.workers = [...new Set([...S.legacy, ...memberWorkers])].sort((a,b)=>a.localeCompare(b));
+  S.me = S.members[S.email] || null;
+  S.role = OWNERS.includes(S.email) ? "admin" : (S.me ? S.me.role : null);
+  if (S.me && S.me.name) S.name = S.me.name;
+  if (OWNERS.includes(S.email)) S.name = OWNER_NAME;
+  renderWhoSel(); renderTeamList();
+}
+
+
+/* ---------- Arabic translation for the report ---------- */
+const hasArabic = s => /[؀-ۿ]/.test(s||"");
+let TR = {}; try{ TR = JSON.parse(localStorage.getItem("mb_tr_v1")||"{}"); }catch(e){ TR = {}; }
+const saveTR = () => { try{ localStorage.setItem("mb_tr_v1", JSON.stringify(TR)); }catch(e){} };
+async function fetchJSON(url, ms=6000){
+  const c = new AbortController(), timer = setTimeout(()=>c.abort(), ms);
+  try{ const r = await fetch(url,{signal:c.signal}); if(!r.ok) throw 0; return await r.json(); } finally{ clearTimeout(timer); }
+}
+async function translateOne(text){
+  text = (text||"").trim();
+  if (!text || hasArabic(text)) return text;
+  if (PREV_MAP[text]) return PREV_MAP[text].ar;
+  if (locAr(text)) return locAr(text);
+  if (TR[text]) return TR[text];
+  let out = "";
+  try{ const j = await fetchJSON("https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ar&dt=t&q="+encodeURIComponent(text));
+       out = (j[0]||[]).map(x=>x[0]).join(""); }catch(e){}
+  if (!out){ try{ const j = await fetchJSON("https://api.mymemory.translated.net/get?langpair=en|ar&q="+encodeURIComponent(text));
+       out = j && j.responseData && j.responseData.translatedText || ""; }catch(e){} }
+  if (out){ TR[text] = out; saveTR(); }
+  return out;
+}
+async function translateMany(texts){
+  const uniq = [...new Set(texts.filter(Boolean))], res = {};
+  let failed = 0, i = 0;
+  async function worker(){ while (i < uniq.length){ const s = uniq[i++]; const a = await translateOne(s); if (!a) failed++; res[s] = a; } }
+  await Promise.all(Array.from({length:Math.min(5,uniq.length)}, worker));
+  return {map:res, failed};
 }
 
 /* ---------- Daily report ---------- */
 function reportData(k){
   const all = tasksOn(k).filter(forWho);
   const open = all.filter(t=>!isDone(t,k)), done = all.filter(t=>isDone(t,k));
-  // One-off tasks from the last 14 days that were never ticked off
   const from = new Date(fromKey(k)); from.setDate(from.getDate()-14); const fk = keyOf(from);
   const carry = S.tasks.filter(t=>(!t.repeat||t.repeat==="none") && t.date && t.date<k && t.date>=fk && !isDone(t,t.date) && forWho(t))
     .sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:byTime(a,b));
-  return {all, open, done, carry};
+  return {all, open, done, carry, urgent: open.filter(isUrgent), normal: open.filter(t=>!isUrgent(t))};
 }
 function groupTasks(list, by){
   const map = new Map();
@@ -522,72 +733,109 @@ function groupTasks(list, by){
     : locRank(a)-locRank(b) || a.localeCompare(b));
   return keys.map(g=>[g, map.get(g)]);
 }
-function itemMeta(t, by, k, extra){
-  return [ extra||"", t.time||"", by==="worker" ? t.location : t.assignee, catLabel(t.category),
-    t.repeat&&t.repeat!=="none" ? REPEAT[t.repeat] : "", t.priority==="urgent" ? "URGENT" : "" ].filter(Boolean);
-}
-function reportHTML(k, by){
-  const {all, open, done, carry} = reportData(k);
-  const d = fromKey(k), urgent = open.filter(t=>t.priority==="urgent").length + carry.filter(t=>t.priority==="urgent").length;
-  const li = (t, ok, extra) => {
-    const m = itemMeta(t, by, k, extra).map(x=>x==="URGENT"?`<b style="color:var(--red)">Urgent</b>`:`<bdi>${esc(x)}</bdi>`).join(" · ");
-    const info = ok ? t.done[k] : null;
-    const doneBy = info ? ` · Done by <bdi>${esc(info.name||"teammate")}</bdi> ${new Date(info.at).toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"})}` : "";
-    return `<li class="r-item ${ok?"ok":""}"><span class="r-box"></span><div><div class="r-t" dir="auto">${esc(t.title)}</div><div class="r-m">${m}${doneBy}</div>${t.notes?`<div class="r-m" dir="auto">${esc(t.notes)}</div>`:""}</div></li>`;
+function reportHTML(k, by, AR){
+  const {open, done, carry, urgent, normal} = reportData(k);
+  const d = fromKey(k), ar = s => AR[s] || "";
+  const urgCount = urgent.length + carry.filter(isUrgent).length;
+  const li = (t, ok, dateTag) => {
+    const enMeta = [dateTag, t.time, by==="worker" ? t.location : "", catLabel(t.category), t.repeat&&t.repeat!=="none" ? REPEAT[t.repeat] : ""].filter(Boolean).map(esc).join(" · ");
+    const arMeta = [dateTag, t.time, by==="worker" ? (locAr(t.location)||ar(t.location)) : "", catAr(t.category), REPEAT_AR[t.repeat]||""].filter(Boolean).map(esc).join(" · ");
+    const pills = (isUrgent(t)?`<span class="pill urg">URGENT · عاجل</span> `:"") + (isPrev(t)?`<span class="pill prev">Preventive · وقائي</span> `:"");
+    const titleAr = hasArabic(t.title) ? "" : ar(t.title);
+    const notesAr = t.notes && !hasArabic(t.notes) ? ar(t.notes) : "";
+    const ex = ok ? execName(t,k) : t.assignee;
+    const sig = `<div class="r-sig">
+      <span><bdi>Executed by · المنفّذ</bdi>: ${ex?`<b dir="auto">${esc(ex)}</b>`:`<i class="blank"></i>`}${ok?` <span style="color:var(--green)">✓ ${fmtTime(t.done[k].at)}</span>`:""}</span>
+      <span><bdi>Checked by · المدقّق</bdi>: ${t.checkedBy?`<b dir="auto">${esc(t.checkedBy)}</b>`:`<i class="blank"></i>`}</span></div>`;
+    return `<li class="r-item ${ok?"ok":""}"><span class="r-box"></span><div class="r-body">
+      ${pills?`<div style="margin-bottom:3px">${pills}</div>`:""}
+      <div class="r-two">
+        <div>${hasArabic(t.title)?"":`<div class="r-t">${esc(t.title)}</div>`}<div class="r-m">${enMeta}</div>${t.notes?`<div class="r-m" dir="auto">${esc(t.notes)}</div>`:""}</div>
+        <div class="r-ar">${hasArabic(t.title)?`<div class="r-t">${esc(t.title)}</div>`:(titleAr?`<div class="r-t">${esc(titleAr)}</div>`:`<div class="r-t r-m">—</div>`)}<div class="r-m">${arMeta}</div>${notesAr?`<div class="r-m">${esc(notesAr)}</div>`:""}</div>
+      </div>${sig}</div></li>`;
   };
-  const groups = list => list.length ? groupTasks(list, by).map(([g,ts])=>`<div class="r-grp" dir="auto">${esc(g)} <span style="color:var(--muted);font-weight:500">(${ts.length})</span></div><ul>${ts.map(t=>li(t,false)).join("")}</ul>`).join("") : `<div class="r-none">Nothing left to do.</div>`;
-  const whoLine = S.who ? ` · For: <bdi>${esc(S.who==="__none"?"Not assigned":S.who)}</bdi>` : "";
+  const grpHead = g => { const a = by==="worker" ? (g==="Not assigned"?"غير محدد":"") : (locAr(g)||ar(g)); return `<div class="r-grp"><span dir="auto">${esc(g)}</span><span dir="rtl">${esc(a)}</span></div>`; };
+  const groups = (list, empty) => list.length ? groupTasks(list, by).map(([g,ts])=>`${grpHead(g)}<ul>${ts.map(t=>li(t,false)).join("")}</ul>`).join("") : `<div class="r-none">${empty}</div>`;
+  const sec = (en, arr, cls="") => `<div class="r-sec ${cls}"><span>${en}</span><span class="ar">${arr}</span></div>`;
+  const whoLine = S.who ? ` · <bdi>${esc(S.who==="__none"?"No one chosen":S.who)}</bdi>` : "";
+  const shortDate = x => fromKey(x).toLocaleDateString(undefined,{day:"numeric",month:"short"});
   return `<div class="report" id="report">
-    <div class="r-hotel">${esc(HOTEL)} · Maintenance</div>
-    <div class="r-title">Daily Report <span style="font-weight:600">· التقرير اليومي</span></div>
-    <div class="r-date">${d.toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long",year:"numeric"})}${whoLine}</div>
-    <div class="r-sum"><span><b>${open.length}</b>to do</span><span><b>${done.length}</b>done</span>${carry.length?`<span><b>${carry.length}</b>overdue</span>`:""}<span><b style="color:var(--red)">${urgent}</b>urgent</span></div>
-    ${carry.length ? `<div class="r-sec">Overdue from earlier days</div><ul>${carry.map(t=>li(t,false,fromKey(t.date).toLocaleDateString(undefined,{day:"numeric",month:"short"}))).join("")}</ul>` : ""}
-    <div class="r-sec">To do · المطلوب</div>
-    ${groups(open)}
-    <div class="r-sec">Done · تم</div>
-    ${done.length ? `<ul>${done.map(t=>li(t,true)).join("")}</ul>` : `<div class="r-none">Nothing ticked off yet.</div>`}
-    <div class="r-sign"><div>Checked by</div><div>Signature</div></div>
+    <div class="r-head">
+      <div><div class="eyebrow">${esc(HOTEL)} · Maintenance</div><div class="r-title">Daily Maintenance Report</div>
+        <div class="r-date">${d.toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long",year:"numeric"})}${whoLine}</div></div>
+      <div class="r-title-ar"><div class="eyebrow" style="letter-spacing:0">${HOTEL_AR} · الصيانة</div>التقرير اليومي للصيانة
+        <div class="r-date">${d.toLocaleDateString("ar-LB",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}</div></div>
+    </div>
+    <div class="r-sum">
+      <div class="u"><b>${urgCount}</b>Urgent · عاجل</div>
+      <div><b>${open.length}</b>To do · مطلوب</div>
+      <div><b>${carry.length}</b>Overdue · متأخر</div>
+      <div><b>${done.length}</b>Done · منجز</div>
+    </div>
+    ${urgent.length ? sec("Urgent","عاجل","u") + groups(urgent,"") : ""}
+    ${carry.length ? sec("Overdue from earlier days","مهام متأخرة من أيام سابقة") + `<ul>${carry.map(t=>li(t,false,shortDate(t.date))).join("")}</ul>` : ""}
+    ${sec("To do","المهام المطلوبة")}${groups(normal, urgent.length ? "No other tasks. · لا توجد مهام أخرى" : "Nothing left to do. · لا توجد مهام")}
+    ${sec("Completed","المهام المنجزة")}${done.length ? `<ul>${done.map(t=>li(t,true)).join("")}</ul>` : `<div class="r-none">Nothing ticked off yet. · لم يُنجز شيء بعد</div>`}
+    <div class="r-foot"><div><span>Prepared by</span><span dir="rtl">أعدّه</span></div><div><span>Manager signature</span><span dir="rtl">توقيع المدير</span></div></div>
   </div>`;
 }
-function reportText(k, by){
-  const {open, done, carry} = reportData(k);
-  const d = fromKey(k), L = [];
-  L.push(`${HOTEL} – Maintenance daily report`);
-  L.push(d.toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long",year:"numeric"}) + (S.who ? ` – ${S.who==="__none"?"Not assigned":S.who}` : ""));
-  L.push(`To do: ${open.length} | Done: ${done.length}${carry.length?` | Overdue: ${carry.length}`:""}`);
-  const line = (t, extra) => `- ${t.title}` + (()=>{ const m=itemMeta(t,by,k,extra); return m.length?` (${m.join(", ")})`:""; })() + (t.notes?`\n   ${t.notes}`:"");
-  if (carry.length){ L.push("", "OVERDUE:"); carry.forEach(t=>L.push(line(t, fromKey(t.date).toLocaleDateString(undefined,{day:"numeric",month:"short"})))); }
-  L.push("", "TO DO:");
-  if (!open.length) L.push("- Nothing left to do");
-  groupTasks(open, by).forEach(([g,ts])=>{ L.push(`* ${g}`); ts.forEach(t=>L.push(line(t))); });
-  if (done.length){ L.push("", "DONE:"); done.forEach(t=>L.push(`- ${t.title}${t.done[k]&&t.done[k].name?` (by ${t.done[k].name})`:""}`)); }
+function reportText(k, by, AR){
+  const {open, done, carry, urgent, normal} = reportData(k);
+  const d = fromKey(k), L = [], ar = s => AR[s] || "";
+  const bil = (en, a) => a && a!==en ? `${en} | ${a}` : en;
+  L.push(`*${HOTEL} – Daily Maintenance Report*`, `*التقرير اليومي للصيانة*`);
+  L.push(d.toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long",year:"numeric"}) + (S.who ? ` – ${S.who==="__none"?"No one chosen":S.who}` : ""));
+  L.push(`Urgent/عاجل: ${urgent.length} | To do/مطلوب: ${open.length} | Done/منجز: ${done.length}${carry.length?` | Overdue/متأخر: ${carry.length}`:""}`);
+  const line = (t, dateTag) => {
+    const where = t.location ? ` @ ${bil(t.location, locAr(t.location)||ar(t.location))}` : "";
+    const who = [t.assignee?`Executed by/المنفّذ: ${t.assignee}`:"", t.checkedBy?`Checked by/المدقّق: ${t.checkedBy}`:""].filter(Boolean).join(", ");
+    return `${isUrgent(t)?"🔴 URGENT عاجل – ":"- "}${dateTag?`[${dateTag}] `:""}${bil(t.title, hasArabic(t.title)?"":ar(t.title))}${t.time?` (${t.time})`:""}${where}${who?`\n   ${who}`:""}${t.notes?`\n   ${bil(t.notes, hasArabic(t.notes)?"":ar(t.notes))}`:""}`;
+  };
+  if (urgent.length){ L.push("", "*URGENT | عاجل*"); urgent.forEach(t=>L.push(line(t))); }
+  if (carry.length){ L.push("", "*OVERDUE | متأخر*"); carry.forEach(t=>L.push(line(t, fromKey(t.date).toLocaleDateString(undefined,{day:"numeric",month:"short"})))); }
+  L.push("", "*TO DO | المطلوب*");
+  if (!normal.length) L.push("- Nothing else to do | لا توجد مهام أخرى");
+  groupTasks(normal, by).forEach(([g,ts])=>{ L.push(`• ${bil(g, by==="worker"?"":(locAr(g)||ar(g)))}`); ts.forEach(t=>L.push(line(t))); });
+  if (done.length){ L.push("", "*DONE | منجز*"); done.forEach(t=>L.push(`✓ ${bil(t.title, hasArabic(t.title)?"":ar(t.title))} – ${execName(t,k)}${t.checkedBy?`, checked by ${t.checkedBy}`:""}`)); }
   return L.join("\n");
 }
-function openReport(){
-  const k = S.sel; let by = "location";
+async function openReport(){
+  const k = S.sel; let by = "location", AR = {};
   $("sheetHost").innerHTML = `<div class="scrim" id="scrim"><div class="sheet wide">
     <div class="no-print">
-      <h3>Daily report</h3>
+      <div class="eyebrow">Report</div><h3>Daily report</h3>
       <div class="r-ctrl">
-        <label>Group by <select id="rBy"><option value="location">Room / place</option><option value="worker">Worker</option></select></label>
-        <span style="color:var(--muted)">${S.who ? "Showing only the selected worker." : "Showing everyone."}</span>
+        <label>Group by <select id="rBy"><option value="location">Room / place</option><option value="worker">Executed by</option></select></label>
+        <span style="color:var(--muted)">${S.who ? "Showing only the selected person." : "Showing everyone."} English and Arabic side by side.</span>
       </div>
     </div>
-    <div id="rBody">${reportHTML(k, by)}</div>
+    <div id="rBody"><div class="r-wait">Preparing the report and translating to Arabic…</div></div>
     <div class="actions no-print" style="margin-top:14px">
-      <button type="button" class="btn" id="rCopy">Copy as text</button>
+      <button type="button" class="btn" id="rCopy" disabled>Copy for WhatsApp</button>
       <span class="grow"></span>
       <button type="button" class="btn" id="cancel">Close</button>
-      <button type="button" class="btn btn-y" id="rPrint">Print / Save PDF</button>
+      <button type="button" class="btn btn-y" id="rPrint" disabled>Print / Save PDF</button>
     </div>
   </div></div>`;
   wireSheet();
   $("cancel").onclick = closeSheet;
-  $("rBy").onchange = e=>{ by = e.target.value; $("rBody").innerHTML = reportHTML(k, by); };
+  // Collect every English text that needs Arabic (titles, notes, unknown places)
+  const {all, carry} = reportData(k), texts = [];
+  [...all, ...carry].forEach(t=>{
+    if (t.title && !hasArabic(t.title) && !PREV_MAP[t.title]) texts.push(t.title);
+    if (t.notes && !hasArabic(t.notes)) texts.push(t.notes);
+    if (t.location && !locAr(t.location)) texts.push(t.location);
+  });
+  const res = await translateMany(texts);
+  AR = res.map;
+  if (!$("rBody")) return; // closed while translating
+  const draw = ()=>{ $("rBody").innerHTML = reportHTML(k, by, AR) + (res.failed ? `<p class="note no-print">Some text couldn't be translated (no internet or translation service busy). Close and reopen the report to try again.</p>` : ""); };
+  draw();
+  $("rCopy").disabled = false; $("rPrint").disabled = false;
+  $("rBy").onchange = e=>{ by = e.target.value; draw(); };
   $("rPrint").onclick = ()=>window.print();
   $("rCopy").onclick = async ()=>{
-    const txt = reportText(k, by);
+    const txt = reportText(k, by, AR);
     try{ await navigator.clipboard.writeText(txt); toast("Report copied. Paste it in WhatsApp or email."); }
     catch(e){ const ta=document.createElement("textarea"); ta.value=txt; document.body.appendChild(ta); ta.select();
       try{ document.execCommand("copy"); toast("Report copied."); }catch(_){ toast("Couldn't copy on this device."); } ta.remove(); }
@@ -600,7 +848,7 @@ $("grid").addEventListener("click", e=>{
   S.sel = c.dataset.k; const d = fromKey(S.sel);
   if (d.getMonth()!==S.month.getMonth()) S.month = new Date(d.getFullYear(), d.getMonth(), 1);
   render();
-  if (window.innerWidth < 900) document.querySelector(".day").scrollIntoView({behavior:"smooth",block:"start"});
+  if (window.innerWidth < 920) document.querySelector(".day").scrollIntoView({behavior:"smooth",block:"start"});
 });
 $("prev").onclick = ()=>{ S.month = new Date(S.month.getFullYear(), S.month.getMonth()-1, 1); renderCalendar(); };
 $("next").onclick = ()=>{ S.month = new Date(S.month.getFullYear(), S.month.getMonth()+1, 1); renderCalendar(); };
@@ -611,7 +859,8 @@ $("list").addEventListener("click", e=>{
   const d = e.target.closest("[data-done]"); if (d){ toggleDone(d.dataset.done); return; }
   const o = e.target.closest("[data-open]"); if (o){ openSheet(S.tasks.find(t=>t.id===o.dataset.open)); }
 });
-$("addBtn").onclick = ()=>openSheet(null);
+$("addBtn").onclick = ()=>openSheet(null, "task");
+$("addPrevBtn").onclick = ()=>openSheet(null, "preventive");
 $("reportBtn").onclick = openReport;
 $("teamBtn").onclick = openTeam;
 $("login").onsubmit = async e=>{
@@ -627,6 +876,7 @@ $("forgot").onclick = async ()=>{
   try{ await firebase.auth().sendPasswordResetEmail(em); toast("Password reset email sent."); }catch(e){ toast("Couldn't send the reset email. Check the address."); }
 };
 $("meBtn").onclick = ()=>{ if(confirm("Log out of the board?")) firebase.auth().signOut(); };
+$("noAccOut").onclick = ()=>firebase.auth().signOut();
 
 /* ---------- Start ---------- */
 (function boot(){
@@ -638,22 +888,47 @@ $("meBtn").onclick = ()=>{ if(confirm("Log out of the board?")) firebase.auth().
   if (firebaseConfig.apiKey==="PASTE_HERE"){ $("gateNote").textContent="Setup needed: paste your Firebase config into this file."; $("enter").disabled=true; return; }
   firebase.initializeApp(firebaseConfig);
   S.db = firebase.firestore();
-  let unsub = null;
+  let unsubTasks = null, unsubTeam = null, taskKey = null;
+  const stopTasks = ()=>{ if (unsubTasks){ unsubTasks(); unsubTasks=null; } taskKey=null; };
+  function showArea(){
+    const ok = !!S.role;
+    $("noAcc").classList.toggle("hidden", ok);
+    $("mainArea").classList.toggle("hidden", !ok);
+    $("teamBtn").classList.toggle("hidden", !isAdmin());
+    $("meName").textContent = S.name + (S.role ? ` · ${ROLES[S.role].label}` : "");
+  }
+  function listenTasks(){
+    // Workers only load their own tasks; everyone else loads the whole board.
+    const key = !S.role ? "none" : (isWorker() ? "w:"+(S.me&&S.me.name) : "all");
+    if (key===taskKey) return;
+    stopTasks(); taskKey = key; S.tasks = []; S.ready = false; render();
+    if (key==="none") return;
+    let q = S.db.collection("tasks");
+    q = isWorker() ? q.where("assignee","==",S.me.name) : q.limit(1000);
+    unsubTasks = q.onSnapshot(snap=>{
+      S.tasks = snap.docs.map(d=>({id:d.id, ...d.data()})).filter(d=>d.id!==TEAM_ID && d.kind!=="team");
+      S.ready = true; render(); renderTeamList();
+    }, err=>{ S.ready=true; render(); toast(err.code==="permission-denied" ? "Your account can't see these tasks. Ask your manager." : "Live updates paused. Reload the page."); });
+  }
   firebase.auth().onAuthStateChanged(u=>{
-    if (unsub){ unsub(); unsub=null; }
-    if (!u){ S.uid=null; S.tasks=[]; S.workers=[]; S.ready=false; closeSheet(); $("app").classList.add("hidden"); $("gate").classList.remove("hidden"); return; }
-    S.uid=u.uid; S.name=u.displayName || u.email.split("@")[0];
-    $("meName").textContent=S.name;
+    stopTasks(); if (unsubTeam){ unsubTeam(); unsubTeam=null; }
+    if (!u){ Object.assign(S,{uid:null,email:"",tasks:[],workers:[],legacy:[],members:{},role:null,me:null,who:"",ready:false});
+      closeSheet(); $("app").classList.add("hidden"); $("gate").classList.remove("hidden"); return; }
+    S.uid=u.uid; S.email=(u.email||"").toLowerCase(); S.name=u.displayName || S.email.split("@")[0];
     $("gate").classList.add("hidden"); $("app").classList.remove("hidden"); window.scrollTo(0,0);
-    unsub = S.db.collection("tasks").limit(1000).onSnapshot(snap=>{
-      const docs = snap.docs.map(d=>({id:d.id, ...d.data()}));
-      const team = docs.find(d=>d.id===TEAM_ID);
-      S.workers = team && Array.isArray(team.workers) ? team.workers : [];
-      S.tasks = docs.filter(d=>d.id!==TEAM_ID && d.kind!=="team");
-      S.ready = true; renderWhoSel(); render(); renderTeamList();
-    }, err=>{ S.ready=true; render(); toast(err.code==="permission-denied" ? "Your account can't see tasks. Check the Firestore rules." : "Live updates paused. Reload the page."); });
+    $("noAcc").classList.add("hidden"); $("mainArea").classList.remove("hidden");
+    unsubTeam = S.db.collection("tasks").doc(TEAM_ID).onSnapshot(doc=>{
+      applyTeam(doc.exists ? doc.data() : {});
+      if (isWorker()) S.who = S.me.name; else if (S.who===(S.me&&S.me.name) && !isAdmin()) S.who="";
+      showArea(); listenTasks(); render();
+    }, err=>{
+      // Team document unreadable: the owner still gets in, everyone else waits for access.
+      applyTeam({}); showArea(); listenTasks();
+      if (!S.role) $("noAccMsg").textContent = "Couldn't check your access. Check your connection, or ask your manager to update the Firestore rules.";
+    });
   });
 })();
+
 </script>
 </body>
 </html>
