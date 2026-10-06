@@ -142,6 +142,8 @@ ul.tasks{list-style:none;margin:0;padding:0}
 .urg-toggle{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;margin-bottom:12px;cursor:pointer;background:var(--bg)}
 .urg-toggle input{width:18px;height:18px;accent-color:var(--red)}
 .urg-toggle b{color:var(--red)}
+.ar-row{display:flex;gap:8px}.ar-row input,.ar-row textarea{flex:1;min-width:0;font-family:"Noto Sans Arabic",var(--body)}.ar-row .btn{padding:8px 12px}
+.ar-hint{display:block;font-size:12px;margin-top:4px;color:var(--muted)}.ar-hint.ok{color:var(--green)}.ar-hint.warn{color:#9A6B14}
 .sec-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:600;margin:16px 0 8px;padding-top:12px;border-top:1px solid var(--line)}
 .actions{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap}
 .actions .grow{flex:1}
@@ -401,6 +403,8 @@ const isUrgent = t => t.priority==="urgent";
 const fmtTime = iso => new Date(iso).toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"});
 /* Everyone who can be picked as "Checked by" */
 const checkers = () => [...new Set([OWNER_NAME, ...Object.values(S.members).map(m=>m.name), ...S.legacy])].filter(Boolean);
+/* Match a typed name to the team spelling (ignores capitals and extra spaces) */
+const canonName = (v, list) => { v = (v||"").trim().replace(/\s+/g," "); const hit = list.find(x=>x.toLowerCase()===v.toLowerCase()); return hit || v; };
 /* Who executed it: the chosen person, or whoever ticked it done */
 const execName = (t,k) => t.assignee || (isDone(t,k) ? (t.done[k].name||"") : "");
 
@@ -549,8 +553,12 @@ function openSheet(task, kind){
     (t.title && !PREV_MAP[t.title] ? `<option value="${esc(t.title)}" selected>${esc(t.title)}</option>` : "") +
     PREVENTIVE.map(g=>`<optgroup label="${esc(g.group)}">${g.items.map(([en,ar])=>`<option value="${esc(en)}" ${en===t.title?"selected":""}>${esc(en)}</option>`).join("")}</optgroup>`).join("");
   const titleField = prev
-    ? `<label class="f"><span>Preventive check</span><select name="title" required ${dis}>${prevOpts}</select></label>`
-    : `<label class="f"><span>What needs doing? <small>English or العربية</small></span><input name="title" dir="auto" required maxlength="120" value="${esc(t.title)}" placeholder="e.g. Fix shower leak / تصليح تسريب الدوش" ${dis}></label>`;
+    ? `<label class="f"><span>Preventive check</span><select name="title" required ${dis}>${prevOpts}</select></label>
+       <p class="note" id="prevAr" dir="rtl" style="margin:-6px 0 12px;text-align:right">${t.title&&PREV_MAP[t.title]?esc(PREV_MAP[t.title].ar):""}</p>`
+    : `<label class="f"><span>What needs doing? <small>English or العربية</small></span><input name="title" dir="auto" required maxlength="120" value="${esc(t.title)}" placeholder="e.g. Fix shower drain / تصليح مصرف الدوش" ${dis}></label>
+       <div class="f ar-box ${hasArabic(t.title)?"hidden":""}" id="titleArBox"><span>Arabic for the report <small>— filled in automatically, correct it if needed</small></span>
+         <div class="ar-row"><input name="titleAr" dir="rtl" maxlength="160" value="${esc(t.titleAr||"")}" placeholder="الترجمة العربية" ${dis}>${ro?"":`<button type="button" class="btn" id="trTitle" title="Suggest Arabic again">↻</button>`}</div>
+         <small class="ar-hint" id="titleArHint"></small></div>`;
   const heading = task ? (ro ? (prev?"Preventive check":"Task details") : (prev?"Edit preventive check":"Edit task")) : (prev?"New preventive check":"New task");
   $("sheetHost").innerHTML = `<div class="scrim" id="scrim"><form class="sheet" id="form" novalidate>
     <div class="eyebrow">${prev?"Preventive maintenance":"Maintenance task"}</div>
@@ -570,12 +578,17 @@ function openSheet(task, kind){
       <label class="f"><span>Priority</span><select name="priority" ${dis}>${opts(PRIO,t.priority||"normal")}</select></label>
     </div>
     <label class="f"><span>Notes</span><textarea name="notes" dir="auto" rows="3" maxlength="600" placeholder="Details, parts needed… / تفاصيل" ${dis}>${esc(t.notes)}</textarea></label>
+    <div class="f ar-box ${t.notes&&!hasArabic(t.notes)?"":"hidden"}" id="notesArBox"><span>Notes in Arabic for the report</span>
+      <div class="ar-row"><textarea name="notesAr" dir="rtl" rows="2" maxlength="800" placeholder="الملاحظات بالعربية" ${dis}>${esc(t.notesAr||"")}</textarea>${ro?"":`<button type="button" class="btn" id="trNotes" title="Suggest Arabic again">↻</button>`}</div>
+      <small class="ar-hint" id="notesArHint"></small></div>
     <div class="sec-label">Responsibility</div>
     <div class="row">
-      <label class="f"><span>Executed by</span><select name="assignee" ${dis}>${optList(S.workers, t.assignee||"", "Choose who does it…")}</select></label>
-      <label class="f"><span>Checked by</span><select name="checkedBy" ${dis}>${optList(checkers(), t.checkedBy||"", "Choose who checks it…")}</select></label>
+      <label class="f"><span>Executed by</span><input name="assignee" list="dlExec" dir="auto" maxlength="60" autocomplete="off" value="${esc(t.assignee||"")}" placeholder="Type a name…" ${dis}></label>
+      <label class="f"><span>Checked by</span><input name="checkedBy" list="dlCheck" dir="auto" maxlength="60" autocomplete="off" value="${esc(t.checkedBy||"")}" placeholder="Type a name…" ${dis}></label>
+      <datalist id="dlExec">${S.workers.map(w=>`<option value="${esc(w)}">`).join("")}</datalist>
+      <datalist id="dlCheck">${checkers().map(w=>`<option value="${esc(w)}">`).join("")}</datalist>
     </div>
-    ${!S.workers.length && isAdmin() ? `<p class="note" style="margin:-4px 0 12px">No maintenance workers yet. Tap <b>Team</b> at the top to add them.</p>` : ""}
+    ${!S.workers.length && isAdmin() ? `<p class="note" style="margin:-4px 0 12px">Tip: add your maintenance workers under <b>Team</b> so their names are suggested and the task shows on their phone.</p>` : ""}
     <div class="actions">
       ${task && isAdmin() ? `<button type="button" class="btn del" id="delBtn">Delete</button>` : ""}
       <span class="grow"></span>
@@ -590,7 +603,31 @@ function openSheet(task, kind){
   f.urgent.onchange = ()=>{ f.priority.value = f.urgent.checked ? "urgent" : (f.priority.value==="urgent" ? "normal" : f.priority.value); };
   f.priority.onchange = ()=>{ f.urgent.checked = f.priority.value==="urgent"; };
   // Preventive checks fill in the Type automatically
-  if (prev && !ro) f.title.onchange = ()=>{ const p = PREV_MAP[f.title.value]; if (p) f.category.value = p.cat; };
+  if (prev && !ro) f.title.onchange = ()=>{ const p = PREV_MAP[f.title.value]; if (p){ f.category.value = p.cat; $("prevAr").textContent = p.ar; } };
+  // Arabic suggestions for the report (dictionary first, machine translation as a fallback)
+  if (!prev && !ro){
+    const auto = {title: t.titleAr||"", notes: t.notesAr||""};
+    async function suggest(which, force){
+      const en = f[which].value.trim(), box = $(which+"ArBox"), inp = f[which+"Ar"], hint = $(which+"ArHint");
+      const arabicTyped = hasArabic(en);
+      box.classList.toggle("hidden", !en || arabicTyped);
+      if (!en || arabicTyped) return;
+      if (!force && inp.value.trim() && inp.value.trim()!==auto[which]) return; // keep the user's own correction
+      const g = glossaryAr(en);
+      let out = g, src = g ? "dict" : "";
+      if (!g){ hint.textContent = "Translating…"; out = await translateOne(en); src = out ? "machine" : "none"; }
+      if (f[which].value.trim()!==en) return; // text changed meanwhile
+      if (out){ inp.value = out; auto[which] = out; }
+      hint.textContent = src==="dict" ? "✓ From the maintenance dictionary" : src==="machine" ? "Machine translation — please check it and correct if needed" : "Couldn't translate automatically. Type the Arabic yourself.";
+      hint.className = "ar-hint " + (src==="dict" ? "ok" : "warn");
+    }
+    let tm = {};
+    ["title","notes"].forEach(w=>{ f[w].addEventListener("input", ()=>{ clearTimeout(tm[w]); tm[w] = setTimeout(()=>suggest(w,false), 700); }); });
+    $("trTitle").onclick = ()=>suggest("title", true);
+    $("trNotes").onclick = ()=>suggest("notes", true);
+    if (t.title && !t.titleAr) suggest("title", false);
+    if (t.notes && !t.notesAr) suggest("notes", false);
+  }
   if ($("delBtn")) $("delBtn").onclick = async ()=>{
     const msg = task.repeat && task.repeat!=="none" ? "Delete this repeating task from every day?" : "Delete this task?";
     if (!confirm(msg)) return;
@@ -602,7 +639,9 @@ function openSheet(task, kind){
     if (!title){ f.title.focus(); toast(prev ? "Choose a preventive check." : "Give the task a name."); return; }
     if (!f.date.value){ f.date.focus(); toast("Pick a date."); return; }
     const body = { title, taskType: prev?"preventive":"task", category:f.category.value, priority:f.priority.value,
-      location:f.location.value, assignee:f.assignee.value, checkedBy:f.checkedBy.value,
+      location:f.location.value, assignee:canonName(f.assignee.value, S.workers), checkedBy:canonName(f.checkedBy.value, checkers()),
+      titleAr: (!prev && f.titleAr && !hasArabic(title)) ? f.titleAr.value.trim() : "",
+      notesAr: (!prev && f.notesAr && f.notes.value.trim() && !hasArabic(f.notes.value)) ? f.notesAr.value.trim() : "",
       date:f.date.value, time:f.time.value, repeat:f.repeat.value, notes:f.notes.value.trim() };
     try{
       if (task) await S.db.collection("tasks").doc(task.id).update(body);
@@ -686,6 +725,85 @@ function applyTeam(data){
 }
 
 
+/* ---------- Maintenance dictionary (English → Arabic) ----------
+   Used first, before any machine translation. Add words here to improve the Arabic. */
+const AR_NOUNS = {
+  "shower drain":"مصرف الدوش","sink drain":"مصرف المغسلة","floor drain":"مصرف الأرض","bathtub drain":"مصرف البانيو","drain":"المصرف","drainage":"التصريف",
+  "shower head":"رأس الدوش","shower hose":"خرطوم الدوش","shower mixer":"خلاط الدوش","shower door":"باب الدوش","shower glass":"زجاج الدوش","shower":"الدوش",
+  "toilet":"المرحاض","wc":"المرحاض","toilet seat":"غطاء المرحاض","toilet flush":"سيفون المرحاض","flush":"السيفون","bidet":"الشطّاف",
+  "sink":"المغسلة","basin":"المغسلة","tap":"الحنفية","faucet":"الحنفية","mixer":"الخلاط","water heater":"سخّان المياه","boiler":"سخّان المياه",
+  "pipe":"الأنبوب","pipes":"الأنابيب","water pipe":"أنبوب المياه","leak":"التسريب","water leak":"تسريب المياه","bathtub":"البانيو","bath":"البانيو",
+  "towel rail":"علّاقة المناشف","towel holder":"علّاقة المناشف","toilet paper holder":"حامل ورق المرحاض","soap dispenser":"موزّع الصابون","mirror":"المرآة",
+  "light":"الضوء","lights":"الأضواء","light bulb":"اللمبة","bulb":"اللمبة","lamp":"اللمبة","bedside lamp":"لمبة السرير","spot light":"السبوت","spotlight":"السبوت",
+  "socket":"المقبس الكهربائي","plug":"المقبس الكهربائي","switch":"مفتاح الكهرباء","light switch":"مفتاح الضوء","electricity":"الكهرباء","power":"الكهرباء",
+  "ac":"المكيّف","a/c":"المكيّف","air conditioner":"المكيّف","air conditioning":"المكيّف","ac remote":"ريموت المكيّف","ac filter":"فلتر المكيّف","ac filters":"فلاتر المكيّف","ac unit":"وحدة المكيّف","remote batteries":"بطاريات الريموت","tv remote batteries":"بطاريات ريموت التلفزيون","ac remote batteries":"بطاريات ريموت المكيّف","remote":"الريموت","tv remote":"ريموت التلفزيون",
+  "tv":"التلفزيون","television":"التلفزيون","heater":"المدفأة","heating":"التدفئة","radiator":"الرادياتير","thermostat":"منظّم الحرارة","fan":"المروحة","exhaust fan":"الشفّاط",
+  "door":"الباب","door handle":"مقبض الباب","handle":"المقبض","lock":"القفل","door lock":"قفل الباب","key card":"بطاقة الغرفة","card reader":"قارئ البطاقة","hinge":"المفصّلة",
+  "door stopper":"مصدّ الباب","window":"الشبّاك","window handle":"مقبض الشبّاك","curtain":"الستارة","curtains":"الستائر","curtain rail":"سكّة الستارة","blinds":"الستائر",
+  "bed":"السرير","mattress":"الفرشة","pillow":"المخدّة","headboard":"رأس السرير","chair":"الكرسي","table":"الطاولة","desk":"المكتب","sofa":"الكنبة",
+  "wardrobe":"الخزانة","closet":"الخزانة","drawer":"الجارور","shelf":"الرف","hanger":"العلّاقة","hangers":"العلّاقات","safe":"الخزنة","minibar":"الميني بار","fridge":"البرّاد",
+  "kettle":"الغلّاية","hair dryer":"مجفّف الشعر","phone":"الهاتف","telephone":"الهاتف","wifi":"الواي فاي","internet":"الإنترنت","router":"الراوتر",
+  "wall":"الحائط","ceiling":"السقف","floor":"الأرضية","tiles":"البلاط","tile":"البلاطة","grout":"الترويب","paint":"الدهان","silicone":"السيليكون","wood":"الخشب","glass":"الزجاج",
+  "elevator":"المصعد","lift":"المصعد","generator":"المولّد","pump":"المضخّة","water pump":"مضخّة المياه","pool pump":"مضخّة المسبح","filter":"الفلتر","water tank":"خزّان المياه",
+  "smoke detector":"كاشف الدخان","fire extinguisher":"طفّاية الحريق","fire alarm":"إنذار الحريق","emergency light":"ضوء الطوارئ","camera":"الكاميرا",
+  "hot water":"المياه الساخنة","cold water":"المياه الباردة","water":"المياه","water pressure":"ضغط المياه","gas":"الغاز","gas bottle":"قارورة الغاز",
+  "garden":"الحديقة","plants":"النباتات","plant":"النبتة","grass":"العشب","tree":"الشجرة","trees":"الأشجار","jacuzzi":"الجاكوزي","pool":"المسبح","sauna":"الساونا",
+  "bathroom":"الحمّام","room":"الغرفة","balcony":"البلكون","terrace":"التراس","stairs":"الدرج","corridor":"الممر","hallway":"الممر","kitchen":"المطبخ","roof":"السطح",
+  "battery":"البطارية","batteries":"البطاريات","smell":"الرائحة","bad smell":"رائحة كريهة","noise":"الضجيج","mould":"العفن","mold":"العفن","stain":"البقعة","crack":"الشقّ"
+};
+const AR_VERBS = {
+  "fix":"تصليح","repair":"تصليح","replace":"تغيير","change":"تغيير","check":"فحص","inspect":"فحص","test":"فحص","clean":"تنظيف","unclog":"فتح انسداد",
+  "unblock":"فتح انسداد","paint":"دهان","repaint":"إعادة دهان","install":"تركيب","mount":"تركيب","tighten":"شدّ","adjust":"ضبط","service":"صيانة","maintain":"صيانة",
+  "remove":"إزالة","seal":"عزل","reseal":"إعادة عزل","refill":"إعادة تعبئة","fill":"تعبئة","charge":"شحن","move":"نقل","polish":"تلميع","oil":"تزييت","lubricate":"تزييت",
+  "reset":"إعادة ضبط","restart":"إعادة تشغيل","order":"طلب","buy":"شراء","descale":"إزالة الكلس من","disinfect":"تعقيم","spray":"رشّ","water":"ريّ","trim":"تقليم"
+};
+const AR_STATUS = {
+  "broken":n=>`${n} ${fem(n)?"معطّلة":"معطّل"}`, "not working":n=>`${n} ${fem(n)?"لا تعمل":"لا يعمل"}`, "doesnt work":n=>`${n} ${fem(n)?"لا تعمل":"لا يعمل"}`,
+  "leaking":n=>`تسريب في ${n}`, "leaks":n=>`تسريب في ${n}`, "leak":n=>`تسريب في ${n}`, "blocked":n=>`انسداد في ${n}`, "clogged":n=>`انسداد في ${n}`,
+  "noisy":n=>`ضجيج في ${n}`, "making noise":n=>`ضجيج في ${n}`, "loose":n=>`${n} ${fem(n)?"مرتخية":"مرتخٍ"}`, "dirty":n=>`${n} ${fem(n)?"متّسخة":"متّسخ"}`,
+  "cracked":n=>`شقّ في ${n}`, "stuck":n=>`${n} ${fem(n)?"عالقة":"عالق"}`, "missing":n=>`${n} ${fem(n)?"مفقودة":"مفقود"}`, "smells":n=>`رائحة كريهة في ${n}`
+};
+const fem = n => /ة$/.test((n||"").split(" ")[0]) || /ات$/.test((n||"").split(" ")[0]);
+const normEn = s => (s||"").toLowerCase().replace(/[’']/g,"").replace(/[.,!?;:()]/g," ").replace(/\s+/g," ").trim();
+function nounAr(w){
+  w = w.replace(/\b(the|a|an|some|all)\b/g," ").replace(/\s+/g," ").trim();
+  if (!w) return null;
+  if (AR_NOUNS[w]) return AR_NOUNS[w];
+  if (w.endsWith("s") && AR_NOUNS[w.slice(0,-1)]) return AR_NOUNS[w.slice(0,-1)];
+  const parts = w.split(" "); // "x and y"
+  const i = parts.indexOf("and");
+  if (i>0){ const a = nounAr(parts.slice(0,i).join(" ")), b = nounAr(parts.slice(i+1).join(" ")); if (a && b) return `${a} و${b}`; }
+  return null;
+}
+function placeAr(w){
+  w = w.replace(/\b(the)\b/g," ").replace(/\s+/g," ").trim();
+  const r = /^(?:room|rm)?\s*(\d{3})$/.exec(w); if (r) return `الغرفة ${r[1]}`;
+  const hit = LOC_ORDER.find(l=>l.toLowerCase()===w); if (hit) return locAr(hit);
+  return nounAr(w);
+}
+/* Returns accurate Arabic built from the dictionary, or "" if the sentence isn't understood */
+function glossaryAr(text){
+  let s = normEn(text).replace(/^(please|pls|kindly)\s+/,"");
+  if (!s) return "";
+  const exact = Object.keys(PREV_MAP).find(k=>k.toLowerCase()===s); if (exact) return PREV_MAP[exact].ar;
+  let place = "";
+  const m = / (?:in|at|on|for) (.+)$/.exec(s);
+  if (m){ const p = placeAr(m[1]); if (p){ place = ` في ${p}`; s = s.slice(0, m.index).trim(); } }
+  let out = null;
+  const words = s.split(" ");
+  // "fix shower drain", "check and fix ac"
+  const v = words[0], v3 = words.slice(0,3).join(" ");
+  if (/^(check and fix|check and repair|inspect and fix)$/.test(v3)){ const n = nounAr(words.slice(3).join(" ")); if (n) out = `فحص وتصليح ${n}`; }
+  if (!out && AR_VERBS[v] && words.length>1){ const n = nounAr(words.slice(1).join(" ")); if (n) out = `${AR_VERBS[v]} ${n}`; }
+  // "shower drain blocked", "ac not working", "broken lamp"
+  if (!out){ for (const st of Object.keys(AR_STATUS).sort((a,b)=>b.length-a.length)){
+      const suf = new RegExp(`^(.+?) (?:is |are )?${st}$`).exec(s), pre = new RegExp(`^${st} (.+)$`).exec(s);
+      const n = suf ? nounAr(suf[1]) : pre ? nounAr(pre[1]) : null;
+      if (n){ out = AR_STATUS[st](n); break; } } }
+  if (!out){ const n = nounAr(s); if (n) out = n; }
+  return out ? out + place : "";
+}
+
 /* ---------- Arabic translation for the report ---------- */
 const hasArabic = s => /[؀-ۿ]/.test(s||"");
 let TR = {}; try{ TR = JSON.parse(localStorage.getItem("mb_tr_v1")||"{}"); }catch(e){ TR = {}; }
@@ -699,6 +817,7 @@ async function translateOne(text){
   if (!text || hasArabic(text)) return text;
   if (PREV_MAP[text]) return PREV_MAP[text].ar;
   if (locAr(text)) return locAr(text);
+  const g = glossaryAr(text); if (g) return g;
   if (TR[text]) return TR[text];
   let out = "";
   try{ const j = await fetchJSON("https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ar&dt=t&q="+encodeURIComponent(text));
@@ -741,8 +860,8 @@ function reportHTML(k, by, AR){
     const enMeta = [dateTag, t.time, by==="worker" ? t.location : "", catLabel(t.category), t.repeat&&t.repeat!=="none" ? REPEAT[t.repeat] : ""].filter(Boolean).map(esc).join(" · ");
     const arMeta = [dateTag, t.time, by==="worker" ? (locAr(t.location)||ar(t.location)) : "", catAr(t.category), REPEAT_AR[t.repeat]||""].filter(Boolean).map(esc).join(" · ");
     const pills = (isUrgent(t)?`<span class="pill urg">URGENT · عاجل</span> `:"") + (isPrev(t)?`<span class="pill prev">Preventive · وقائي</span> `:"");
-    const titleAr = hasArabic(t.title) ? "" : ar(t.title);
-    const notesAr = t.notes && !hasArabic(t.notes) ? ar(t.notes) : "";
+    const titleAr = hasArabic(t.title) ? "" : (t.titleAr || ar(t.title));
+    const notesAr = t.notes && !hasArabic(t.notes) ? (t.notesAr || ar(t.notes)) : "";
     const ex = ok ? execName(t,k) : t.assignee;
     const sig = `<div class="r-sig">
       <span><bdi>Executed by · المنفّذ</bdi>: ${ex?`<b dir="auto">${esc(ex)}</b>`:`<i class="blank"></i>`}${ok?` <span style="color:var(--green)">✓ ${fmtTime(t.done[k].at)}</span>`:""}</span>
@@ -789,14 +908,14 @@ function reportText(k, by, AR){
   const line = (t, dateTag) => {
     const where = t.location ? ` @ ${bil(t.location, locAr(t.location)||ar(t.location))}` : "";
     const who = [t.assignee?`Executed by/المنفّذ: ${t.assignee}`:"", t.checkedBy?`Checked by/المدقّق: ${t.checkedBy}`:""].filter(Boolean).join(", ");
-    return `${isUrgent(t)?"🔴 URGENT عاجل – ":"- "}${dateTag?`[${dateTag}] `:""}${bil(t.title, hasArabic(t.title)?"":ar(t.title))}${t.time?` (${t.time})`:""}${where}${who?`\n   ${who}`:""}${t.notes?`\n   ${bil(t.notes, hasArabic(t.notes)?"":ar(t.notes))}`:""}`;
+    return `${isUrgent(t)?"🔴 URGENT عاجل – ":"- "}${dateTag?`[${dateTag}] `:""}${bil(t.title, hasArabic(t.title)?"":(t.titleAr||ar(t.title)))}${t.time?` (${t.time})`:""}${where}${who?`\n   ${who}`:""}${t.notes?`\n   ${bil(t.notes, hasArabic(t.notes)?"":(t.notesAr||ar(t.notes)))}`:""}`;
   };
   if (urgent.length){ L.push("", "*URGENT | عاجل*"); urgent.forEach(t=>L.push(line(t))); }
   if (carry.length){ L.push("", "*OVERDUE | متأخر*"); carry.forEach(t=>L.push(line(t, fromKey(t.date).toLocaleDateString(undefined,{day:"numeric",month:"short"})))); }
   L.push("", "*TO DO | المطلوب*");
   if (!normal.length) L.push("- Nothing else to do | لا توجد مهام أخرى");
   groupTasks(normal, by).forEach(([g,ts])=>{ L.push(`• ${bil(g, by==="worker"?"":(locAr(g)||ar(g)))}`); ts.forEach(t=>L.push(line(t))); });
-  if (done.length){ L.push("", "*DONE | منجز*"); done.forEach(t=>L.push(`✓ ${bil(t.title, hasArabic(t.title)?"":ar(t.title))} – ${execName(t,k)}${t.checkedBy?`, checked by ${t.checkedBy}`:""}`)); }
+  if (done.length){ L.push("", "*DONE | منجز*"); done.forEach(t=>L.push(`✓ ${bil(t.title, hasArabic(t.title)?"":(t.titleAr||ar(t.title)))} – ${execName(t,k)}${t.checkedBy?`, checked by ${t.checkedBy}`:""}`)); }
   return L.join("\n");
 }
 async function openReport(){
@@ -822,8 +941,8 @@ async function openReport(){
   // Collect every English text that needs Arabic (titles, notes, unknown places)
   const {all, carry} = reportData(k), texts = [];
   [...all, ...carry].forEach(t=>{
-    if (t.title && !hasArabic(t.title) && !PREV_MAP[t.title]) texts.push(t.title);
-    if (t.notes && !hasArabic(t.notes)) texts.push(t.notes);
+    if (t.title && !t.titleAr && !hasArabic(t.title) && !PREV_MAP[t.title]) texts.push(t.title);
+    if (t.notes && !t.notesAr && !hasArabic(t.notes)) texts.push(t.notes);
     if (t.location && !locAr(t.location)) texts.push(t.location);
   });
   const res = await translateMany(texts);
