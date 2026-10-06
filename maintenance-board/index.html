@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Maintenance Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E8EBEE; --panel:#FFFFFF; --ink:#18212B; --muted:#5E6975; --line:#CDD3D9;
+  --yellow:#F5C400; --yellow-ink:#18212B; --red:#C8361E; --green:#2E7D4F;
+  --c-plumbing:#2F6FB3; --c-electrical:#D99A00; --c-hvac:#2A9A9A; --c-cleaning:#7A5BB5; --c-grounds:#4E8A3A; --c-safety:#C8361E; --c-general:#6B7682;
+  --display:"Barlow Condensed","Noto Sans Arabic","Arial Narrow",Arial,sans-serif; --body:"Barlow","Noto Sans Arabic",system-ui,-apple-system,"Segoe UI",sans-serif;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --bg:#12171D; --panel:#1C232B; --ink:#E6EAEE; --muted:#9AA5B0; --line:#2E3842; --yellow-ink:#12171D; --red:#F06A4F; --green:#5CC28A;
+}}
+:root[data-theme="dark"]{ --bg:#12171D; --panel:#1C232B; --ink:#E6EAEE; --muted:#9AA5B0; --line:#2E3842; --yellow-ink:#12171D; --red:#F06A4F; --green:#5CC28A; }
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.hidden{display:none!important}
+.tape{height:10px;background:repeating-linear-gradient(-45deg,var(--yellow) 0 14px,var(--ink) 14px 28px)}
+
+/* Gate */
+#gate{min-height:100vh;display:flex;flex-direction:column}
+.gate-body{flex:1;display:flex;align-items:center;justify-content:center;padding:32px 20px}
+.gate-card{width:100%;max-width:420px}
+.gate-card h1{font-family:var(--display);font-weight:700;font-size:clamp(48px,13vw,72px);line-height:.92;margin:0 0 12px;letter-spacing:-.5px}
+.gate-card .f input{background:var(--panel)}
+.gate-card p{color:var(--muted);margin:0 0 28px;max-width:34ch}
+.btn{border:0;border-radius:8px;padding:12px 18px;font-weight:600;background:var(--panel);border:1px solid var(--line)}
+.btn-main{background:var(--yellow);color:var(--yellow-ink);border:0;font-family:var(--display);font-size:22px;letter-spacing:.3px;width:100%;padding:14px}
+.btn-main:disabled{opacity:.5;cursor:default}
+.btn-y{background:var(--yellow);color:var(--yellow-ink);border:0}
+.note{font-size:14px;color:var(--muted);margin-top:14px}
+
+/* App shell */
+header.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--ink);color:var(--bg)}
+.bar-in{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:10px;padding:10px 16px}
+.bar h2{font-family:var(--display);font-size:24px;margin:0;flex:1;font-weight:700;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.live{display:inline-flex;align-items:center;gap:6px;font-size:13px;opacity:.85}
+.live i{width:8px;height:8px;border-radius:50%;background:var(--yellow);animation:pulse 2s infinite}
+@media (prefers-reduced-motion:reduce){.live i{animation:none}}
+@media (max-width:480px){.live{display:none}}
+@keyframes pulse{50%{opacity:.3}}
+.me-btn{display:flex;align-items:center;gap:8px;background:transparent;border:1px solid rgba(255,255,255,.25);color:inherit;border-radius:20px;padding:5px 12px;font-size:14px;white-space:nowrap}
+main{max-width:1100px;margin:0 auto;padding:16px;display:grid;gap:16px;grid-template-columns:1fr}
+@media (min-width:900px){ main{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);align-items:start} .day{position:sticky;top:76px} }
+section.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+
+/* Calendar */
+.cal-head{display:flex;align-items:center;gap:8px;padding:14px 14px 8px}
+.cal-head h3{font-family:var(--display);font-size:28px;margin:0;flex:1;font-weight:600}
+.nav{width:40px;height:40px;border-radius:8px;border:1px solid var(--line);background:transparent;font-size:20px;line-height:1}
+.today-btn{height:40px;padding:0 12px;border-radius:8px;border:1px solid var(--line);background:transparent;font-weight:600;font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.dow{background:var(--panel);text-align:center;font-size:12px;color:var(--muted);padding:6px 0;font-weight:600}
+.cell{background:var(--panel);border:0;min-height:64px;padding:6px 4px 6px;text-align:left;display:flex;flex-direction:column;gap:4px;position:relative;border-radius:0}
+@media (min-width:600px){.cell{min-height:86px;padding:8px 6px}}
+.cell.out{opacity:.38}
+.cell .n{font-family:var(--display);font-size:18px;font-weight:600;line-height:1;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.cell.today .n{background:var(--yellow);color:var(--yellow-ink)}
+.cell.sel{box-shadow:inset 0 0 0 3px var(--ink)}
+.bars{display:flex;flex-wrap:wrap;gap:2px}
+.bars b{display:block;height:5px;width:10px;border-radius:2px}
+.bars b.done{opacity:.3}
+.cnt{font-size:11px;color:var(--muted);margin-top:auto}
+.cell.late .cnt{color:var(--red);font-weight:600}
+.cell.clear .cnt{color:var(--green);font-weight:600}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;padding:10px 14px 14px;font-size:13px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend b{width:10px;height:10px;border-radius:2px;display:inline-block}
+
+/* Day panel */
+.day-head{padding:16px 16px 10px;display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.day-head h3{font-family:var(--display);font-size:30px;line-height:1;margin:0;font-weight:700}
+.day-head p{margin:4px 0 0;color:var(--muted);font-size:14px}
+.day-acts{margin-left:auto;display:flex;gap:8px}
+.add{background:var(--yellow);color:var(--yellow-ink);border:0;border-radius:8px;padding:10px 14px;font-weight:600;white-space:nowrap}
+.rep{background:transparent;border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-weight:600;white-space:nowrap}
+.meter{height:6px;background:var(--line);margin:0 16px 8px;border-radius:3px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--green);transition:width .3s}
+.tabs{display:flex;gap:6px;padding:4px 16px 10px;flex-wrap:wrap;align-items:center}
+.tabs button{border:1px solid var(--line);background:transparent;border-radius:16px;padding:4px 12px;font-size:14px}
+.tabs button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.who-sel{margin-left:auto;border:1px solid var(--line);background:transparent;border-radius:16px;padding:4px 10px;font-size:14px;max-width:48%}
+ul.tasks{list-style:none;margin:0;padding:0}
+.task{display:flex;gap:12px;padding:12px 16px;border-top:1px solid var(--line);align-items:flex-start}
+.task.is-done .t-title{text-decoration:line-through;color:var(--muted)}
+.chk{flex:none;width:30px;height:30px;border-radius:6px;border:2px solid var(--muted);background:transparent;display:flex;align-items:center;justify-content:center;padding:0;margin-top:1px}
+.chk svg{width:18px;height:18px;opacity:0}
+.task.is-done .chk{background:var(--green);border-color:var(--green);color:#fff}
+.task.is-done .chk svg{opacity:1}
+.t-main{flex:1;min-width:0;background:transparent;border:0;text-align:start;padding:0}
+.t-title{font-weight:600;display:block}
+.t-meta{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:13px;color:var(--muted);margin-top:2px}
+.t-notes{display:block;font-size:13px;color:var(--muted);margin-top:2px}
+.tag{display:inline-flex;align-items:center;gap:5px}
+.tag b{width:8px;height:8px;border-radius:2px;display:inline-block}
+.person{color:var(--ink);font-weight:600}
+.urgent{color:var(--red);font-weight:600}
+.by{font-size:13px;color:var(--green);margin-top:3px}
+.empty{padding:28px 16px 32px;color:var(--muted);border-top:1px solid var(--line)}
+.empty strong{display:block;color:var(--ink);font-size:17px;margin-bottom:4px}
+.ro{margin:0 16px 12px;padding:10px 12px;border-radius:8px;background:var(--bg);font-size:14px;color:var(--muted)}
+
+/* Sheet */
+.scrim{position:fixed;inset:0;background:rgba(10,14,18,.55);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+@media (min-width:640px){.scrim{align-items:center}}
+.sheet{background:var(--panel);width:100%;max-width:520px;max-height:92vh;overflow:auto;border-radius:14px 14px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom,0px))}
+.sheet.wide{max-width:720px}
+@media (min-width:640px){.sheet{border-radius:14px}}
+.sheet h3{font-family:var(--display);font-size:28px;margin:0 0 14px;font-weight:700}
+.sheet .lead{color:var(--muted);font-size:14px;margin:-8px 0 14px}
+.f{display:block;margin-bottom:12px}
+.f span{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.f input,.f select,.f textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);font-size:16px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.actions{display:flex;gap:10px;margin-top:6px;flex-wrap:wrap}
+.actions .grow{flex:1}
+.del{background:transparent;border:1px solid var(--red);color:var(--red)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;z-index:30;font-size:14px;max-width:90vw}
+
+/* Team */
+.w-add{display:flex;gap:8px;margin-bottom:12px}
+.w-add input{flex:1;min-width:0;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);font-size:16px}
+ul.wlist{list-style:none;margin:0 0 12px;padding:0;border-top:1px solid var(--line)}
+ul.wlist li{display:flex;align-items:center;gap:10px;padding:10px 2px;border-bottom:1px solid var(--line)}
+ul.wlist li span{flex:1;font-weight:600}
+ul.wlist li small{color:var(--muted);font-size:13px}
+.x{background:transparent;border:1px solid var(--line);border-radius:6px;padding:4px 10px;font-size:13px;color:var(--red)}
+
+/* Report */
+.r-ctrl{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px;font-size:14px}
+.r-ctrl select{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:6px 10px}
+.report{border:1px solid var(--line);border-radius:10px;padding:16px}
+.r-hotel{font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-weight:600}
+.r-title{font-family:var(--display);font-size:30px;font-weight:700;line-height:1.05;margin:2px 0}
+.r-date{color:var(--muted);font-size:15px}
+.r-sum{display:flex;gap:16px;flex-wrap:wrap;margin:12px 0 4px;font-size:14px}
+.r-sum b{font-family:var(--display);font-size:22px;margin-right:4px}
+.r-sec{font-family:var(--display);font-size:22px;font-weight:700;margin:18px 0 4px;padding-bottom:4px;border-bottom:2px solid var(--ink)}
+.r-grp{font-weight:700;font-size:15px;margin:12px 0 2px}
+.report ul{list-style:none;margin:0;padding:0}
+.r-item{display:flex;gap:10px;padding:6px 0;border-bottom:1px dashed var(--line)}
+.r-box{flex:none;width:16px;height:16px;border:2px solid var(--muted);border-radius:3px;margin-top:3px}
+.r-item.ok .r-box{background:var(--green);border-color:var(--green)}
+.r-t{font-weight:600}
+.r-m{font-size:13px;color:var(--muted)}
+.r-none{color:var(--muted);font-size:14px;padding:6px 0}
+.r-sign{display:flex;gap:24px;margin-top:28px;font-size:13px;color:var(--muted)}
+.r-sign div{flex:1;border-top:1px solid var(--muted);padding-top:4px}
+
+@media print{
+  @page{margin:14mm}
+  body{background:#fff!important}
+  #gate,#app,#toast,.no-print{display:none!important}
+  .scrim{position:static;background:none;display:block}
+  .sheet{max-width:none!important;max-height:none;overflow:visible;padding:0;border-radius:0;background:#fff}
+  .report{border:0;padding:0;color:#000}
+  .report .r-m,.report .r-date,.report .r-hotel,.report .r-none,.report .r-sign{color:#444}
+  .r-sec{border-color:#000}
+  .r-item{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<!-- Sign-in gate -->
+<div id="gate">
+  <div class="tape"></div>
+  <div class="gate-body">
+    <div class="gate-card">
+      <h1>Maintenance<br>Board</h1>
+      <p>Daily jobs, checks and repairs for the whole team, on one live calendar.</p>
+      <form id="login" novalidate>
+        <label class="f"><span>Email</span><input type="email" name="email" autocomplete="username" required></label>
+        <label class="f"><span>Password</span><input type="password" name="pw" autocomplete="current-password" required></label>
+        <button class="btn btn-main" id="enter" type="submit">Log in</button>
+      </form>
+      <button class="note" id="forgot" type="button" style="background:none;border:0;padding:0;text-decoration:underline">Forgot password?</button>
+      <div class="note" id="gateNote">Ask your manager for an account if you don't have one.</div>
+    </div>
+  </div>
+  <div class="tape"></div>
+</div>
+
+<!-- App -->
+<div id="app" class="hidden">
+  <header class="bar"><div class="bar-in">
+    <h2>Maintenance Board</h2>
+    <span class="live"><i></i>Live</span>
+    <button class="me-btn" id="teamBtn">Team</button>
+    <button class="me-btn" id="meBtn" title="Log out"><span id="meName"></span></button>
+  </div></header>
+  <main>
+    <section class="card">
+      <div class="cal-head">
+        <h3 id="monthLabel"></h3>
+        <button class="today-btn" id="toToday">Today</button>
+        <button class="nav" id="prev" aria-label="Previous month">‹</button>
+        <button class="nav" id="next" aria-label="Next month">›</button>
+      </div>
+      <div class="grid" id="grid"></div>
+      <div class="legend" id="legend"></div>
+    </section>
+    <section class="card day">
+      <div class="day-head">
+        <div><h3 id="dayTitle"></h3><p id="daySub"></p></div>
+        <div class="day-acts">
+          <button class="rep" id="reportBtn">Daily report</button>
+          <button class="add" id="addBtn">+ Add task</button>
+        </div>
+      </div>
+      <div class="meter"><i id="meter" style="width:0"></i></div>
+      <div class="ro hidden" id="roNote">You can view tasks but not change them. Ask the board owner to give you Contributor access.</div>
+      <div class="tabs" role="group" aria-label="Filter">
+        <button data-f="all" aria-pressed="true">All</button>
+        <button data-f="open" aria-pressed="false">To do</button>
+        <button data-f="done" aria-pressed="false">Done</button>
+        <select class="who-sel" id="whoSel" aria-label="Show tasks for"></select>
+      </div>
+      <ul class="tasks" id="list"></ul>
+    </section>
+  </main>
+</div>
+
+<div id="sheetHost"></div>
+<div class="toast hidden" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+/* ===== PASTE YOUR FIREBASE CONFIG HERE (Project settings > Your apps > Web app) ===== */
+const firebaseConfig = {
+  apiKey: "AIzaSyAlZb7QoRqHYz1YBuvTwnK6nCnldv-nwbo",
+  authDomain: "maintenance-board-f3157.firebaseapp.com",
+  projectId: "maintenance-board-f3157",
+  storageBucket: "maintenance-board-f3157.firebasestorage.app",
+  messagingSenderId: "493843988836",
+  appId: "1:493843988836:web:de34d3d0fcd4bccfe97a71"
+};
+/* ================================================================================== */
+const HOTEL = "Serab Residencia";
+const CATS = {
+  general:{label:"General",c:"--c-general"}, plumbing:{label:"Plumbing",c:"--c-plumbing"},
+  electrical:{label:"Electrical",c:"--c-electrical"}, hvac:{label:"Heating & AC",c:"--c-hvac"},
+  cleaning:{label:"Cleaning",c:"--c-cleaning"}, grounds:{label:"Grounds",c:"--c-grounds"},
+  safety:{label:"Safety check",c:"--c-safety"}
+};
+const REPEAT = {none:"Does not repeat", daily:"Every day", weekdays:"Weekdays (Mon–Fri)", weekly:"Every week", monthly:"Every month"};
+
+/* ----- Places (edit this list to add or rename rooms) ----- */
+const rooms = f => Array.from({length:10}, (_,i)=>`Room ${f}${String(i+1).padStart(2,"0")}`);
+const LOC_GROUPS = [
+  {label:"Floor 1", items:[...rooms(1), "Hallway Floor 1"]},
+  {label:"Floor 2", items:[...rooms(2), "Hallway Floor 2"]},
+  {label:"Floor 3", items:[...rooms(3), "Hallway Floor 3"]},
+  {label:"Other areas", items:["Spa Room M", "Lobby GF", "Parking -1", "Breakfast Area", "Pool / Outdoor Area"]}
+];
+const LOC_ORDER = LOC_GROUPS.flatMap(g=>g.items);
+
+/* The team list is stored as one special document inside the "tasks" collection,
+   so it works with the Firestore rules you already have. */
+const TEAM_ID = "_team_settings";
+
+const S = { db:null, user:null, uid:null, tasks:[], workers:[], month:null, sel:null, filter:"all", who:"", canWrite:true, ready:false };
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pad = n => String(n).padStart(2,"0");
+const keyOf = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const fromKey = k => { const [y,m,d] = k.split("-").map(Number); return new Date(y,m-1,d); };
+const todayKey = () => keyOf(new Date());
+const color = cat => `var(${(CATS[cat]||CATS.general).c})`;
+const catLabel = cat => (CATS[cat]||CATS.general).label;
+const locRank = l => { const i = LOC_ORDER.indexOf(l); return i<0 ? 999 : i; };
+
+function toast(msg){ const t=$("toast"); t.textContent=msg; t.classList.remove("hidden"); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.add("hidden"),3200); }
+
+function occurs(t, k){
+  if (!t.date || k < t.date) return false;
+  const d = fromKey(k), s = fromKey(t.date);
+  switch(t.repeat){
+    case "daily": return true;
+    case "weekdays": return d.getDay()>0 && d.getDay()<6;
+    case "weekly": return d.getDay()===s.getDay();
+    case "monthly": return d.getDate()===s.getDate();
+    default: return k===t.date;
+  }
+}
+const isDone = (t,k) => !!(t.done && t.done[k]);
+const byTime = (a,b) => { const rank={urgent:0,normal:1,low:2};
+  return (a.time||"99")<(b.time||"99")?-1:(a.time||"99")>(b.time||"99")?1:(rank[a.priority]??1)-(rank[b.priority]??1); };
+function tasksOn(k){ return S.tasks.filter(t=>occurs(t,k)).sort(byTime); }
+const forWho = t => !S.who || (S.who==="__none" ? !t.assignee : t.assignee===S.who);
+
+/* ---------- Calendar ---------- */
+function renderCalendar(){
+  const m = S.month, today = todayKey();
+  $("monthLabel").textContent = m.toLocaleDateString(undefined,{month:"long",year:"numeric"});
+  const first = new Date(m.getFullYear(), m.getMonth(), 1);
+  const offset = (first.getDay()+6)%7; // Monday first
+  const start = new Date(first); start.setDate(1-offset);
+  let html = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(d=>`<div class="dow">${d}</div>`).join("");
+  for (let i=0;i<42;i++){
+    const d = new Date(start); d.setDate(start.getDate()+i);
+    const k = keyOf(d), list = tasksOn(k).filter(forWho), done = list.filter(t=>isDone(t,k)).length;
+    const cls = ["cell"];
+    if (d.getMonth()!==m.getMonth()) cls.push("out");
+    if (k===today) cls.push("today");
+    if (k===S.sel) cls.push("sel");
+    if (list.length && k<today && done<list.length) cls.push("late");
+    if (list.length && done===list.length) cls.push("clear");
+    const bars = list.slice(0,8).map(t=>`<b class="${isDone(t,k)?"done":""}" style="background:${color(t.category)}"></b>`).join("");
+    const cnt = list.length ? (done===list.length ? "✓ all done" : `${done}/${list.length}`) : "";
+    html += `<button class="${cls.join(" ")}" data-k="${k}" aria-label="${d.toDateString()}, ${list.length} tasks, ${done} done"><span class="n">${d.getDate()}</span><span class="bars">${bars}</span><span class="cnt">${cnt}</span></button>`;
+  }
+  $("grid").innerHTML = html;
+}
+function renderLegend(){
+  $("legend").innerHTML = Object.values(CATS).map(c=>`<span><b style="background:var(${c.c})"></b>${c.label}</span>`).join("");
+}
+function renderWhoSel(){
+  const s = $("whoSel");
+  if (S.who && S.who!=="__none" && !S.workers.includes(S.who)) S.who = "";
+  s.innerHTML = `<option value="">Everyone</option>` +
+    S.workers.map(w=>`<option value="${esc(w)}" ${w===S.who?"selected":""}>${esc(w)}</option>`).join("") +
+    `<option value="__none" ${S.who==="__none"?"selected":""}>Not assigned</option>`;
+  s.value = S.who;
+}
+
+/* ---------- Day panel ---------- */
+function renderDay(){
+  const k = S.sel, d = fromKey(k), today = todayKey();
+  const rel = k===today ? "Today" : (k===keyOf(new Date(Date.now()+864e5)) ? "Tomorrow" : (k===keyOf(new Date(Date.now()-864e5)) ? "Yesterday" : null));
+  $("dayTitle").textContent = rel || d.toLocaleDateString(undefined,{weekday:"long"});
+  const all = tasksOn(k).filter(forWho), done = all.filter(t=>isDone(t,k)).length;
+  $("daySub").textContent = d.toLocaleDateString(undefined,{weekday:rel?"long":undefined,day:"numeric",month:"long"}) + (all.length ? `, ${done} of ${all.length} done` : "");
+  $("meter").style.width = all.length ? (done/all.length*100)+"%" : "0";
+  $("addBtn").classList.toggle("hidden", !S.canWrite);
+  $("roNote").classList.toggle("hidden", S.canWrite);
+  document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-pressed", b.dataset.f===S.filter));
+  const list = all.filter(t => S.filter==="all" || (S.filter==="done" ? isDone(t,k) : !isDone(t,k)));
+  if (!S.ready){ $("list").innerHTML = `<li class="empty">Loading tasks…</li>`; return; }
+  if (!list.length){
+    const msg = all.length ? (S.filter==="done" ? "<strong>Nothing finished yet</strong>Tick a task when it's done." : "<strong>Everything is done</strong>Nice work, team.")
+      : (S.canWrite ? "<strong>No tasks on this day</strong>Tap “Add task” to schedule a job or a daily check." : "<strong>No tasks on this day</strong>");
+    $("list").innerHTML = `<li class="empty">${msg}</li>`; return;
+  }
+  $("list").innerHTML = list.map(t=>{
+    const dn = isDone(t,k), info = dn ? t.done[k] : null;
+    const meta = [
+      t.time ? `<span>${esc(t.time)}</span>` : "",
+      t.location ? `<span>${esc(t.location)}</span>` : "",
+      t.assignee ? `<span class="person" dir="auto">${esc(t.assignee)}</span>` : "",
+      `<span class="tag"><b style="background:${color(t.category)}"></b>${esc(catLabel(t.category))}</span>`,
+      t.repeat && t.repeat!=="none" ? `<span>${esc(REPEAT[t.repeat])}</span>` : "",
+      t.priority==="urgent" ? `<span class="urgent">Urgent</span>` : ""
+    ].join("");
+    const by = info ? `<div class="by">Done by <bdi>${esc(info.by===S.uid ? "you" : (info.name || "a teammate"))}</bdi> at ${new Date(info.at).toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"})}</div>` : "";
+    return `<li class="task ${dn?"is-done":""}">
+      <button class="chk" data-done="${t.id}" aria-label="${dn?"Mark not done":"Mark done"}: ${esc(t.title)}" ${S.canWrite?"":"disabled"}>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></button>
+      <button class="t-main" data-open="${t.id}"><span class="t-title" dir="auto">${esc(t.title)}</span><span class="t-meta">${meta}</span>${t.notes?`<span class="t-notes" dir="auto">${esc(t.notes)}</span>`:""}${by}</button>
+    </li>`;
+  }).join("");
+}
+function render(){ renderCalendar(); renderDay(); }
+
+/* ---------- Writes ---------- */
+function writeFailed(e){
+  if (e && e.code==="permission-denied") toast("You don't have permission to change this.");
+  else toast("Couldn't save. Check your connection and try again.");
+}
+async function toggleDone(id){
+  const t = S.tasks.find(x=>x.id===id); if (!t) return;
+  const k = S.sel, done = Object.assign({}, t.done||{});
+  if (done[k]) delete done[k]; else done[k] = {by:S.uid, name:S.name, at:new Date().toISOString()};
+  try{ await S.db.collection("tasks").doc(id).update({done}); }catch(e){ writeFailed(e); }
+}
+async function saveWorkers(list){
+  try{ await S.db.collection("tasks").doc(TEAM_ID).set({kind:"team", workers:list, updatedAt:new Date().toISOString()}); return true; }
+  catch(e){ writeFailed(e); return false; }
+}
+
+/* ---------- Sheet helpers ---------- */
+const closeSheet = () => { $("sheetHost").innerHTML = ""; };
+function wireSheet(){
+  $("scrim").addEventListener("click", e=>{ if (e.target.id==="scrim") closeSheet(); });
+  document.addEventListener("keydown", function esc_(e){ if(e.key==="Escape"){ closeSheet(); document.removeEventListener("keydown",esc_);} });
+}
+
+/* ---------- Add / edit task ---------- */
+function openSheet(task){
+  const t = task || {title:"",category:"general",location:"",assignee:"",date:S.sel,time:"",repeat:"none",priority:"normal",notes:""};
+  const ro = !S.canWrite;
+  const opts = (obj,val,lab) => Object.entries(obj).map(([k,v])=>`<option value="${k}" ${k===val?"selected":""}>${esc(lab?v[lab]:v)}</option>`).join("");
+  const loc = t.location || "";
+  const locOpts = `<option value="">Choose a place…</option>` +
+    (loc && !LOC_ORDER.includes(loc) ? `<option value="${esc(loc)}" selected>${esc(loc)}</option>` : "") +
+    LOC_GROUPS.map(g=>`<optgroup label="${esc(g.label)}">${g.items.map(i=>`<option value="${esc(i)}" ${i===loc?"selected":""}>${esc(i)}</option>`).join("")}</optgroup>`).join("");
+  const who = t.assignee || "";
+  const whoOpts = `<option value="">Not assigned</option>` +
+    (who && !S.workers.includes(who) ? `<option value="${esc(who)}" selected>${esc(who)}</option>` : "") +
+    S.workers.map(w=>`<option value="${esc(w)}" ${w===who?"selected":""}>${esc(w)}</option>`).join("");
+  $("sheetHost").innerHTML = `<div class="scrim" id="scrim"><form class="sheet" id="form" novalidate>
+    <h3>${task ? (ro?"Task details":"Edit task") : "New task"}</h3>
+    <label class="f"><span>What needs doing? <small style="font-weight:400;color:var(--muted)">English or العربية</small></span><input name="title" dir="auto" required maxlength="120" value="${esc(t.title)}" placeholder="e.g. Fix shower leak / تصليح تسريب الدوش" ${ro?"disabled":""}></label>
+    <div class="row">
+      <label class="f"><span>Where</span><select name="location" ${ro?"disabled":""}>${locOpts}</select></label>
+      <label class="f"><span>Assigned to</span><select name="assignee" ${ro?"disabled":""}>${whoOpts}</select></label>
+    </div>
+    ${!S.workers.length && !ro ? `<p class="note" style="margin:-6px 0 12px">No workers yet. Tap <b>Team</b> at the top to add their names.</p>` : ""}
+    <div class="row">
+      <label class="f"><span>Type</span><select name="category" ${ro?"disabled":""}>${opts(CATS,t.category,"label")}</select></label>
+      <label class="f"><span>Priority</span><select name="priority" ${ro?"disabled":""}>${opts({low:"Low",normal:"Normal",urgent:"Urgent"},t.priority)}</select></label>
+    </div>
+    <div class="row">
+      <label class="f"><span>${t.repeat&&t.repeat!=="none"?"Starts on":"Date"}</span><input type="date" name="date" required value="${esc(t.date)}" ${ro?"disabled":""}></label>
+      <label class="f"><span>Time (optional)</span><input type="time" name="time" value="${esc(t.time)}" ${ro?"disabled":""}></label>
+    </div>
+    <label class="f"><span>Repeat</span><select name="repeat" ${ro?"disabled":""}>${opts(REPEAT,t.repeat||"none")}</select></label>
+    <label class="f"><span>Notes</span><textarea name="notes" dir="auto" rows="3" maxlength="600" placeholder="Details, parts needed… / تفاصيل" ${ro?"disabled":""}>${esc(t.notes)}</textarea></label>
+    <div class="actions">
+      ${task && !ro ? `<button type="button" class="btn del" id="delBtn">Delete</button>` : ""}
+      <span class="grow"></span>
+      <button type="button" class="btn" id="cancel">${ro?"Close":"Cancel"}</button>
+      ${ro ? "" : `<button type="submit" class="btn btn-y">${task?"Save changes":"Add task"}</button>`}
+    </div></form></div>`;
+  wireSheet();
+  $("cancel").onclick = closeSheet;
+  setTimeout(()=>{ const i=$("form").title; if(i && !ro) i.focus(); }, 50);
+  if ($("delBtn")) $("delBtn").onclick = async ()=>{
+    const msg = task.repeat && task.repeat!=="none" ? "Delete this repeating task from every day?" : "Delete this task?";
+    if (!confirm(msg)) return;
+    try{ await S.db.collection("tasks").doc(task.id).delete(); closeSheet(); toast("Task deleted"); }catch(e){ writeFailed(e); }
+  };
+  $("form").onsubmit = async e=>{
+    e.preventDefault();
+    const f = e.target, title = f.title.value.trim();
+    if (!title){ f.title.focus(); toast("Give the task a name."); return; }
+    if (!f.date.value){ f.date.focus(); toast("Pick a date."); return; }
+    const body = { title, category:f.category.value, priority:f.priority.value, location:f.location.value, assignee:f.assignee.value,
+      date:f.date.value, time:f.time.value, repeat:f.repeat.value, notes:f.notes.value.trim() };
+    try{
+      if (task) await S.db.collection("tasks").doc(task.id).update(body);
+      else await S.db.collection("tasks").add({...body, done:{}, createdBy:S.uid, createdAt:new Date().toISOString()});
+      closeSheet(); toast(task ? "Changes saved" : "Task added");
+      if (!task && body.date !== S.sel){ S.sel = body.date; const d=fromKey(body.date); S.month=new Date(d.getFullYear(),d.getMonth(),1); render(); }
+    }catch(err){ writeFailed(err); }
+  };
+}
+
+/* ---------- Team (worker names) ---------- */
+function openTeam(){
+  const ro = !S.canWrite;
+  $("sheetHost").innerHTML = `<div class="scrim" id="scrim"><div class="sheet" id="teamSheet">
+    <h3>Team</h3>
+    <p class="lead">The names of your maintenance workers. You can type them in English or Arabic.</p>
+    ${ro ? "" : `<form class="w-add" id="wForm" novalidate>
+      <input name="w" dir="auto" maxlength="40" placeholder="Worker name / اسم العامل" autocomplete="off">
+      <button class="btn btn-y" type="submit">Add</button></form>`}
+    <ul class="wlist" id="wList"></ul>
+    <div class="actions"><span class="grow"></span><button type="button" class="btn" id="cancel">Done</button></div>
+  </div></div>`;
+  wireSheet();
+  $("cancel").onclick = closeSheet;
+  renderTeamList();
+  if (!ro){
+    const f = $("wForm"); setTimeout(()=>f.w.focus(), 50);
+    f.onsubmit = async e=>{
+      e.preventDefault();
+      const name = f.w.value.trim().replace(/\s+/g," ");
+      if (!name){ f.w.focus(); return; }
+      if (S.workers.some(w=>w.toLowerCase()===name.toLowerCase())){ toast(`${name} is already on the team.`); return; }
+      const list = [...S.workers, name];
+      if (await saveWorkers(list)){ S.workers = list; f.w.value=""; f.w.focus(); renderTeamList(); renderWhoSel(); toast(`${name} added`); }
+    };
+  }
+}
+function renderTeamList(){
+  const ul = $("wList"); if (!ul) return;
+  if (!S.workers.length){ ul.innerHTML = `<li><small>No workers added yet.</small></li>`; return; }
+  const today = todayKey();
+  ul.innerHTML = S.workers.map((w,i)=>{
+    const n = tasksOn(today).filter(t=>t.assignee===w && !isDone(t,today)).length;
+    return `<li><span dir="auto">${esc(w)}</span><small>${n} open today</small>${S.canWrite?`<button class="x" data-rm="${i}">Remove</button>`:""}</li>`;
+  }).join("");
+  ul.onclick = async e=>{
+    const b = e.target.closest("[data-rm]"); if (!b) return;
+    const name = S.workers[+b.dataset.rm];
+    if (!confirm(`Remove ${name} from the team? Their existing tasks keep their name.`)) return;
+    const list = S.workers.filter((_,i)=>i!==+b.dataset.rm);
+    if (await saveWorkers(list)){ S.workers = list; renderTeamList(); renderWhoSel(); render(); }
+  };
+}
+
+/* ---------- Daily report ---------- */
+function reportData(k){
+  const all = tasksOn(k).filter(forWho);
+  const open = all.filter(t=>!isDone(t,k)), done = all.filter(t=>isDone(t,k));
+  // One-off tasks from the last 14 days that were never ticked off
+  const from = new Date(fromKey(k)); from.setDate(from.getDate()-14); const fk = keyOf(from);
+  const carry = S.tasks.filter(t=>(!t.repeat||t.repeat==="none") && t.date && t.date<k && t.date>=fk && !isDone(t,t.date) && forWho(t))
+    .sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:byTime(a,b));
+  return {all, open, done, carry};
+}
+function groupTasks(list, by){
+  const map = new Map();
+  for (const t of list){ const g = by==="worker" ? (t.assignee||"Not assigned") : (t.location||"No place set"); if(!map.has(g)) map.set(g,[]); map.get(g).push(t); }
+  const keys = [...map.keys()].sort((a,b)=> by==="worker"
+    ? (a==="Not assigned")-(b==="Not assigned") || a.localeCompare(b)
+    : locRank(a)-locRank(b) || a.localeCompare(b));
+  return keys.map(g=>[g, map.get(g)]);
+}
+function itemMeta(t, by, k, extra){
+  return [ extra||"", t.time||"", by==="worker" ? t.location : t.assignee, catLabel(t.category),
+    t.repeat&&t.repeat!=="none" ? REPEAT[t.repeat] : "", t.priority==="urgent" ? "URGENT" : "" ].filter(Boolean);
+}
+function reportHTML(k, by){
+  const {all, open, done, carry} = reportData(k);
+  const d = fromKey(k), urgent = open.filter(t=>t.priority==="urgent").length + carry.filter(t=>t.priority==="urgent").length;
+  const li = (t, ok, extra) => {
+    const m = itemMeta(t, by, k, extra).map(x=>x==="URGENT"?`<b style="color:var(--red)">Urgent</b>`:`<bdi>${esc(x)}</bdi>`).join(" · ");
+    const info = ok ? t.done[k] : null;
+    const doneBy = info ? ` · Done by <bdi>${esc(info.name||"teammate")}</bdi> ${new Date(info.at).toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"})}` : "";
+    return `<li class="r-item ${ok?"ok":""}"><span class="r-box"></span><div><div class="r-t" dir="auto">${esc(t.title)}</div><div class="r-m">${m}${doneBy}</div>${t.notes?`<div class="r-m" dir="auto">${esc(t.notes)}</div>`:""}</div></li>`;
+  };
+  const groups = list => list.length ? groupTasks(list, by).map(([g,ts])=>`<div class="r-grp" dir="auto">${esc(g)} <span style="color:var(--muted);font-weight:500">(${ts.length})</span></div><ul>${ts.map(t=>li(t,false)).join("")}</ul>`).join("") : `<div class="r-none">Nothing left to do.</div>`;
+  const whoLine = S.who ? ` · For: <bdi>${esc(S.who==="__none"?"Not assigned":S.who)}</bdi>` : "";
+  return `<div class="report" id="report">
+    <div class="r-hotel">${esc(HOTEL)} · Maintenance</div>
+    <div class="r-title">Daily Report <span style="font-weight:600">· التقرير اليومي</span></div>
+    <div class="r-date">${d.toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long",year:"numeric"})}${whoLine}</div>
+    <div class="r-sum"><span><b>${open.length}</b>to do</span><span><b>${done.length}</b>done</span>${carry.length?`<span><b>${carry.length}</b>overdue</span>`:""}<span><b style="color:var(--red)">${urgent}</b>urgent</span></div>
+    ${carry.length ? `<div class="r-sec">Overdue from earlier days</div><ul>${carry.map(t=>li(t,false,fromKey(t.date).toLocaleDateString(undefined,{day:"numeric",month:"short"}))).join("")}</ul>` : ""}
+    <div class="r-sec">To do · المطلوب</div>
+    ${groups(open)}
+    <div class="r-sec">Done · تم</div>
+    ${done.length ? `<ul>${done.map(t=>li(t,true)).join("")}</ul>` : `<div class="r-none">Nothing ticked off yet.</div>`}
+    <div class="r-sign"><div>Checked by</div><div>Signature</div></div>
+  </div>`;
+}
+function reportText(k, by){
+  const {open, done, carry} = reportData(k);
+  const d = fromKey(k), L = [];
+  L.push(`${HOTEL} – Maintenance daily report`);
+  L.push(d.toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long",year:"numeric"}) + (S.who ? ` – ${S.who==="__none"?"Not assigned":S.who}` : ""));
+  L.push(`To do: ${open.length} | Done: ${done.length}${carry.length?` | Overdue: ${carry.length}`:""}`);
+  const line = (t, extra) => `- ${t.title}` + (()=>{ const m=itemMeta(t,by,k,extra); return m.length?` (${m.join(", ")})`:""; })() + (t.notes?`\n   ${t.notes}`:"");
+  if (carry.length){ L.push("", "OVERDUE:"); carry.forEach(t=>L.push(line(t, fromKey(t.date).toLocaleDateString(undefined,{day:"numeric",month:"short"})))); }
+  L.push("", "TO DO:");
+  if (!open.length) L.push("- Nothing left to do");
+  groupTasks(open, by).forEach(([g,ts])=>{ L.push(`* ${g}`); ts.forEach(t=>L.push(line(t))); });
+  if (done.length){ L.push("", "DONE:"); done.forEach(t=>L.push(`- ${t.title}${t.done[k]&&t.done[k].name?` (by ${t.done[k].name})`:""}`)); }
+  return L.join("\n");
+}
+function openReport(){
+  const k = S.sel; let by = "location";
+  $("sheetHost").innerHTML = `<div class="scrim" id="scrim"><div class="sheet wide">
+    <div class="no-print">
+      <h3>Daily report</h3>
+      <div class="r-ctrl">
+        <label>Group by <select id="rBy"><option value="location">Room / place</option><option value="worker">Worker</option></select></label>
+        <span style="color:var(--muted)">${S.who ? "Showing only the selected worker." : "Showing everyone."}</span>
+      </div>
+    </div>
+    <div id="rBody">${reportHTML(k, by)}</div>
+    <div class="actions no-print" style="margin-top:14px">
+      <button type="button" class="btn" id="rCopy">Copy as text</button>
+      <span class="grow"></span>
+      <button type="button" class="btn" id="cancel">Close</button>
+      <button type="button" class="btn btn-y" id="rPrint">Print / Save PDF</button>
+    </div>
+  </div></div>`;
+  wireSheet();
+  $("cancel").onclick = closeSheet;
+  $("rBy").onchange = e=>{ by = e.target.value; $("rBody").innerHTML = reportHTML(k, by); };
+  $("rPrint").onclick = ()=>window.print();
+  $("rCopy").onclick = async ()=>{
+    const txt = reportText(k, by);
+    try{ await navigator.clipboard.writeText(txt); toast("Report copied. Paste it in WhatsApp or email."); }
+    catch(e){ const ta=document.createElement("textarea"); ta.value=txt; document.body.appendChild(ta); ta.select();
+      try{ document.execCommand("copy"); toast("Report copied."); }catch(_){ toast("Couldn't copy on this device."); } ta.remove(); }
+  };
+}
+
+/* ---------- Events ---------- */
+$("grid").addEventListener("click", e=>{
+  const c = e.target.closest(".cell"); if (!c) return;
+  S.sel = c.dataset.k; const d = fromKey(S.sel);
+  if (d.getMonth()!==S.month.getMonth()) S.month = new Date(d.getFullYear(), d.getMonth(), 1);
+  render();
+  if (window.innerWidth < 900) document.querySelector(".day").scrollIntoView({behavior:"smooth",block:"start"});
+});
+$("prev").onclick = ()=>{ S.month = new Date(S.month.getFullYear(), S.month.getMonth()-1, 1); renderCalendar(); };
+$("next").onclick = ()=>{ S.month = new Date(S.month.getFullYear(), S.month.getMonth()+1, 1); renderCalendar(); };
+$("toToday").onclick = ()=>{ const n=new Date(); S.month=new Date(n.getFullYear(),n.getMonth(),1); S.sel=todayKey(); render(); };
+document.querySelector(".tabs").addEventListener("click", e=>{ const b=e.target.closest("button"); if(!b) return; S.filter=b.dataset.f; renderDay(); });
+$("whoSel").onchange = e=>{ S.who = e.target.value; render(); };
+$("list").addEventListener("click", e=>{
+  const d = e.target.closest("[data-done]"); if (d){ toggleDone(d.dataset.done); return; }
+  const o = e.target.closest("[data-open]"); if (o){ openSheet(S.tasks.find(t=>t.id===o.dataset.open)); }
+});
+$("addBtn").onclick = ()=>openSheet(null);
+$("reportBtn").onclick = openReport;
+$("teamBtn").onclick = openTeam;
+$("login").onsubmit = async e=>{
+  e.preventDefault(); const f=e.target;
+  if(!f.email.value || !f.pw.value){ toast("Enter your email and password."); return; }
+  $("enter").disabled=true; $("enter").textContent="Logging in…";
+  try{ await firebase.auth().signInWithEmailAndPassword(f.email.value.trim(), f.pw.value); f.pw.value=""; }
+  catch(err){ toast(/wrong-password|invalid-credential|user-not-found|invalid-email/.test(err.code) ? "Email or password is wrong." : (err.code==="auth/too-many-requests" ? "Too many tries. Wait a minute and try again." : "Couldn't log in. Check your connection.")); }
+  $("enter").disabled=false; $("enter").textContent="Log in";
+};
+$("forgot").onclick = async ()=>{
+  const em=$("login").email.value.trim(); if(!em){ toast("Type your email first, then tap Forgot password."); return; }
+  try{ await firebase.auth().sendPasswordResetEmail(em); toast("Password reset email sent."); }catch(e){ toast("Couldn't send the reset email. Check the address."); }
+};
+$("meBtn").onclick = ()=>{ if(confirm("Log out of the board?")) firebase.auth().signOut(); };
+
+/* ---------- Start ---------- */
+(function boot(){
+  const n = new Date(); S.month = new Date(n.getFullYear(), n.getMonth(), 1); S.sel = todayKey();
+  renderLegend(); renderWhoSel(); render();
+  // roll the "today" highlight over at midnight
+  setInterval(()=>{ if (S._today !== todayKey()){ S._today = todayKey(); renderCalendar(); } }, 60000); S._today = todayKey();
+
+  if (firebaseConfig.apiKey==="PASTE_HERE"){ $("gateNote").textContent="Setup needed: paste your Firebase config into this file."; $("enter").disabled=true; return; }
+  firebase.initializeApp(firebaseConfig);
+  S.db = firebase.firestore();
+  let unsub = null;
+  firebase.auth().onAuthStateChanged(u=>{
+    if (unsub){ unsub(); unsub=null; }
+    if (!u){ S.uid=null; S.tasks=[]; S.workers=[]; S.ready=false; closeSheet(); $("app").classList.add("hidden"); $("gate").classList.remove("hidden"); return; }
+    S.uid=u.uid; S.name=u.displayName || u.email.split("@")[0];
+    $("meName").textContent=S.name;
+    $("gate").classList.add("hidden"); $("app").classList.remove("hidden"); window.scrollTo(0,0);
+    unsub = S.db.collection("tasks").limit(1000).onSnapshot(snap=>{
+      const docs = snap.docs.map(d=>({id:d.id, ...d.data()}));
+      const team = docs.find(d=>d.id===TEAM_ID);
+      S.workers = team && Array.isArray(team.workers) ? team.workers : [];
+      S.tasks = docs.filter(d=>d.id!==TEAM_ID && d.kind!=="team");
+      S.ready = true; renderWhoSel(); render(); renderTeamList();
+    }, err=>{ S.ready=true; render(); toast(err.code==="permission-denied" ? "Your account can't see tasks. Check the Firestore rules." : "Live updates paused. Reload the page."); });
+  });
+})();
+</script>
+</body>
+</html>
