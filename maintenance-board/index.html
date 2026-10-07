@@ -658,12 +658,10 @@ function renderDay(){
   $("daySub").textContent = d.toLocaleDateString(undefined,{weekday:rel?"long":undefined,day:"numeric",month:"long"}) +
     (all.length ? ` · ${closed} of ${all.length} closed` : "") + (wait ? ` · ${wait} awaiting inspection` : "") + (urg ? ` · ${urg} urgent` : "");
   $("meter").style.width = all.length ? (closed/all.length*100)+"%" : "0";
-  if (!isAdmin()) S.kind = "task";                     // preventive is manager-only
-  document.querySelector(".kind-seg").classList.toggle("hidden", !isAdmin());
   $("addBtn").classList.toggle("hidden", !(canAdd() && S.kind==="task"));
   $("addPrevBtn").classList.toggle("hidden", !(isAdmin() && S.kind==="preventive"));
-  const note = isWorker() ? "These are the jobs allocated to you. Tick a job when you've done it — your manager closes it after inspection."
-    : isReporter() ? "Tap “+ Add task” to report a job. Maintenance executes it and the manager closes it." : "";
+  const note = isWorker() ? `These are the ${S.kind==="preventive"?"preventive checks":"tasks"} allocated to you. Tick a job when you've done it — your manager closes it after inspection.`
+    : isReporter() ? (S.kind==="preventive" ? "Preventive checks for all maintenance staff (view only). The manager schedules and closes them." : "Tap “+ Add task” to report a job. Maintenance executes it and the manager closes it.") : "";
   $("roNote").textContent = note; $("roNote").classList.toggle("hidden", !note);
   $("whoSel").classList.toggle("hidden", isWorker());
   // Carry-over banner for the manager
@@ -836,7 +834,7 @@ function statusBlock(t){
 /* ---------- Add / edit task (normal or preventive) ---------- */
 function openSheet(task, kind){
   const prev = task ? isPrev(task) : kind==="preventive";
-  if (prev && !isAdmin()) return;                       // preventive is manager-only
+  if (!task && prev && !isAdmin()) return;              // only the manager adds preventive checks (staff can still open them to view)
   const t = task || {title:"",taskType:prev?"preventive":"task",category:"general",location:"",assignee:"",date:S.sel<todayKey()?todayKey():S.sel,recDate:"",time:"",repeat:prev?"monthly":"none",priority:"normal",notes:"",realloc:[]};
   const ro = task ? !canEdit(task) : !canAdd();
   const dis = ro ? "disabled" : "";
@@ -1298,14 +1296,14 @@ function reportText(type, k, staff, AR){
 }
 
 async function openReport(){
-  const R = { type: (isAdmin() && S.kind==="preventive") ? "monthly" : "daily", k: S.sel, staff: isWorker() ? (S.me&&S.me.name||"") : (S.who||""), by:"place", AR:{}, failed:0, multi:false };
+  const R = { type: S.kind==="preventive" ? "monthly" : "daily", k: S.sel, staff: isWorker() ? (S.me&&S.me.name||"") : (S.who||""), by:"place", AR:{}, failed:0, multi:false };
   const typeBtn = (v, l) => `<button type="button" data-type="${v}">${l}</button>`;
   $("sheetHost").innerHTML = `<div class="scrim" id="scrim"><div class="sheet wide xl">
     <div class="no-print">
       <div class="eyebrow">Reports</div><h3>Reports dashboard</h3>
       <div class="dash-types">
         <div><span class="dl">Tasks</span><div class="seg" id="rTypesT">${typeBtn("daily","Daily Report")}</div></div>
-        <div class="${isAdmin()?"":"hidden"}"><span class="dl">Preventive</span><div class="seg" id="rTypesP">${typeBtn("weekly","Weekly")}${typeBtn("monthly","Monthly")}${typeBtn("midyear","Mid-Year")}${typeBtn("yearly","Yearly")}</div></div>
+        <div><span class="dl">Preventive</span><div class="seg" id="rTypesP">${typeBtn("weekly","Weekly")}${typeBtn("monthly","Monthly")}${typeBtn("midyear","Mid-Year")}${typeBtn("yearly","Yearly")}</div></div>
       </div>
       <div class="dash-row">
         <label class="f"><span>Date</span><input type="date" id="rDate" value="${R.k}"></label>
@@ -1379,7 +1377,7 @@ async function openReport(){
     $("rBody").innerHTML = reportDoc(R.type, R.k, R.staff, R.AR, R.by) + (R.failed ? `<p class="note no-print">Some free text couldn't be translated automatically (no internet or the service was busy). Open the job and fill in “Arabic for the report”, or reopen this report to retry.</p>` : "");
     drawAlloc();
   }
-  document.querySelectorAll(".dash-types [data-type]").forEach(b=>b.onclick = ()=>{ if (b.dataset.type!=="daily" && !isAdmin()) return; R.type = b.dataset.type; draw(); });
+  document.querySelectorAll(".dash-types [data-type]").forEach(b=>b.onclick = ()=>{ R.type = b.dataset.type; draw(); });
   $("rDate").onchange = e=>{ if (e.target.value){ R.k = e.target.value; draw(); } };
   $("rStaff").onchange = e=>{ R.staff = e.target.value; draw(); };
   $("rBy").onchange = e=>{ R.by = e.target.value; draw(); };
@@ -1415,7 +1413,7 @@ $("prev").onclick = ()=>{ S.month = new Date(S.month.getFullYear(), S.month.getM
 $("next").onclick = ()=>{ S.month = new Date(S.month.getFullYear(), S.month.getMonth()+1, 1); renderCalendar(); };
 $("toToday").onclick = ()=>{ const n=new Date(); S.month=new Date(n.getFullYear(),n.getMonth(),1); S.sel=todayKey(); render(); };
 document.querySelector(".tabs").addEventListener("click", e=>{ const b=e.target.closest("button"); if(!b) return; S.filter=b.dataset.f; renderDay(); });
-document.querySelector(".kind-seg").addEventListener("click", e=>{ const b=e.target.closest("button"); if(!b || !isAdmin()) return; S.kind=b.dataset.kind; S.filter="all"; render(); });
+document.querySelector(".kind-seg").addEventListener("click", e=>{ const b=e.target.closest("button"); if(!b) return; S.kind=b.dataset.kind; S.filter="all"; render(); });
 $("whoSel").onchange = e=>{ S.who = e.target.value; render(); };
 $("carryBanner").addEventListener("click", e=>{ if (e.target.closest("#carryOpen")) openCarry(); });
 $("list").addEventListener("click", e=>{
@@ -1465,18 +1463,17 @@ $("noAccOut").onclick = ()=>firebase.auth().signOut();
   }
   function listenTasks(){
     // Workers only load their own tasks; everyone else loads the whole board.
-    const key = !S.role ? "none" : (isWorker() ? "w:"+(S.me&&S.me.name) : isAdmin() ? "all" : "staff");
+    const key = !S.role ? "none" : (isWorker() ? "w:"+(S.me&&S.me.name) : "all");
     if (key===taskKey) return;
     stopTasks(); taskKey = key; S.tasks = []; S.ready = false; render();
     if (key==="none") return;
     let q = S.db.collection("tasks");
-    // Staff only ever load tasks; preventive checks stay with the manager (also enforced by the Firestore rules)
-    q = isWorker() ? q.where("assignee","==",S.me.name).where("taskType","==","task")
-      : isAdmin() ? q.limit(5000) : q.where("taskType","==","task").limit(5000);
+    // Maintenance workers only load the jobs allocated to them (also enforced by the Firestore rules)
+    q = isWorker() ? q.where("assignee","==",S.me.name) : q.limit(5000);
     unsubTasks = q.onSnapshot(snap=>{
       const raw = snap.docs.map(d=>({id:d.id, ...d.data()})).filter(d=>d.id!==TEAM_ID && d.kind!=="team");
       if (isAdmin()) labelOldTasks(raw);
-      S.tasks = raw.map(norm).filter(t=>isAdmin() || !isPrev(t));
+      S.tasks = raw.map(norm).filter(t=>!isWorker() || t.assignee===(S.me&&S.me.name));
       S.ready = true; render(); renderTeamList(); maybeCarryPopup();
     }, err=>{ S.ready=true; render(); toast(err.code==="permission-denied" ? "Your account can't see these tasks. Ask your manager." : "Live updates paused. Reload the page."); });
   }
