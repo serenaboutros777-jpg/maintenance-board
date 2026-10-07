@@ -4,6 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#BAB1A0">
+<!-- Installable app (Chrome / Edge "Install app", phone "Add to Home Screen") -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Serab Maintenance">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="application-name" content="Serab Maintenance">
 <title>Maintenance Board · Serab Residencia</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -234,6 +243,69 @@ ul.wlist li{display:flex;align-items:center;gap:10px;padding:10px 2px;border-bot
   .r-grp{background:#E4DFD5!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .r-item.ok .r-box,.r-sec.u{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
+
+/* ---- v6: statuses, dates, carry-over, dashboard ---- */
+.kind-seg{display:flex;gap:0;margin:0 16px 12px;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.kind-seg button{flex:1;border:0;background:transparent;padding:9px 10px;font-weight:600;font-size:14px}
+.kind-seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.carry-banner{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 16px 12px;padding:10px 12px;border-radius:10px;background:#FBEFD9;border:1px solid #E7CF9E;font-size:13px}
+.carry-banner span{flex:1;min-width:160px}.carry-banner .btn{padding:7px 12px;font-size:13px}
+.sec-li{list-style:none;padding:8px 16px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;color:var(--muted);background:var(--soft);border-top:1px solid var(--line)}
+.sec-li.late{color:#8A5A0C;background:#FBEFD9}
+.t-dates{display:block;font-size:12px;color:var(--muted);margin-top:3px}.t-dates b{color:var(--ink);font-weight:600}
+.pill.ok{background:#DCEBDF;color:#24502F}.pill.wait{background:#FBEFD9;color:#8A5A0C}.pill.late{background:#F6E3DF;color:var(--red)}
+.chk.c-exec{background:#FBEFD9;border-color:#C9A25A;color:#8A5A0C}.chk.c-exec svg{opacity:1}
+.chk.c-closed{background:var(--taupe);border-color:var(--taupe);color:var(--ink)}.chk.c-closed svg{opacity:1}
+.st-box{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--bg);font-size:13px;margin-bottom:12px}
+.st-dates{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.st-dates span{font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:var(--muted)}.st-dates b{display:block;font-size:14px;letter-spacing:0;text-transform:none;color:var(--ink)}
+ul.hist{margin:0;padding-left:18px}ul.hist li{margin:2px 0}ul.hist small{color:var(--muted)}
+.co-tools{display:flex;gap:10px;margin-bottom:6px}
+.co-list{max-height:50vh;overflow:auto;border:1px solid var(--line);border-radius:10px;margin-bottom:12px}
+.co-h{padding:7px 12px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;color:var(--muted);background:var(--soft)}
+.co-row{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border-top:1px solid var(--line);cursor:pointer}
+.co-row input{width:18px;height:18px;margin-top:2px;accent-color:var(--ink)}
+.co-main{flex:1;min-width:0}.co-main b{display:block;font-weight:600}.co-main small{color:var(--muted);font-size:12px}
+.co-late{font-size:12px;font-weight:700;color:var(--red);white-space:nowrap}
+.sheet.xl{max-width:960px}
+.dash-types{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px}
+.dl{display:block;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;color:var(--muted);margin-bottom:5px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;flex-wrap:wrap}
+.seg button{border:0;border-right:1px solid var(--line);background:var(--panel);padding:8px 14px;font-weight:600;font-size:13px}
+.seg button:last-child{border-right:0}.seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.dash-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:640px){.dash-row{grid-template-columns:1fr 1fr}}
+.r-period-note{font-size:12px;color:var(--muted);margin:-4px 0 12px}
+details.alloc *,details.alloc *::before,details.alloc *::after{box-sizing:border-box}
+details.alloc{border:1px solid var(--line);border-radius:10px;margin-bottom:14px;background:var(--bg)}
+details.alloc summary{cursor:pointer;padding:10px 12px;font-weight:700;font-size:14px}details.alloc summary span{font-weight:500;color:var(--muted)}
+#allocBody{padding:0 12px 12px;max-height:44vh;overflow:auto}
+.al-bulk{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin-bottom:10px}
+.al-bulk input{flex:1;min-width:120px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.al-tab{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
+.al-tab th:nth-child(1){width:50%}.al-tab th:nth-child(2){width:16%}.al-tab th:nth-child(3){width:34%}
+.al-tab td span{overflow-wrap:anywhere}
+.al-tab th{text-align:left;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:6px 4px;border-bottom:1px solid var(--line)}
+.al-tab td{padding:6px 4px;border-bottom:1px solid var(--line);vertical-align:top}.al-tab td small{display:block;color:var(--muted);font-size:11px}
+.al-tab tr.un td:first-child{box-shadow:inset 3px 0 0 var(--red);padding-left:8px}
+.al-tab input{width:100%;min-width:0;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--panel)}
+/* report page */
+.r-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.r-top .r-logo{height:52px;margin:0}
+.r-kind{display:flex;flex-direction:column;align-items:flex-end;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-weight:600}
+.r-titleblock{text-align:center;border-bottom:2px solid var(--taupe);padding:6px 0 14px;margin-bottom:4px}
+.r-big{font-family:var(--display);font-size:40px;line-height:1.05;font-weight:700;margin:6px 0 0;letter-spacing:.3px}
+.r-big-ar{font-size:24px;font-weight:700;margin-top:2px}
+.r-staff{font-size:17px;font-weight:600;margin-top:8px;color:var(--ink)}
+.r-period{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:4px}
+.r-pills{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:3px}
+.r-dates{display:flex;gap:6px 16px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:5px}
+.r-dates b{color:var(--ink)}
+.r-sig .blank.short,.r-dates .blank.short{min-width:60px}
+.r-dates .blank{display:inline-block;min-width:60px;border-bottom:1px solid var(--muted);height:12px;vertical-align:-2px}
+.page-break{break-before:page;height:0}
+@media screen{.page-break{height:24px}}
+@media print{ .r-big{font-size:34px} .pill{-webkit-print-color-adjust:exact;print-color-adjust:exact} .r-titleblock{border-color:#BAB1A0} }
 </style>
 </head>
 <body>
@@ -286,21 +358,27 @@ ul.wlist li{display:flex;align-items:center;gap:10px;padding:10px 2px;border-bot
     </section>
     <section class="card day">
       <div class="day-head">
-        <div><div class="eyebrow" id="dayEyebrow">Schedule</div><h3 id="dayTitle"></h3><p id="daySub"></p></div>
+        <div><div class="eyebrow" id="dayEyebrow">Maintenance tasks</div><h3 id="dayTitle"></h3><p id="daySub"></p></div>
+      </div>
+      <div class="kind-seg" role="group" aria-label="Show">
+        <button data-kind="task" aria-pressed="true">Tasks</button>
+        <button data-kind="preventive" aria-pressed="false">Preventive</button>
       </div>
       <div class="day-acts">
         <button class="add" id="addBtn">+ Add task</button>
         <button class="add alt" id="addPrevBtn">+ Add preventive</button>
-        <button class="rep" id="reportBtn">Daily report</button>
+        <button class="rep" id="reportBtn">Reports</button>
       </div>
+      <div class="carry-banner hidden" id="carryBanner"></div>
       <div class="meter"><i id="meter" style="width:0"></i></div>
       <div class="ro hidden" id="roNote"></div>
       <div class="tabs" role="group" aria-label="Filter">
         <button data-f="all" aria-pressed="true">All</button>
-        <button data-f="open" aria-pressed="false">To do</button>
+        <button data-f="open" aria-pressed="false">Open</button>
         <button data-f="urgent" aria-pressed="false">Urgent</button>
-        <button data-f="done" aria-pressed="false">Done</button>
-        <select class="who-sel" id="whoSel" aria-label="Show tasks executed by"></select>
+        <button data-f="awaiting" aria-pressed="false">Awaiting inspection</button>
+        <button data-f="closed" aria-pressed="false">Closed</button>
+        <select class="who-sel" id="whoSel" aria-label="Show jobs allocated to"></select>
       </div>
       <ul class="tasks" id="list"></ul>
     </section>
@@ -339,8 +417,10 @@ const CATS = {
   cleaning:{label:"Cleaning",ar:"تنظيف",c:"--c-cleaning"},
   safety:{label:"Safety & Utilities",ar:"السلامة والمرافق",c:"--c-safety"}
 };
-const REPEAT = {none:"Does not repeat", daily:"Every day", weekdays:"Weekdays (Mon–Fri)", weekly:"Every week", monthly:"Every month"};
-const REPEAT_AR = {none:"", daily:"كل يوم", weekdays:"أيام العمل", weekly:"كل أسبوع", monthly:"كل شهر"};
+const REPEAT_TASK = {none:"Does not repeat", daily:"Every day", weekly:"Every week", monthly:"Every month"};
+const FREQ_PREV = {weekly:"Weekly", monthly:"Monthly", midyear:"Mid-Year (every 6 months)", yearly:"Yearly"};
+const REPEAT_LABEL = {...REPEAT_TASK, ...FREQ_PREV, weekdays:"Weekdays"};
+const REPEAT_AR = {none:"", daily:"كل يوم", weekdays:"أيام العمل", weekly:"أسبوعي", monthly:"شهري", midyear:"نصف سنوي", yearly:"سنوي"};
 const PRIO = {low:"Low · منخفضة", normal:"Normal · عادية", urgent:"Urgent · عاجل"};
 
 /* ----- Places (edit this list to add or rename rooms) ----- */
@@ -409,21 +489,21 @@ const TEAM_ID = "_team_settings";
 /* ----- Who is the owner (full access, always). Must match the Firestore rules. ----- */
 const OWNERS = ["serenaboutros777@gmail.com"];
 const ROLES = {
-  worker:   {label:"Maintenance worker", hint:"Sees only tasks they execute and ticks them done"},
-  reporter: {label:"Staff",              hint:"Can report new tasks, can't tick or delete"},
+  worker:   {label:"Maintenance worker", hint:"Sees only jobs allocated to them and marks them executed"},
+  reporter: {label:"Staff / Reception",  hint:"Can report new tasks, can't close or delete"},
   admin:    {label:"Manager",            hint:"Full access"}
 };
 
-const S = { db:null, user:null, uid:null, email:"", tasks:[], workers:[], legacy:[], members:{}, role:null, me:null,
-  month:null, sel:null, filter:"all", who:"", ready:false };
+const S = { db:null, uid:null, email:"", name:"", tasks:[], workers:[], legacy:[], members:{}, role:null, me:null,
+  month:null, sel:null, kind:"task", filter:"all", who:"", ready:false, carryShown:"", onData:null };
 
 /* ----- Permissions ----- */
 const isAdmin    = () => S.role==="admin";
 const isWorker   = () => S.role==="worker";
 const isReporter = () => S.role==="reporter";
 const canAdd     = () => isAdmin() || isReporter();
-const canTick    = t => isAdmin() || (isWorker() && !!S.me && t.assignee===S.me.name);
-const canEdit    = t => isAdmin() || (isReporter() && t.createdBy===S.uid);
+const canExec    = t => isWorker() && !!S.me && t.assignee===S.me.name && !isClosed(t);
+const canEdit    = t => isAdmin() || (isReporter() && t.createdBy===S.uid && !isClosed(t));
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -438,31 +518,61 @@ const locRank = l => { const i = LOC_ORDER.indexOf(l); return i<0 ? 999 : i; };
 const isPrev = t => t.taskType==="preventive";
 const isUrgent = t => t.priority==="urgent";
 const fmtTime = iso => new Date(iso).toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"});
-/* Everyone who can be picked as "Checked by" */
+const fmtD  = k => k ? fromKey(k).toLocaleDateString(undefined,{day:"numeric",month:"short"}) : "";
+const fmtDY = k => k ? fromKey(k).toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"}) : "";
+const daysBetween = (a,b) => Math.round((fromKey(b)-fromKey(a))/864e5);
+/* Everyone who can be picked as "Inspected by" */
 const checkers = () => [...new Set([OWNER_NAME, ...Object.values(S.members).map(m=>m.name), ...S.legacy])].filter(Boolean);
 /* Match a typed name to the team spelling (ignores capitals and extra spaces) */
 const canonName = (v, list) => { v = (v||"").trim().replace(/\s+/g," "); const hit = list.find(x=>x.toLowerCase()===v.toLowerCase()); return hit || v; };
-/* Who executed it: the chosen person, or whoever ticked it done */
-const execName = (t,k) => t.assignee || (isDone(t,k) ? (t.done[k].name||"") : "");
 
-function toast(msg){ const t=$("toast"); t.textContent=msg; t.classList.remove("hidden"); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.add("hidden"),3200); }
+function toast(msg){ const t=$("toast"); t.textContent=msg; t.classList.remove("hidden"); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.add("hidden"),3600); }
 
-function occurs(t, k){
-  if (!t.date || k < t.date) return false;
-  const d = fromKey(k), s = fromKey(t.date);
-  switch(t.repeat){
-    case "daily": return true;
-    case "weekdays": return d.getDay()>0 && d.getDay()<6;
-    case "weekly": return d.getDay()===s.getDay();
-    case "monthly": return d.getDate()===s.getDate();
-    default: return k===t.date;
+/* ----- Repeats ----- */
+function addMonths(k,n){ const [y,m,d]=k.split("-").map(Number); const t=new Date(y,m-1+n,1); const last=new Date(t.getFullYear(),t.getMonth()+1,0).getDate(); t.setDate(Math.min(d,last)); return keyOf(t); }
+function addInterval(k, f){
+  if (!k) return null;
+  const d = fromKey(k);
+  switch(f){
+    case "daily": d.setDate(d.getDate()+1); return keyOf(d);
+    case "weekdays": do{ d.setDate(d.getDate()+1); }while(d.getDay()===0||d.getDay()===6); return keyOf(d);
+    case "weekly": d.setDate(d.getDate()+7); return keyOf(d);
+    case "monthly": return addMonths(k,1);
+    case "midyear": return addMonths(k,6);
+    case "yearly": return addMonths(k,12);
+    default: return null;
   }
 }
-const isDone = (t,k) => !!(t.done && t.done[k]);
-const byTime = (a,b) => { const rank={urgent:0,normal:1,low:2};
-  return (rank[a.priority]??1)-(rank[b.priority]??1) || ((a.time||"99")<(b.time||"99")?-1:(a.time||"99")>(b.time||"99")?1:0); };
-function tasksOn(k){ return S.tasks.filter(t=>occurs(t,k)).sort(byTime); }
+/* Preventive frequency (older preventive items are mapped to the nearest one) */
+const freqOf = t => FREQ_PREV[t.repeat] ? t.repeat : ((t.repeat==="daily"||t.repeat==="weekdays") ? "weekly" : "monthly");
+
+/* ----- One task = one document with 3 dates: recDate (recommended), date (current / reallocated), closedDate ----- */
+function norm(t){
+  const legacyDone = t.done && t.date && t.done[t.date];
+  const status = t.status || ((!t.repeat || t.repeat==="none") && legacyDone ? "closed" : "open");
+  return { ...t, taskType: t.taskType || "task", recDate: t.recDate || t.date || "", status,
+    closedDate: t.closedDate || (status==="closed" && legacyDone ? t.date : ""),
+    execution: t.execution || (legacyDone ? {name: legacyDone.name || "", at: legacyDone.at} : null),
+    realloc: Array.isArray(t.realloc) ? t.realloc : [] };
+}
+const isClosed = t => t.status==="closed";
+const isExecuted = t => t.status==="executed";
+const rank = {urgent:0,normal:1,low:2};
+const byRank = (a,b) => (rank[a.priority]??1)-(rank[b.priority]??1) || ((a.time||"99")<(b.time||"99")?-1:(a.time||"99")>(b.time||"99")?1:0)
+  || (a.title||"").localeCompare(b.title||"") || locRank(locsOf(a)[0])-locRank(locsOf(b)[0]);
 const forWho = t => !S.who || (S.who==="__none" ? !t.assignee : t.assignee===S.who);
+const ofKind = (t, kind) => !kind || ((kind==="preventive") === isPrev(t));
+const onDay = (k, kind) => S.tasks.filter(t=>t.date===k && ofKind(t,kind)).sort(byRank);
+const overdue = (before, kind) => S.tasks.filter(t=>!isClosed(t) && t.date && t.date<before && ofKind(t,kind))
+  .sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:byRank(a,b));
+/* Preventive checks are one per place: "AC Filter – Room 101" */
+const fullTitle = t => isPrev(t) && locsOf(t).length===1 ? `${t.title} – ${locsOf(t)[0]}` : t.title;
+function titleArOf(t, AR){
+  const base = hasArabic(t.title) ? t.title : (t.titleAr || (PREV_MAP[t.title] && PREV_MAP[t.title].ar) || (AR && AR[t.title]) || glossaryAr(t.title) || "");
+  if (isPrev(t) && locsOf(t).length===1 && base) return `${base} – ${locAr(locsOf(t)[0]) || (AR && AR[locsOf(t)[0]]) || locsOf(t)[0]}`;
+  return base;
+}
+const reallocEntry = (type, from, to) => ({type, from:from||"", to:to||"", at:new Date().toISOString(), by:S.name});
 
 /* ---------- Calendar ---------- */
 function renderCalendar(){
@@ -474,16 +584,16 @@ function renderCalendar(){
   let html = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(d=>`<div class="dow">${d}</div>`).join("");
   for (let i=0;i<42;i++){
     const d = new Date(start); d.setDate(start.getDate()+i);
-    const k = keyOf(d), list = tasksOn(k).filter(forWho), done = list.filter(t=>isDone(t,k)).length;
+    const k = keyOf(d), list = onDay(k, S.kind).filter(forWho), done = list.filter(isClosed).length;
     const cls = ["cell"];
     if (d.getMonth()!==m.getMonth()) cls.push("out");
     if (k===today) cls.push("today");
     if (k===S.sel) cls.push("sel");
     if (list.length && k<today && done<list.length) cls.push("late");
     if (list.length && done===list.length) cls.push("clear");
-    const bars = list.slice(0,8).map(t=>`<b class="${isDone(t,k)?"done":""} ${isUrgent(t)&&!isDone(t,k)?"urg":""}" style="background:${color(t.category)}"></b>`).join("");
-    const cnt = list.length ? (done===list.length ? "✓ all done" : `${done}/${list.length}`) : "";
-    html += `<button class="${cls.join(" ")}" data-k="${k}" aria-label="${d.toDateString()}, ${list.length} tasks, ${done} done"><span class="n">${d.getDate()}</span><span class="bars">${bars}</span><span class="cnt">${cnt}</span></button>`;
+    const bars = list.slice(0,8).map(t=>`<b class="${isClosed(t)?"done":""} ${isUrgent(t)&&!isClosed(t)?"urg":""}" style="background:${color(t.category)}"></b>`).join("");
+    const cnt = list.length ? (done===list.length ? "✓ all closed" : `${done}/${list.length}`) : "";
+    html += `<button class="${cls.join(" ")}" data-k="${k}" aria-label="${d.toDateString()}, ${list.length} items, ${done} closed"><span class="n">${d.getDate()}</span><span class="bars">${bars}</span><span class="cnt">${cnt}</span></button>`;
   }
   $("grid").innerHTML = html;
 }
@@ -493,92 +603,231 @@ function renderLegend(){
 function renderWhoSel(){
   const s = $("whoSel");
   if (S.who && S.who!=="__none" && !S.workers.includes(S.who)) S.who = "";
-  s.innerHTML = `<option value="">Everyone</option>` +
+  s.innerHTML = `<option value="">All staff</option>` +
     S.workers.map(w=>`<option value="${esc(w)}" ${w===S.who?"selected":""}>${esc(w)}</option>`).join("") +
-    `<option value="__none" ${S.who==="__none"?"selected":""}>No one chosen</option>`;
+    `<option value="__none" ${S.who==="__none"?"selected":""}>Not allocated</option>`;
   s.value = S.who;
 }
 
 /* ---------- Day panel ---------- */
+function datesLine(t){
+  const parts = [`Recommended <b>${esc(fmtD(t.recDate)||"—")}</b>`];
+  if (t.date && t.recDate && t.date!==t.recDate) parts.push(`Reallocated to <b>${esc(fmtD(t.date))}</b>`);
+  if (isClosed(t)) parts.push(`Closed <b>${esc(fmtD(t.closedDate)||"—")}</b>`);
+  return parts.join(" · ");
+}
+function taskRow(t, k){
+  const closed = isClosed(t), today = todayKey();
+  const late = !closed && t.date < today;
+  const status = closed ? `<span class="pill ok">Closed</span>` : isExecuted(t) ? `<span class="pill wait">Awaiting inspection</span>`
+    : late ? `<span class="pill late">Not closed · ${daysBetween(t.date, today)}d late</span>` : "";
+  const meta = [
+    isUrgent(t) ? `<span class="pill urg">Urgent · عاجل</span>` : "", status,
+    isPrev(t) ? `<span class="pill prev">${esc((FREQ_PREV[freqOf(t)]||"").split(" ")[0])} preventive</span>` : "",
+    t.time ? `<span>${esc(t.time)}</span>` : "",
+    !isPrev(t) && locsOf(t).length ? `<span>${esc(locSummary(locsOf(t)))}</span>` : "",
+    `<span class="tag"><b style="background:${color(t.category)}"></b>${esc(catLabel(t.category))}</span>`,
+    !isPrev(t) && t.repeat && t.repeat!=="none" ? `<span>${esc(REPEAT_LABEL[t.repeat]||"")}</span>` : ""
+  ].join("");
+  const people = [
+    t.assignee ? `Allocated to <span class="person" dir="auto">${esc(t.assignee)}</span>` : `<span style="color:var(--red)">Not allocated</span>`,
+    t.execution && t.execution.name ? `Executed by <span class="person" dir="auto">${esc(closed && t.executedBy ? t.executedBy : t.execution.name)}</span>` : (closed && t.executedBy ? `Executed by <span class="person" dir="auto">${esc(t.executedBy)}</span>` : ""),
+    closed && t.inspectedBy ? `Inspected by <span class="person" dir="auto">${esc(t.inspectedBy)}</span>` : ""
+  ].filter(Boolean).join(" · ");
+  // The tick box: managers close (needs an inspector), maintenance marks executed
+  let act = "", label = "", on = closed || isExecuted(t);
+  if (isAdmin()) { act = closed ? `data-reopen="${t.id}"` : `data-close="${t.id}"`; label = closed ? "Reopen" : "Close (needs inspector)"; }
+  else if (canExec(t)) { act = `data-exec="${t.id}"`; label = isExecuted(t) ? "Undo executed" : "Mark executed"; }
+  const box = `<button class="chk ${closed?"c-closed":isExecuted(t)?"c-exec":""}" ${act||"disabled"} aria-label="${esc(label)}: ${esc(fullTitle(t))}" title="${esc(label)}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></button>`;
+  return `<li class="task ${closed?"is-done":""} ${isUrgent(t)&&!closed?"urgent-row":""}">${box}
+    <button class="t-main" data-open="${t.id}"><span class="t-title" dir="auto">${esc(fullTitle(t))}</span><span class="t-meta">${meta}</span>
+      <span class="t-meta">${people}</span><span class="t-dates">${datesLine(t)}</span>
+      ${t.notes?`<span class="t-notes" dir="auto">${esc(t.notes)}</span>`:""}</button></li>`;
+}
 function renderDay(){
   const k = S.sel, d = fromKey(k), today = todayKey();
   const rel = k===today ? "Today" : (k===keyOf(new Date(Date.now()+864e5)) ? "Tomorrow" : (k===keyOf(new Date(Date.now()-864e5)) ? "Yesterday" : null));
   $("dayTitle").textContent = rel || d.toLocaleDateString(undefined,{weekday:"long"});
-  const all = tasksOn(k).filter(forWho), done = all.filter(t=>isDone(t,k)).length;
-  const urg = all.filter(t=>isUrgent(t) && !isDone(t,k)).length;
+  document.querySelectorAll(".kind-seg button").forEach(b=>b.setAttribute("aria-pressed", b.dataset.kind===S.kind));
+  $("dayEyebrow").textContent = S.kind==="preventive" ? "Preventive maintenance" : "Maintenance tasks";
+  const main = onDay(k, S.kind).filter(forWho);
+  const carry = k===today ? overdue(today, S.kind).filter(forWho) : [];
+  const all = [...carry, ...main];
+  const closed = all.filter(isClosed).length, urg = all.filter(t=>isUrgent(t)&&!isClosed(t)).length, wait = all.filter(isExecuted).length;
   $("daySub").textContent = d.toLocaleDateString(undefined,{weekday:rel?"long":undefined,day:"numeric",month:"long"}) +
-    (all.length ? ` · ${done} of ${all.length} done` : "") + (urg ? ` · ${urg} urgent` : "");
-  $("meter").style.width = all.length ? (done/all.length*100)+"%" : "0";
+    (all.length ? ` · ${closed} of ${all.length} closed` : "") + (wait ? ` · ${wait} awaiting inspection` : "") + (urg ? ` · ${urg} urgent` : "");
+  $("meter").style.width = all.length ? (closed/all.length*100)+"%" : "0";
   $("addBtn").classList.toggle("hidden", !canAdd());
   $("addPrevBtn").classList.toggle("hidden", !canAdd());
-  const note = isWorker() ? "These are the tasks you execute. Tick each one when it's done."
-    : isReporter() ? "Tap “+ Add task” to report a job. Maintenance will tick it off when it's done." : "";
-  $("roNote").textContent = note;
-  $("roNote").classList.toggle("hidden", !note);
+  const note = isWorker() ? "These are the jobs allocated to you. Tick a job when you've done it — your manager closes it after inspection."
+    : isReporter() ? "Tap “+ Add task” to report a job. Maintenance executes it and the manager closes it." : "";
+  $("roNote").textContent = note; $("roNote").classList.toggle("hidden", !note);
   $("whoSel").classList.toggle("hidden", isWorker());
+  // Carry-over banner for the manager
+  const od = isAdmin() ? overdue(today) : [];
+  $("carryBanner").classList.toggle("hidden", !od.length);
+  if (od.length) $("carryBanner").innerHTML = `<span><b>${od.length}</b> ${od.length===1?"job":"jobs"} from earlier days ${od.length===1?"wasn't":"weren't"} closed.</span><button class="btn btn-y" id="carryOpen">Review &amp; move to today</button>`;
   document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-pressed", b.dataset.f===S.filter));
-  const list = all.filter(t => S.filter==="all" || (S.filter==="done" ? isDone(t,k) : S.filter==="urgent" ? isUrgent(t)&&!isDone(t,k) : !isDone(t,k)));
-  if (!S.ready){ $("list").innerHTML = `<li class="empty">Loading tasks…</li>`; return; }
-  if (!list.length){
-    const msg = all.length ? (S.filter==="done" ? "<strong>Nothing finished yet</strong>Tick a task when it's done." : S.filter==="urgent" ? "<strong>No urgent tasks</strong>Nothing urgent is waiting." : "<strong>Everything is done</strong>Nice work, team.")
-      : (canAdd() ? "<strong>No tasks on this day</strong>Use “+ Add task” or “+ Add preventive” to schedule work." : "<strong>No tasks for you on this day</strong>");
+  const pass = t => S.filter==="all" || (S.filter==="closed" ? isClosed(t) : S.filter==="urgent" ? isUrgent(t)&&!isClosed(t) : S.filter==="awaiting" ? isExecuted(t) : !isClosed(t));
+  const lc = carry.filter(pass), lm = main.filter(pass);
+  if (!S.ready){ $("list").innerHTML = `<li class="empty">Loading…</li>`; return; }
+  if (!lc.length && !lm.length){
+    const what = S.kind==="preventive" ? "preventive checks" : "tasks";
+    const msg = all.length ? (S.filter==="closed" ? "<strong>Nothing closed yet</strong>Close a job once it has been inspected." : "<strong>Nothing here</strong>No jobs match this filter.")
+      : (canAdd() ? `<strong>No ${what} on this day</strong>Use “+ Add task” or “+ Add preventive” to schedule work.` : `<strong>No ${what} for you on this day</strong>`);
     $("list").innerHTML = `<li class="empty">${msg}</li>`; return;
   }
-  $("list").innerHTML = list.map(t=>{
-    const dn = isDone(t,k), info = dn ? t.done[k] : null;
-    const meta = [
-      isUrgent(t) ? `<span class="pill urg">Urgent · عاجل</span>` : "",
-      isPrev(t) ? `<span class="pill prev">Preventive</span>` : "",
-      t.time ? `<span>${esc(t.time)}</span>` : "",
-      locsOf(t).length ? `<span>${esc(locSummary(locsOf(t)))}</span>` : "",
-      `<span class="tag"><b style="background:${color(t.category)}"></b>${esc(catLabel(t.category))}</span>`,
-      t.repeat && t.repeat!=="none" ? `<span>${esc(REPEAT[t.repeat])}</span>` : ""
-    ].join("");
-    const people = [
-      t.assignee ? `Executed by <span class="person" dir="auto">${esc(t.assignee)}</span>` : "",
-      t.checkedBy ? `Checked by <span class="person" dir="auto">${esc(t.checkedBy)}</span>` : ""
-    ].filter(Boolean).join(" · ");
-    const by = info ? `<div class="by">✓ Done by <bdi>${esc(info.by===S.uid ? "you" : (info.name || "a teammate"))}</bdi> at ${fmtTime(info.at)}</div>` : "";
-    return `<li class="task ${dn?"is-done":""} ${isUrgent(t)&&!dn?"urgent-row":""}">
-      <button class="chk" data-done="${t.id}" aria-label="${dn?"Mark not done":"Mark done"}: ${esc(t.title)}" ${canTick(t)?"":"disabled"}>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></button>
-      <button class="t-main" data-open="${t.id}"><span class="t-title" dir="auto">${esc(t.title)}</span><span class="t-meta">${meta}</span>${people?`<span class="t-meta">${people}</span>`:""}${t.notes?`<span class="t-notes" dir="auto">${esc(t.notes)}</span>`:""}${by}</button>
-    </li>`;
-  }).join("");
+  $("list").innerHTML =
+    (lc.length ? `<li class="sec-li late">Carried over · not closed on time (${lc.length})</li>` + lc.map(t=>taskRow(t,k)).join("") : "") +
+    (lc.length && lm.length ? `<li class="sec-li">Scheduled for ${rel ? rel.toLowerCase() : fmtD(k)} (${lm.length})</li>` : "") +
+    lm.map(t=>taskRow(t,k)).join("");
 }
-function render(){ renderCalendar(); renderDay(); }
+function render(){ renderCalendar(); renderDay(); if (S.onData) S.onData(); }
 
 /* ---------- Writes ---------- */
 function writeFailed(e){
   if (e && e.code==="permission-denied") toast("You don't have permission to change this.");
   else toast("Couldn't save. Check your connection and try again.");
 }
-async function toggleDone(id){
-  const t = S.tasks.find(x=>x.id===id); if (!t) return;
-  if (!canTick(t)){ toast(isReporter() ? "Only maintenance can mark tasks done." : "This task isn't yours to execute."); return; }
-  const k = S.sel, done = Object.assign({}, t.done||{});
-  if (done[k]) delete done[k]; else done[k] = {by:S.uid, name:S.name, at:new Date().toISOString()};
-  try{ await S.db.collection("tasks").doc(id).update({done}); }catch(e){ writeFailed(e); }
+const tasksCol = () => S.db.collection("tasks");
+async function toggleExec(id){
+  const t = S.tasks.find(x=>x.id===id); if (!t || !canExec(t)) return;
+  const exec = !isExecuted(t);
+  try{ await tasksCol().doc(id).update({ status: exec ? "executed" : "open", execution: exec ? {by:S.uid, name:S.name, at:new Date().toISOString()} : null });
+       toast(exec ? "Marked as executed. Your manager will inspect and close it." : "Marked as not executed."); }
+  catch(e){ writeFailed(e); }
 }
 async function saveTeam(legacy, members){
-  try{ await S.db.collection("tasks").doc(TEAM_ID).set({kind:"team", workers:legacy, members, updatedAt:new Date().toISOString()}); return true; }
+  try{ await tasksCol().doc(TEAM_ID).set({kind:"team", workers:legacy, members, updatedAt:new Date().toISOString()}); return true; }
   catch(e){ writeFailed(e); return false; }
+}
+function nextInstance(t, k){
+  return { title:t.title, titleAr:t.titleAr||"", notes:t.notes||"", notesAr:t.notesAr||"", taskType:t.taskType, category:t.category||"general",
+    priority:t.priority||"normal", locations:locsOf(t), location:t.location||locSummary(locsOf(t)), assignee:t.assignee||"", time:t.time||"",
+    repeat:t.repeat, seriesId:t.seriesId||t.id, recDate:k, date:k, status:"open", execution:null, realloc:[], done:{},
+    createdBy:S.uid, createdAt:new Date().toISOString() };
+}
+async function closeTask(t, {executedBy, inspectedBy, closedDate}){
+  const batch = S.db.batch(), upd = { recDate:t.recDate||t.date, status:"closed", executedBy, inspectedBy, closedDate, closedAt:new Date().toISOString(), closedBy:S.name };
+  let next = null;
+  if (t.repeat && t.repeat!=="none" && !t.nextId){
+    let nk = addInterval(t.recDate || t.date, t.repeat), guard = 0;
+    while (nk && nk <= closedDate && guard++ < 800) nk = addInterval(nk, t.repeat);
+    if (nk){ const ref = tasksCol().doc(); batch.set(ref, nextInstance(t, nk)); upd.nextId = ref.id; next = nk; }
+  }
+  batch.update(tasksCol().doc(t.id), upd);
+  await batch.commit();
+  return next;
+}
+async function reopenTask(t){
+  if (!confirm("Reopen this job? It will need to be closed again with an inspector.")) return;
+  try{ await tasksCol().doc(t.id).update({ status: t.execution ? "executed" : "open", closedDate:"", closedAt:"", inspectedBy:"", executedBy:"" }); toast("Reopened"); }
+  catch(e){ writeFailed(e); }
+}
+async function saveAllocation(t, name){
+  name = canonName(name, S.workers);
+  if (name === (t.assignee||"")) return;
+  try{ await tasksCol().doc(t.id).update({ assignee:name, recDate:t.recDate||t.date, realloc:[...(t.realloc||[]), reallocEntry("user", t.assignee, name)] }); }
+  catch(e){ writeFailed(e); }
+}
+async function moveToDate(list, k){
+  for (let i=0; i<list.length; i+=400){
+    const batch = S.db.batch();
+    list.slice(i,i+400).forEach(t=>batch.update(tasksCol().doc(t.id), { date:k, recDate:t.recDate||t.date, realloc:[...(t.realloc||[]), reallocEntry("date", t.date, k)] }));
+    await batch.commit();
+  }
 }
 
 /* ---------- Sheet helpers ---------- */
-const closeSheet = () => { $("sheetHost").innerHTML = ""; };
+const closeSheet = () => { $("sheetHost").innerHTML = ""; S.onData = null; };
 function wireSheet(){
   $("scrim").addEventListener("click", e=>{ if (e.target.id==="scrim") closeSheet(); });
   document.addEventListener("keydown", function esc_(e){ if(e.key==="Escape"){ closeSheet(); document.removeEventListener("keydown",esc_);} });
 }
-const optList = (list, val, empty) => (empty!==undefined ? `<option value="">${esc(empty)}</option>` : "") +
-  (val && !list.includes(val) ? `<option value="${esc(val)}" selected>${esc(val)}</option>` : "") +
-  list.map(x=>`<option value="${esc(x)}" ${x===val?"selected":""}>${esc(x)}</option>`).join("");
+const dl = (id, list) => `<datalist id="${id}">${list.map(w=>`<option value="${esc(w)}">`).join("")}</datalist>`;
 
+/* ---------- Close a job (manager only, inspector required) ---------- */
+function openClose(t){
+  if (!isAdmin()) return;
+  const today = todayKey();
+  $("sheetHost").innerHTML = `<div class="scrim" id="scrim"><form class="sheet" id="cForm" novalidate>
+    <div class="eyebrow">${isPrev(t)?"Close preventive check":"Close task"}</div>
+    <h3 dir="auto">${esc(fullTitle(t))}</h3>
+    <p class="lead">${datesLine(t)}${t.assignee?` · Allocated to <b>${esc(t.assignee)}</b>`:""}</p>
+    <label class="f"><span>Executed by <small>(optional)</small></span><input name="exec" list="dlExec" dir="auto" maxlength="60" autocomplete="off" value="${esc((t.execution&&t.execution.name)||t.assignee||"")}" placeholder="Who did the job"></label>
+    <label class="f"><span>Inspected by <small style="color:var(--red)">— required to close</small></span><input name="insp" list="dlInsp" dir="auto" maxlength="60" autocomplete="off" placeholder="Type who inspected it" required></label>
+    <label class="f"><span>Closing date</span><input type="date" name="cdate" value="${today}" max="${today}" required></label>
+    ${t.repeat && t.repeat!=="none" && !t.nextId ? `<p class="note">This repeats (${esc(REPEAT_LABEL[t.repeat]||t.repeat)}). The next one will be scheduled automatically when you close it.</p>` : ""}
+    ${dl("dlExec", S.workers)}${dl("dlInsp", checkers())}
+    <div class="actions"><span class="grow"></span><button type="button" class="btn" id="cancel">Cancel</button><button type="submit" class="btn btn-y">Close job</button></div>
+  </form></div>`;
+  wireSheet(); $("cancel").onclick = closeSheet;
+  const f = $("cForm"); setTimeout(()=>f.insp.focus(), 50);
+  f.onsubmit = async e=>{
+    e.preventDefault();
+    const insp = canonName(f.insp.value, checkers()), exec = canonName(f.exec.value, S.workers), cd = f.cdate.value || today;
+    if (!insp){ f.insp.focus(); toast("Add who inspected it. A job can't be closed without an inspector."); return; }
+    try{ const next = await closeTask(t, {executedBy:exec, inspectedBy:insp, closedDate:cd}); closeSheet();
+         toast(next ? `Closed. Next one scheduled for ${fmtDY(next)}.` : "Closed"); }
+    catch(err){ writeFailed(err); }
+  };
+}
+
+/* ---------- Carry-over pop-up: jobs not closed on their day ---------- */
+function openCarry(){
+  if (!isAdmin()) return;
+  const today = todayKey(), list = overdue(today);
+  if (!list.length){ toast("Nothing to carry over. Everything from earlier days is closed."); return; }
+  const row = t => `<label class="co-row"><input type="checkbox" value="${t.id}" checked>
+      <span class="co-main"><b dir="auto">${esc(fullTitle(t))}</b><small>${[!isPrev(t)&&locsOf(t).length?locSummary(locsOf(t)):"", t.assignee?`Allocated to ${t.assignee}`:"Not allocated", `Planned ${fmtD(t.date)}`, isExecuted(t)?"Executed, awaiting inspection":""].filter(Boolean).map(esc).join(" · ")}</small></span>
+      <span class="co-late">${daysBetween(t.date,today)}d</span></label>`;
+  const tasks = list.filter(t=>!isPrev(t)), prev = list.filter(isPrev);
+  $("sheetHost").innerHTML = `<div class="scrim" id="scrim"><div class="sheet">
+    <div class="eyebrow">Not closed on time</div>
+    <h3>${list.length} ${list.length===1?"job wasn't":"jobs weren't"} closed</h3>
+    <p class="lead">These were planned for earlier days and are still open. Move them to <b>today</b> so they're done today. The recommended date is kept, and the move is saved as a reallocation.</p>
+    <div class="co-tools"><button type="button" class="lk" id="coAll">Select all</button><button type="button" class="lk" id="coNone">Select none</button></div>
+    <div class="co-list" id="coList">
+      ${tasks.length?`<div class="co-h">Tasks (${tasks.length})</div>${tasks.map(row).join("")}`:""}
+      ${prev.length?`<div class="co-h">Preventive (${prev.length})</div>${prev.map(row).join("")}`:""}
+    </div>
+    <div class="actions"><span class="grow"></span><button type="button" class="btn" id="cancel">Not now</button><button type="button" class="btn btn-y" id="coMove">Move selected to today</button></div>
+  </div></div>`;
+  wireSheet(); $("cancel").onclick = closeSheet;
+  const boxes = [...$("coList").querySelectorAll("input")];
+  $("coAll").onclick = ()=>boxes.forEach(b=>b.checked=true);
+  $("coNone").onclick = ()=>boxes.forEach(b=>b.checked=false);
+  $("coMove").onclick = async ()=>{
+    const ids = new Set(boxes.filter(b=>b.checked).map(b=>b.value)), sel = list.filter(t=>ids.has(t.id));
+    if (!sel.length){ toast("Select at least one job."); return; }
+    try{ await moveToDate(sel, today); closeSheet(); S.sel = today; const n=new Date(); S.month=new Date(n.getFullYear(),n.getMonth(),1); render();
+         toast(`${sel.length} ${sel.length===1?"job":"jobs"} moved to today.`); }
+    catch(e){ writeFailed(e); }
+  };
+}
+function maybeCarryPopup(){
+  const today = todayKey();
+  if (!isAdmin() || !S.ready || S.carryShown===today || $("sheetHost").innerHTML) return;
+  S.carryShown = today;
+  if (overdue(today).length) openCarry();
+}
+
+/* Status, dates and reallocation history shown when opening a job */
+function statusBlock(t){
+  const st = isClosed(t) ? `Closed on <b>${esc(fmtDY(t.closedDate))}</b> · Executed by <b>${esc(t.executedBy||(t.execution&&t.execution.name)||"—")}</b> · Inspected by <b>${esc(t.inspectedBy||"—")}</b>`
+    : isExecuted(t) ? `Executed by <b>${esc((t.execution&&t.execution.name)||"—")}</b>${t.execution&&t.execution.at?` on ${esc(fmtDY(keyOf(new Date(t.execution.at))))}`:""} · <b>awaiting inspection</b>`
+    : `Open`;
+  const hist = (t.realloc||[]).slice().reverse().map(r=>`<li>${r.type==="date" ? `Date moved <b>${esc(fmtD(r.from)||"—")}</b> → <b>${esc(fmtD(r.to))}</b>` : `Reallocated <b>${esc(r.from||"nobody")}</b> → <b>${esc(r.to||"nobody")}</b>`}<small> · ${esc(r.by||"")} · ${esc(new Date(r.at).toLocaleString(undefined,{day:"numeric",month:"short",hour:"numeric",minute:"2-digit"}))}</small></li>`).join("");
+  return `<div class="sec-label">Status &amp; history</div>
+    <div class="st-box"><div>${st}</div>
+      <div class="st-dates"><span>Recommended<b>${esc(fmtDY(t.recDate)||"—")}</b></span><span>Reallocated<b>${t.date!==t.recDate?esc(fmtDY(t.date)):"—"}</b></span><span>Closed<b>${isClosed(t)?esc(fmtDY(t.closedDate)):"—"}</b></span></div>
+      ${hist ? `<ul class="hist">${hist}</ul>` : `<small style="color:var(--muted)">No reallocations yet.</small>`}</div>`;
+}
 /* ---------- Add / edit task (normal or preventive) ---------- */
 function openSheet(task, kind){
   const prev = task ? isPrev(task) : kind==="preventive";
-  const t = task || {title:"",taskType:prev?"preventive":"task",category:"general",location:"",assignee:"",checkedBy:"",date:S.sel,time:"",repeat:"none",priority:"normal",notes:""};
+  const t = task || {title:"",taskType:prev?"preventive":"task",category:"general",location:"",assignee:"",date:S.sel<todayKey()?todayKey():S.sel,recDate:"",time:"",repeat:prev?"monthly":"none",priority:"normal",notes:"",realloc:[]};
   const ro = task ? !canEdit(task) : !canAdd();
   const dis = ro ? "disabled" : "";
   const opts = (obj,val,lab) => Object.entries(obj).map(([k,v])=>`<option value="${k}" ${k===val?"selected":""}>${esc(lab?v[lab]:v)}</option>`).join("");
@@ -606,7 +855,7 @@ function openSheet(task, kind){
     <h3>${heading}</h3>
     ${titleField}
     <label class="urg-toggle"><input type="checkbox" name="urgent" ${isUrgent(t)?"checked":""} ${dis}><span><b>Mark as urgent · عاجل</b><br><small style="color:var(--muted)">Shown in red at the top of the board and the daily report</small></span></label>
-    <div class="f"><span>Where <small>— choose one or more places</small></span>
+    <div class="f"><span>Where <small>— ${prev ? (task ? "extra places become separate checks" : "each place becomes its own check") : "choose one or more places"}</small></span>
       <button type="button" class="loc-btn" id="locBtn" ${dis}><span id="locSum"></span><i>▾</i></button>
       ${locPicker}
     </div>
@@ -615,24 +864,27 @@ function openSheet(task, kind){
       <label class="f"><span>Priority</span><select name="priority" ${dis}>${opts(PRIO,t.priority||"normal")}</select></label>
     </div>
     <div class="row">
-      <label class="f"><span>${t.repeat&&t.repeat!=="none"?"Starts on":"Date"}</span><input type="date" name="date" required value="${esc(t.date)}" ${dis}></label>
-      <label class="f"><span>Time <small>(optional)</small></span><input type="time" name="time" value="${esc(t.time)}" ${dis}></label>
+      ${task ? `<label class="f"><span>Recommended date</span><input type="date" value="${esc(t.recDate||t.date)}" disabled title="The recommended date never changes"></label>`
+             : `<label class="f"><span>Recommended date</span><input type="date" name="date" required value="${esc(t.date)}" ${dis}></label>`}
+      ${task ? `<label class="f"><span>Reallocated date <small>(move it)</small></span><input type="date" name="date" required value="${esc(t.date)}" ${dis}></label>` : ""}
     </div>
-    <label class="f"><span>Repeat</span><select name="repeat" ${dis}>${opts(REPEAT,t.repeat||"none")}</select></label>
+    <div class="row">
+      <label class="f"><span>Time <small>(optional)</small></span><input type="time" name="time" value="${esc(t.time)}" ${dis}></label>
+      <label class="f"><span>${prev?"Frequency":"Repeat"}</span><select name="repeat" ${dis}>${prev ? opts(FREQ_PREV, freqOf(t)) : opts(REPEAT_TASK, REPEAT_TASK[t.repeat]?t.repeat:"none")}</select></label>
+    </div>
     <label class="f"><span>Notes</span><textarea name="notes" dir="auto" rows="3" maxlength="600" placeholder="Details, parts needed… / تفاصيل" ${dis}>${esc(t.notes)}</textarea></label>
     <div class="f ar-box ${t.notes&&!hasArabic(t.notes)?"":"hidden"}" id="notesArBox"><span>Notes in Arabic for the report</span>
       <div class="ar-row"><textarea name="notesAr" dir="rtl" rows="2" maxlength="800" placeholder="الملاحظات بالعربية" ${dis}>${esc(t.notesAr||"")}</textarea>${ro?"":`<button type="button" class="btn" id="trNotes" title="Suggest Arabic again">↻</button>`}</div>
       <small class="ar-hint" id="notesArHint"></small></div>
-    <div class="sec-label">Responsibility</div>
-    <div class="row">
-      <label class="f"><span>Executed by</span><input name="assignee" list="dlExec" dir="auto" maxlength="60" autocomplete="off" value="${esc(t.assignee||"")}" placeholder="Type a name…" ${dis}></label>
-      <label class="f"><span>Checked by</span><input name="checkedBy" list="dlCheck" dir="auto" maxlength="60" autocomplete="off" value="${esc(t.checkedBy||"")}" placeholder="Type a name…" ${dis}></label>
-      <datalist id="dlExec">${S.workers.map(w=>`<option value="${esc(w)}">`).join("")}</datalist>
-      <datalist id="dlCheck">${checkers().map(w=>`<option value="${esc(w)}">`).join("")}</datalist>
-    </div>
+    <div class="sec-label">Allocation</div>
+    <label class="f"><span>Allocated to <small>— the maintenance person who will execute it</small></span><input name="assignee" list="dlExec" dir="auto" maxlength="60" autocomplete="off" value="${esc(t.assignee||"")}" placeholder="Type a name…" ${dis}></label>
+    ${dl("dlExec", S.workers)}
+    <p class="note" style="margin:-4px 0 12px">“Inspected by” is added when you close the job.</p>
+    ${task ? statusBlock(t) : ""}
     ${!S.workers.length && isAdmin() ? `<p class="note" style="margin:-4px 0 12px">Tip: add your maintenance workers under <b>Team</b> so their names are suggested and the task shows on their phone.</p>` : ""}
     <div class="actions">
       ${task && isAdmin() ? `<button type="button" class="btn del" id="delBtn">Delete</button>` : ""}
+      ${task && isAdmin() && !isClosed(task) ? `<button type="button" class="btn" id="closeBtn">Close job…</button>` : ""}
       <span class="grow"></span>
       <button type="button" class="btn" id="cancel">${ro?"Close":"Cancel"}</button>
       ${ro ? "" : `<button type="submit" class="btn btn-y">${task?"Save changes":(prev?"Add preventive":"Add task")}</button>`}
@@ -686,8 +938,9 @@ function openSheet(task, kind){
     if (t.title && !t.titleAr) suggest("title", false);
     if (t.notes && !t.notesAr) suggest("notes", false);
   }
+  if ($("closeBtn")) $("closeBtn").onclick = ()=>openClose(task);
   if ($("delBtn")) $("delBtn").onclick = async ()=>{
-    const msg = task.repeat && task.repeat!=="none" ? "Delete this repeating task from every day?" : "Delete this task?";
+    const msg = "Delete this job? This can't be undone." + (task.repeat && task.repeat!=="none" ? " Future repeats that were already scheduled stay on the board." : "");
     if (!confirm(msg)) return;
     try{ await S.db.collection("tasks").doc(task.id).delete(); closeSheet(); toast("Task deleted"); }catch(e){ writeFailed(e); }
   };
@@ -696,16 +949,33 @@ function openSheet(task, kind){
     const title = f.title.value.trim();
     if (!title){ f.title.focus(); toast(prev ? "Choose a preventive check." : "Give the task a name."); return; }
     if (!f.date.value){ f.date.focus(); toast("Pick a date."); return; }
-    const body = { title, taskType: prev?"preventive":"task", category:f.category.value, priority:f.priority.value,
-      locations:picked(), location:locSummary(picked()), assignee:canonName(f.assignee.value, S.workers), checkedBy:canonName(f.checkedBy.value, checkers()),
+    const places = picked(), assignee = canonName(f.assignee.value, S.workers), now = new Date().toISOString();
+    const body = { title, taskType: prev?"preventive":"task", category:f.category.value, priority:f.priority.value, assignee,
       titleAr: (!prev && f.titleAr && !hasArabic(title)) ? f.titleAr.value.trim() : "",
       notesAr: (!prev && f.notesAr && f.notes.value.trim() && !hasArabic(f.notes.value)) ? f.notesAr.value.trim() : "",
-      date:f.date.value, time:f.time.value, repeat:f.repeat.value, notes:f.notes.value.trim() };
+      time:f.time.value, repeat:f.repeat.value, notes:f.notes.value.trim() };
+    const fresh = (k, locs) => ({ ...body, locations:locs, location:locSummary(locs), recDate:k, date:k, status:"open", execution:null, realloc:[], done:{}, createdBy:S.uid, createdAt:now });
     try{
-      if (task) await S.db.collection("tasks").doc(task.id).update(body);
-      else await S.db.collection("tasks").add({...body, done:{}, createdBy:S.uid, createdAt:new Date().toISOString()});
-      closeSheet(); toast(task ? "Changes saved" : (prev ? "Preventive check added" : "Task added"));
-      if (!task && body.date !== S.sel){ S.sel = body.date; const d=fromKey(body.date); S.month=new Date(d.getFullYear(),d.getMonth(),1); render(); }
+      const batch = S.db.batch(); let added = 0;
+      if (!task){
+        // Preventive: one separate check per place. Tasks: one task covering all chosen places.
+        const groups = prev ? (places.length ? places.map(p=>[p]) : [[]]) : [places];
+        groups.forEach(locs=>{ batch.set(tasksCol().doc(), fresh(f.date.value, locs)); added++; });
+      } else {
+        const realloc = [...(task.realloc||[])];
+        if (f.date.value !== task.date) realloc.push(reallocEntry("date", task.date, f.date.value));
+        if (assignee !== (task.assignee||"")) realloc.push(reallocEntry("user", task.assignee, assignee));
+        const mine = prev ? (places.length ? [places[0]] : []) : places;
+        batch.update(tasksCol().doc(task.id), { ...body, locations:mine, location:locSummary(mine), date:f.date.value, realloc, recDate: task.recDate || task.date });
+        if (prev) places.slice(1).forEach(p=>{ batch.set(tasksCol().doc(), {...fresh(f.date.value, [p]), recDate: f.date.value}); added++; });
+      }
+      await batch.commit();
+      closeSheet();
+      toast(task ? (added ? `Saved, and ${added} more ${added===1?"check":"checks"} added (one per place).` : "Changes saved")
+                 : (prev ? (added>1 ? `${added} preventive checks added, one per place.` : "Preventive check added") : "Task added"));
+      if (!task && f.date.value !== S.sel){ S.sel = f.date.value; const d=fromKey(S.sel); S.month=new Date(d.getFullYear(),d.getMonth(),1); }
+      if (!task){ S.kind = prev ? "preventive" : "task"; }
+      render();
     }catch(err){ writeFailed(err); }
   };
 }
@@ -754,8 +1024,8 @@ function renderTeamList(){
   if (!people.length){ ul.innerHTML = `<li><small>Nobody added yet.</small></li>`; return; }
   const today = todayKey();
   ul.innerHTML = people.map(p=>{
-    const n = p.role==="worker" ? tasksOn(today).filter(t=>t.assignee===p.name && !isDone(t,today)).length : null;
-    const sub = [p.email || "No login (name only)", n!==null ? `${n} open today` : ""].filter(Boolean).join(" · ");
+    const n = p.role==="worker" ? S.tasks.filter(t=>t.assignee===p.name && !isClosed(t) && t.date<=today).length : null;
+    const sub = [p.email || "No login (name only)", n!==null ? `${n} open` : ""].filter(Boolean).join(" · ");
     return `<li><div class="p-info"><span dir="auto">${esc(p.name)}<em class="badge ${p.role}" style="font-style:normal">${esc((ROLES[p.role]||ROLES.worker).label)}</em></span><small>${esc(sub)}</small></div><button class="x" data-rm="${esc(p.key)}">Remove</button></li>`;
   }).join("");
   ul.onclick = async e=>{
@@ -893,130 +1163,234 @@ async function translateMany(texts){
   return {map:res, failed};
 }
 
-/* ---------- Daily report ---------- */
-function reportData(k){
-  const all = tasksOn(k).filter(forWho);
-  const open = all.filter(t=>!isDone(t,k)), done = all.filter(t=>isDone(t,k));
-  const from = new Date(fromKey(k)); from.setDate(from.getDate()-14); const fk = keyOf(from);
-  const carry = S.tasks.filter(t=>(!t.repeat||t.repeat==="none") && t.date && t.date<k && t.date>=fk && !isDone(t,t.date) && forWho(t))
-    .sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:byTime(a,b));
-  return {all, open, done, carry, urgent: open.filter(isUrgent), normal: open.filter(t=>!isUrgent(t))};
+
+/* ---------- Reports ---------- */
+const REPORT_TITLE = {
+  daily:["Daily Report","التقرير اليومي"], weekly:["Weekly Report","التقرير الأسبوعي"], monthly:["Monthly Report","التقرير الشهري"],
+  midyear:["Mid-Year Report","تقرير نصف السنة"], yearly:["Yearly Report","التقرير السنوي"]
+};
+function period(type, k){
+  const d = fromKey(k), y = d.getFullYear(), m = d.getMonth();
+  if (type==="daily") return [k,k];
+  if (type==="weekly"){ const s = new Date(d); s.setDate(d.getDate()-((d.getDay()+6)%7)); const e = new Date(s); e.setDate(s.getDate()+6); return [keyOf(s), keyOf(e)]; }
+  if (type==="monthly") return [keyOf(new Date(y,m,1)), keyOf(new Date(y,m+1,0))];
+  if (type==="midyear") return m<6 ? [`${y}-01-01`,`${y}-06-30`] : [`${y}-07-01`,`${y}-12-31`];
+  return [`${y}-01-01`,`${y}-12-31`];
 }
-function groupTasks(list, by){
-  const map = new Map();
-  for (const t of list){ const L = locsOf(t), g = by==="worker" ? (t.assignee||"Not assigned") : (L.length===1 ? L[0] : L.length ? "Multiple places" : "No place set"); if(!map.has(g)) map.set(g,[]); map.get(g).push(t); }
-  const keys = [...map.keys()].sort((a,b)=> by==="worker"
-    ? (a==="Not assigned")-(b==="Not assigned") || a.localeCompare(b)
-    : (a==="Multiple places")-(b==="Multiple places") || (a==="No place set")-(b==="No place set") || locRank(a)-locRank(b) || a.localeCompare(b));
-  return keys.map(g=>[g, map.get(g)]);
+function periodLabel(type, k, ar){
+  const loc = ar ? "ar-LB" : undefined, d = fromKey(k), [s,e] = period(type,k);
+  if (type==="daily") return d.toLocaleDateString(loc,{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  if (type==="weekly") return `${fromKey(s).toLocaleDateString(loc,{day:"numeric",month:"short"})} – ${fromKey(e).toLocaleDateString(loc,{day:"numeric",month:"short",year:"numeric"})}`;
+  if (type==="monthly") return d.toLocaleDateString(loc,{month:"long",year:"numeric"});
+  if (type==="midyear") return ar ? `${d.getMonth()<6?"النصف الأول":"النصف الثاني"} ${d.toLocaleDateString(loc,{year:"numeric"})}` : `${d.getMonth()<6?"January – June":"July – December"} ${d.getFullYear()}`;
+  return d.toLocaleDateString(loc,{year:"numeric"});
 }
-function reportHTML(k, by, AR){
-  const {open, done, carry, urgent, normal} = reportData(k);
-  const d = fromKey(k), ar = s => AR[s] || "";
-  const urgCount = urgent.length + carry.filter(isUrgent).length;
-  const li = (t, ok, dateTag) => {
-    const enMeta = [dateTag, t.time, (by==="worker" || locsOf(t).length>1) ? locSummary(locsOf(t)) : "", catLabel(t.category), t.repeat&&t.repeat!=="none" ? REPEAT[t.repeat] : ""].filter(Boolean).map(esc).join(" · ");
-    const arMeta = [dateTag, t.time, (by==="worker" || locsOf(t).length>1) ? locSummary(locsOf(t), true) : "", catAr(t.category), REPEAT_AR[t.repeat]||""].filter(Boolean).map(esc).join(" · ");
-    const pills = (isUrgent(t)?`<span class="pill urg">URGENT · عاجل</span> `:"") + (isPrev(t)?`<span class="pill prev">Preventive · وقائي</span> `:"");
-    const titleAr = hasArabic(t.title) ? "" : (t.titleAr || (PREV_MAP[t.title] && PREV_MAP[t.title].ar) || ar(t.title));
+const staffMatch = (t, staff) => !staff || (staff==="__none" ? !t.assignee : t.assignee===staff);
+/* Which jobs belong in a report. Tasks and preventive checks are never mixed. */
+function scope(type, k, staff){
+  const [s,e] = period(type,k);
+  const fits = type==="daily" ? (t=>!isPrev(t)) : (t=>isPrev(t) && freqOf(t)===type);
+  const items = S.tasks.filter(t=>fits(t) && t.date>=s && t.date<=e && staffMatch(t,staff));
+  const carry = S.tasks.filter(t=>fits(t) && !isClosed(t) && t.date && t.date<s && staffMatch(t,staff));
+  return {items:items.sort(byRank), carry:carry.sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:byRank(a,b)), s, e};
+}
+function staffList(type, k){
+  const {items, carry} = scope(type, k, "");
+  const names = [...new Set([...items, ...carry].map(t=>t.assignee).filter(Boolean))];
+  const order = [...S.workers.filter(w=>names.includes(w)), ...names.filter(n=>!S.workers.includes(n)).sort()];
+  if ([...items, ...carry].some(t=>!t.assignee)) order.push("__none");
+  return order;
+}
+const staffLabel = s => s==="__none" ? ["Not allocated","غير مخصص"] : s ? [s, ""] : ["All staff","جميع الموظفين"];
+
+function reportDoc(type, k, staff, AR, by){
+  const prevRep = type!=="daily";
+  const {items, carry} = scope(type, k, staff);
+  const all = [...carry, ...items];
+  const open = all.filter(t=>!isClosed(t)), closed = all.filter(isClosed);
+  const urgent = open.filter(isUrgent), normal = open.filter(t=>!isUrgent(t));
+  const ar = s => (AR && AR[s]) || "";
+  const [tEn, tAr] = REPORT_TITLE[type], [sEn, sAr] = staffLabel(staff);
+  const carryIds = new Set(carry.map(t=>t.id));
+  const groupKey = t => prevRep ? t.title : by==="staff" ? (t.assignee||"Not allocated") : (locsOf(t).length===1 ? locsOf(t)[0] : locsOf(t).length ? "Multiple places" : "No place set");
+  const groupAr = g => prevRep ? ((PREV_MAP[g]&&PREV_MAP[g].ar) || ar(g) || glossaryAr(g)) : by==="staff" ? (g==="Not allocated"?"غير مخصص":"") : (locAr(g)||ar(g));
+  const groupOrder = (a,b) => prevRep ? a.localeCompare(b)
+    : by==="staff" ? ((a==="Not allocated")-(b==="Not allocated") || a.localeCompare(b))
+    : ((a==="Multiple places")-(b==="Multiple places") || (a==="No place set")-(b==="No place set") || locRank(a)-locRank(b) || a.localeCompare(b));
+  const line = t => {
+    const c = isClosed(t);
+    // Preventive reports are grouped by check, so each line is the place: "AC Filter" › "Room 101"
+    const en = prevRep ? (locsOf(t)[0] || t.title) : t.title;
+    const arT = prevRep ? (locsOf(t)[0] ? (locAr(locsOf(t)[0]) || ar(locsOf(t)[0])) : titleArOf(t, AR)) : (hasArabic(t.title) ? "" : titleArOf(t, AR));
+    const enMeta = [t.time, !prevRep && (by==="staff" || locsOf(t).length>1) ? locSummary(locsOf(t)) : "", !prevRep ? catLabel(t.category) : "",
+      !staff && by!=="staff" ? (t.assignee ? `Allocated to ${t.assignee}` : "Not allocated") : ""].filter(Boolean).map(esc).join(" · ");
+    const arMeta = [t.time, !prevRep && (by==="staff" || locsOf(t).length>1) ? locSummary(locsOf(t), true) : "", !prevRep ? catAr(t.category) : ""].filter(Boolean).map(esc).join(" · ");
     const notesAr = t.notes && !hasArabic(t.notes) ? (t.notesAr || ar(t.notes)) : "";
-    const ex = ok ? execName(t,k) : t.assignee;
-    const sig = `<div class="r-sig">
-      <span><bdi>Executed by · المنفّذ</bdi>: ${ex?`<b dir="auto">${esc(ex)}</b>`:`<i class="blank"></i>`}${ok?` <span style="color:var(--green)">✓ ${fmtTime(t.done[k].at)}</span>`:""}</span>
-      <span><bdi>Checked by · المدقّق</bdi>: ${t.checkedBy?`<b dir="auto">${esc(t.checkedBy)}</b>`:`<i class="blank"></i>`}</span></div>`;
-    return `<li class="r-item ${ok?"ok":""}"><span class="r-box"></span><div class="r-body">
-      ${pills?`<div style="margin-bottom:3px">${pills}</div>`:""}
+    const pills = (isUrgent(t)&&!c?`<span class="pill urg">URGENT · عاجل</span>`:"") + (carryIds.has(t.id)?`<span class="pill late">Carried over · مُرحّل</span>`:"") + (isExecuted(t)?`<span class="pill wait">Awaiting inspection · بانتظار التفتيش</span>`:"") + (c?`<span class="pill ok">Closed · مغلق</span>`:"");
+    const exec = c ? (t.executedBy || (t.execution&&t.execution.name) || "") : ((t.execution&&t.execution.name) || "");
+    return `<li class="r-item ${c?"ok":""}"><span class="r-box"></span><div class="r-body">
+      ${pills?`<div class="r-pills">${pills}</div>`:""}
       <div class="r-two">
-        <div>${hasArabic(t.title)?"":`<div class="r-t">${esc(t.title)}</div>`}<div class="r-m">${enMeta}</div>${t.notes?`<div class="r-m" dir="auto">${esc(t.notes)}</div>`:""}</div>
-        <div class="r-ar">${hasArabic(t.title)?`<div class="r-t">${esc(t.title)}</div>`:(titleAr?`<div class="r-t">${esc(titleAr)}</div>`:`<div class="r-t r-m">—</div>`)}<div class="r-m">${arMeta}</div>${notesAr?`<div class="r-m">${esc(notesAr)}</div>`:""}</div>
-      </div>${sig}</div></li>`;
+        <div>${hasArabic(en)?"":`<div class="r-t">${esc(en)}</div>`}${enMeta?`<div class="r-m">${enMeta}</div>`:""}${t.notes?`<div class="r-m" dir="auto">${esc(t.notes)}</div>`:""}</div>
+        <div class="r-ar">${hasArabic(en)?`<div class="r-t">${esc(en)}</div>`:(arT?`<div class="r-t">${esc(arT)}</div>`:`<div class="r-t r-m">—</div>`)}${arMeta?`<div class="r-m">${arMeta}</div>`:""}${notesAr?`<div class="r-m">${esc(notesAr)}</div>`:""}</div>
+      </div>
+      <div class="r-dates">
+        <span><bdi>Recommended · الموصى به</bdi> <b>${esc(fmtD(t.recDate)||"—")}</b></span>
+        <span><bdi>Reallocated · أعيدت جدولته</bdi> <b>${t.date!==t.recDate?esc(fmtD(t.date)):"—"}</b></span>
+        <span><bdi>Closed · الإغلاق</bdi> ${c?`<b>${esc(fmtD(t.closedDate))}</b>`:`<i class="blank short"></i>`}</span>
+      </div>
+      <div class="r-sig">
+        <span><bdi>Executed by · المنفّذ</bdi>: ${exec?`<b dir="auto">${esc(exec)}</b>`:`<i class="blank"></i>`}</span>
+        <span><bdi>Inspected by · المفتّش</bdi>: ${c&&t.inspectedBy?`<b dir="auto">${esc(t.inspectedBy)}</b>`:`<i class="blank"></i>`}</span>
+      </div></div></li>`;
   };
-  const grpHead = g => { const a = by==="worker" ? (g==="Not assigned"?"غير محدد":"") : (locAr(g)||ar(g)); return `<div class="r-grp"><span dir="auto">${esc(g)}</span><span dir="rtl">${esc(a)}</span></div>`; };
-  const groups = (list, empty) => list.length ? groupTasks(list, by).map(([g,ts])=>`${grpHead(g)}<ul>${ts.map(t=>li(t,false)).join("")}</ul>`).join("") : `<div class="r-none">${empty}</div>`;
+  const grouped = (list, empty) => {
+    if (!list.length) return `<div class="r-none">${empty}</div>`;
+    const map = new Map(); list.forEach(t=>{ const g = groupKey(t); if (!map.has(g)) map.set(g,[]); map.get(g).push(t); });
+    return [...map.keys()].sort(groupOrder).map(g=>`<div class="r-grp"><span dir="auto">${esc(g)}${prevRep?` <small>(${map.get(g).length})</small>`:""}</span><span dir="rtl">${esc(groupAr(g)||"")}</span></div><ul>${map.get(g).sort((a,b)=>prevRep?locRank(locsOf(a)[0])-locRank(locsOf(b)[0]):byRank(a,b)).map(line).join("")}</ul>`).join("");
+  };
   const sec = (en, arr, cls="") => `<div class="r-sec ${cls}"><span>${en}</span><span class="ar">${arr}</span></div>`;
-  const whoLine = S.who ? ` · <bdi>${esc(S.who==="__none"?"No one chosen":S.who)}</bdi>` : "";
-  const shortDate = x => fromKey(x).toLocaleDateString(undefined,{day:"numeric",month:"short"});
-  return `<div class="report" id="report">
-    <div class="r-head">
-      <div><img class="r-logo" src="${LOGO_INK}" alt="${esc(HOTEL)}"><div class="eyebrow">Maintenance</div><div class="r-title">Daily Maintenance Report</div>
-        <div class="r-date">${d.toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long",year:"numeric"})}${whoLine}</div></div>
-      <div class="r-title-ar"><div class="eyebrow" style="letter-spacing:0">${HOTEL_AR} · الصيانة</div>التقرير اليومي للصيانة
-        <div class="r-date">${d.toLocaleDateString("ar-LB",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}</div></div>
+  return `<div class="report">
+    <div class="r-top"><img class="r-logo" src="${LOGO_INK}" alt="${esc(HOTEL)}"><div class="r-kind"><span>${prevRep?"Preventive maintenance":"Maintenance tasks"}</span><span dir="rtl">${prevRep?"الصيانة الوقائية":"مهام الصيانة"}</span></div></div>
+    <div class="r-titleblock">
+      <h1 class="r-big">${tEn}</h1><div class="r-big-ar" dir="rtl">${tAr}</div>
+      <div class="r-staff" dir="auto">${esc(sEn)}${sAr?` · <span dir="rtl">${sAr}</span>`:""}</div>
+      <div class="r-period"><span>${esc(periodLabel(type,k))}</span><span dir="rtl">${esc(periodLabel(type,k,true))}</span></div>
     </div>
     <div class="r-sum">
-      <div class="u"><b>${urgCount}</b>Urgent · عاجل</div>
-      <div><b>${open.length}</b>To do · مطلوب</div>
-      <div><b>${carry.length}</b>Overdue · متأخر</div>
-      <div><b>${done.length}</b>Done · منجز</div>
+      <div class="u"><b>${urgent.length}</b>Urgent · عاجل</div>
+      <div><b>${open.length}</b>Open · مفتوح</div>
+      <div><b>${all.filter(t=>t.recDate && t.date!==t.recDate).length + carry.length}</b>Reallocated / carried over · أعيدت جدولتها</div>
+      <div><b>${closed.length}</b>Closed · مغلق</div>
     </div>
-    ${urgent.length ? sec("Urgent","عاجل","u") + groups(urgent,"") : ""}
-    ${carry.length ? sec("Overdue from earlier days","مهام متأخرة من أيام سابقة") + `<ul>${carry.map(t=>li(t,false,shortDate(t.date))).join("")}</ul>` : ""}
-    ${sec("To do","المهام المطلوبة")}${groups(normal, urgent.length ? "No other tasks. · لا توجد مهام أخرى" : "Nothing left to do. · لا توجد مهام")}
-    ${sec("Completed","المهام المنجزة")}${done.length ? `<ul>${done.map(t=>li(t,true)).join("")}</ul>` : `<div class="r-none">Nothing ticked off yet. · لم يُنجز شيء بعد</div>`}
+    ${urgent.length ? sec("Urgent","عاجل","u") + grouped(urgent,"") : ""}
+    ${sec(prevRep?"Checks to do":"To do", prevRep?"الفحوصات المطلوبة":"المهام المطلوبة")}${grouped(normal, (urgent.length?"Nothing else open.":"Nothing open.")+" · لا يوجد")}
+    ${sec("Closed","المغلقة")}${grouped(closed, "Nothing closed yet. · لم يُغلق شيء بعد")}
     <div class="r-foot"><div><span>Prepared by</span><span dir="rtl">أعدّه</span></div><div><span>Manager signature</span><span dir="rtl">توقيع المدير</span></div></div>
   </div>`;
 }
-function reportText(k, by, AR){
-  const {open, done, carry, urgent, normal} = reportData(k);
-  const d = fromKey(k), L = [], ar = s => AR[s] || "";
+function reportText(type, k, staff, AR){
+  const prevRep = type!=="daily", {items, carry} = scope(type, k, staff), all = [...carry, ...items], ar = s => (AR && AR[s]) || "";
+  const open = all.filter(t=>!isClosed(t)), closed = all.filter(isClosed), carryIds = new Set(carry.map(t=>t.id));
+  const [tEn, tAr] = REPORT_TITLE[type], [sEn, sAr] = staffLabel(staff);
   const bil = (en, a) => a && a!==en ? `${en} | ${a}` : en;
-  L.push(`*${HOTEL} – Daily Maintenance Report*`, `*التقرير اليومي للصيانة*`);
-  L.push(d.toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long",year:"numeric"}) + (S.who ? ` – ${S.who==="__none"?"No one chosen":S.who}` : ""));
-  L.push(`Urgent/عاجل: ${urgent.length} | To do/مطلوب: ${open.length} | Done/منجز: ${done.length}${carry.length?` | Overdue/متأخر: ${carry.length}`:""}`);
-  const line = (t, dateTag) => {
-    const where = locsOf(t).length ? ` @ ${bil(locSummary(locsOf(t)), locSummary(locsOf(t), true))}` : "";
-    const who = [t.assignee?`Executed by/المنفّذ: ${t.assignee}`:"", t.checkedBy?`Checked by/المدقّق: ${t.checkedBy}`:""].filter(Boolean).join(", ");
-    return `${isUrgent(t)?"🔴 URGENT عاجل – ":"- "}${dateTag?`[${dateTag}] `:""}${bil(t.title, hasArabic(t.title)?"":(t.titleAr||(PREV_MAP[t.title]&&PREV_MAP[t.title].ar)||ar(t.title)))}${t.time?` (${t.time})`:""}${where}${who?`\n   ${who}`:""}${t.notes?`\n   ${bil(t.notes, hasArabic(t.notes)?"":(t.notesAr||ar(t.notes)))}`:""}`;
+  const L = [`*${tEn} | ${tAr}*`, `${sEn}${sAr?` | ${sAr}`:""}`, `${HOTEL} – ${periodLabel(type,k)}`, `Open/مفتوح: ${open.length} | Closed/مغلق: ${closed.length}${carry.length?` | Carried over/مُرحّل: ${carry.length}`:""}`];
+  const one = t => {
+    const where = !prevRep && locsOf(t).length ? ` @ ${bil(locSummary(locsOf(t)), locSummary(locsOf(t), true))}` : "";
+    const who = !staff ? (t.assignee ? `\n   Allocated to: ${t.assignee}` : `\n   Not allocated`) : "";
+    const dates = `\n   Recommended ${fmtD(t.recDate)}${t.date!==t.recDate?` · Reallocated ${fmtD(t.date)}`:""}${isClosed(t)?` · Closed ${fmtD(t.closedDate)} · Inspected by ${t.inspectedBy||"—"}`:""}`;
+    return `${isUrgent(t)&&!isClosed(t)?"🔴 URGENT عاجل – ":isClosed(t)?"✓ ":"☐ "}${carryIds.has(t.id)?"[carried over] ":""}${bil(fullTitle(t), titleArOf(t, AR))}${t.time?` (${t.time})`:""}${where}${who}${dates}`;
   };
-  if (urgent.length){ L.push("", "*URGENT | عاجل*"); urgent.forEach(t=>L.push(line(t))); }
-  if (carry.length){ L.push("", "*OVERDUE | متأخر*"); carry.forEach(t=>L.push(line(t, fromKey(t.date).toLocaleDateString(undefined,{day:"numeric",month:"short"})))); }
-  L.push("", "*TO DO | المطلوب*");
-  if (!normal.length) L.push("- Nothing else to do | لا توجد مهام أخرى");
-  groupTasks(normal, by).forEach(([g,ts])=>{ L.push(`• ${bil(g, by==="worker"?"":(locAr(g)||ar(g)))}`); ts.forEach(t=>L.push(line(t))); });
-  if (done.length){ L.push("", "*DONE | منجز*"); done.forEach(t=>L.push(`✓ ${bil(t.title, hasArabic(t.title)?"":(t.titleAr||(PREV_MAP[t.title]&&PREV_MAP[t.title].ar)||ar(t.title)))} – ${execName(t,k)}${t.checkedBy?`, checked by ${t.checkedBy}`:""}`)); }
+  if (open.length){ L.push("", prevRep ? "*CHECKS TO DO | الفحوصات المطلوبة*" : "*TO DO | المطلوب*"); open.forEach(t=>L.push(one(t))); }
+  else L.push("", "Nothing open | لا يوجد");
+  if (closed.length){ L.push("", "*CLOSED | المغلقة*"); closed.forEach(t=>L.push(one(t))); }
   return L.join("\n");
 }
+
 async function openReport(){
-  const k = S.sel; let by = "location", AR = {};
-  $("sheetHost").innerHTML = `<div class="scrim" id="scrim"><div class="sheet wide">
+  const R = { type: S.kind==="preventive" ? "monthly" : "daily", k: S.sel, staff: isWorker() ? (S.me&&S.me.name||"") : (S.who||""), by:"place", AR:{}, failed:0, multi:false };
+  const typeBtn = (v, l) => `<button type="button" data-type="${v}">${l}</button>`;
+  $("sheetHost").innerHTML = `<div class="scrim" id="scrim"><div class="sheet wide xl">
     <div class="no-print">
-      <div class="eyebrow">Report</div><h3>Daily report</h3>
-      <div class="r-ctrl">
-        <label>Group by <select id="rBy"><option value="location">Room / place</option><option value="worker">Executed by</option></select></label>
-        <span style="color:var(--muted)">${S.who ? "Showing only the selected person." : "Showing everyone."} English and Arabic side by side.</span>
+      <div class="eyebrow">Reports</div><h3>Reports dashboard</h3>
+      <div class="dash-types">
+        <div><span class="dl">Tasks</span><div class="seg" id="rTypesT">${typeBtn("daily","Daily Report")}</div></div>
+        <div><span class="dl">Preventive</span><div class="seg" id="rTypesP">${typeBtn("weekly","Weekly")}${typeBtn("monthly","Monthly")}${typeBtn("midyear","Mid-Year")}${typeBtn("yearly","Yearly")}</div></div>
       </div>
+      <div class="dash-row">
+        <label class="f"><span>Date</span><input type="date" id="rDate" value="${R.k}"></label>
+        <label class="f"><span>Staff</span><select id="rStaff" ${isWorker()?"disabled":""}></select></label>
+        <label class="f" id="rByWrap"><span>Group by</span><select id="rBy"><option value="place">Place</option><option value="staff">Staff</option></select></label>
+      </div>
+      <div class="r-period-note" id="rPeriodNote"></div>
+      ${isAdmin() ? `<details class="alloc" id="alloc" open><summary>Allocate jobs <span id="allocCount"></span></summary><div id="allocBody"></div></details>` : ""}
     </div>
-    <div id="rBody"><div class="r-wait">Preparing the report and translating to Arabic…</div></div>
+    <div id="rBody"><div class="r-wait">Preparing the report…</div></div>
     <div class="actions no-print" style="margin-top:14px">
-      <button type="button" class="btn" id="rCopy" disabled>Copy for WhatsApp</button>
+      <button type="button" class="btn" id="rCopy">Copy for WhatsApp</button>
       <span class="grow"></span>
       <button type="button" class="btn" id="cancel">Close</button>
-      <button type="button" class="btn btn-y" id="rPrint" disabled>Print / Save PDF</button>
+      ${isWorker() ? "" : `<button type="button" class="btn" id="rEach">Print one report per staff</button>`}
+      <button type="button" class="btn btn-y" id="rPrint">Print / Save PDF</button>
     </div>
   </div></div>`;
-  wireSheet();
-  $("cancel").onclick = closeSheet;
-  // Collect every English text that needs Arabic (titles, notes, unknown places)
-  const {all, carry} = reportData(k), texts = [];
-  [...all, ...carry].forEach(t=>{
-    if (t.title && !t.titleAr && !hasArabic(t.title) && !PREV_MAP[t.title]) texts.push(t.title);
-    if (t.notes && !t.notesAr && !hasArabic(t.notes)) texts.push(t.notes);
-    locsOf(t).forEach(l=>{ if (!locAr(l)) texts.push(l); });
-  });
-  const res = await translateMany(texts);
-  AR = res.map;
-  if (!$("rBody")) return; // closed while translating
-  const draw = ()=>{ $("rBody").innerHTML = reportHTML(k, by, AR) + (res.failed ? `<p class="note no-print">Some text couldn't be translated (no internet or translation service busy). Close and reopen the report to try again.</p>` : ""); };
-  draw();
-  $("rCopy").disabled = false; $("rPrint").disabled = false;
-  $("rBy").onchange = e=>{ by = e.target.value; draw(); };
+  wireSheet(); $("cancel").onclick = closeSheet;
+
+  function fillStaff(){
+    const names = [...new Set([...S.workers, ...staffList(R.type, R.k).filter(n=>n!=="__none")])];
+    if (isWorker()){ $("rStaff").innerHTML = `<option>${esc(R.staff)}</option>`; return; }
+    $("rStaff").innerHTML = `<option value="">All staff</option>` + names.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join("") + `<option value="__none">Not allocated</option>`;
+    $("rStaff").value = R.staff;
+  }
+  function drawAlloc(){
+    if (!isAdmin() || !$("allocBody")) return;
+    if ($("allocBody").contains(document.activeElement) && document.activeElement.tagName==="INPUT") return; // don't disturb typing
+    const {items, carry} = scope(R.type, R.k, R.staff), list = [...carry, ...items].filter(t=>!isClosed(t));
+    const un = list.filter(t=>!t.assignee).length;
+    $("allocCount").textContent = `· ${list.length} open${un?` · ${un} not allocated`:""}`;
+    $("allocBody").innerHTML = !list.length ? `<p class="note">No open jobs in this report.</p>` : `
+      <div class="al-bulk"><span>Allocate all <b>not allocated</b> jobs to</span><input id="alBulk" list="dlAl" dir="auto" placeholder="Name…" autocomplete="off"><button type="button" class="btn" id="alBulkGo" ${un?"":"disabled"}>Apply</button></div>
+      <table class="al-tab"><thead><tr><th>Job</th><th>Date</th><th>Allocated to</th></tr></thead><tbody>
+      ${list.map(t=>`<tr class="${t.assignee?"":"un"}"><td><span dir="auto">${esc(fullTitle(t))}</span>${!isPrev(t)&&locsOf(t).length?`<small>${esc(locSummary(locsOf(t)))}</small>`:""}</td>
+        <td>${esc(fmtD(t.date))}${t.date!==t.recDate?`<small>rec. ${esc(fmtD(t.recDate))}</small>`:""}</td>
+        <td><input data-al="${t.id}" list="dlAl" dir="auto" value="${esc(t.assignee||"")}" placeholder="Not allocated" autocomplete="off"></td></tr>`).join("")}
+      </tbody></table>${dl("dlAl", S.workers)}`;
+    $("allocBody").querySelectorAll("[data-al]").forEach(inp=>inp.onchange = async ()=>{
+      const t = S.tasks.find(x=>x.id===inp.dataset.al); if (!t) return;
+      inp.blur(); await saveAllocation(t, inp.value); toast(inp.value.trim() ? `Allocated to ${canonName(inp.value, S.workers)}` : "Allocation removed");
+    });
+    if ($("alBulkGo")) $("alBulkGo").onclick = async ()=>{
+      const name = canonName($("alBulk").value, S.workers); if (!name){ $("alBulk").focus(); toast("Type a name first."); return; }
+      const todo = list.filter(t=>!t.assignee);
+      try{ for (let i=0;i<todo.length;i+=400){ const b = S.db.batch(); todo.slice(i,i+400).forEach(t=>b.update(tasksCol().doc(t.id), {assignee:name, recDate:t.recDate||t.date, realloc:[...(t.realloc||[]), reallocEntry("user","",name)]})); await b.commit(); }
+           toast(`${todo.length} ${todo.length===1?"job":"jobs"} allocated to ${name}`); }
+      catch(e){ writeFailed(e); }
+    };
+  }
+  async function draw(){
+    document.querySelectorAll(".dash-types [data-type]").forEach(b=>b.setAttribute("aria-pressed", b.dataset.type===R.type));
+    $("rByWrap").classList.toggle("hidden", R.type!=="daily");
+    const [s,e] = period(R.type, R.k);
+    $("rPeriodNote").textContent = R.type==="daily" ? `Tasks scheduled for ${periodLabel("daily",R.k)}, plus open tasks carried over from earlier days.`
+      : `${FREQ_PREV[R.type]} preventive checks scheduled ${fmtDY(s)} – ${fmtDY(e)}, plus open ones carried over.`;
+    fillStaff();
+    // Arabic for anything typed freely (dictionary first, then machine translation; cached)
+    const {items, carry} = scope(R.type, R.k, "");
+    const texts = [];
+    [...items, ...carry].forEach(t=>{
+      if (t.title && !t.titleAr && !hasArabic(t.title) && !PREV_MAP[t.title] && !glossaryAr(t.title)) texts.push(t.title);
+      if (t.notes && !t.notesAr && !hasArabic(t.notes)) texts.push(t.notes);
+      locsOf(t).forEach(l=>{ if (!locAr(l)) texts.push(l); });
+    });
+    const need = texts.filter(x=>!(x in R.AR));
+    if (need.length){ const res = await translateMany(need); Object.assign(R.AR, res.map); R.failed = res.failed; }
+    if (!$("rBody")) return;
+    R.multi = false;
+    $("rBody").innerHTML = reportDoc(R.type, R.k, R.staff, R.AR, R.by) + (R.failed ? `<p class="note no-print">Some free text couldn't be translated automatically (no internet or the service was busy). Open the job and fill in “Arabic for the report”, or reopen this report to retry.</p>` : "");
+    drawAlloc();
+  }
+  document.querySelectorAll(".dash-types [data-type]").forEach(b=>b.onclick = ()=>{ R.type = b.dataset.type; draw(); });
+  $("rDate").onchange = e=>{ if (e.target.value){ R.k = e.target.value; draw(); } };
+  $("rStaff").onchange = e=>{ R.staff = e.target.value; draw(); };
+  $("rBy").onchange = e=>{ R.by = e.target.value; draw(); };
   $("rPrint").onclick = ()=>window.print();
+  if ($("rEach")) $("rEach").onclick = ()=>{
+    const staff = staffList(R.type, R.k);
+    if (!staff.length){ toast("No jobs in this report yet."); return; }
+    $("rBody").innerHTML = staff.map(s=>reportDoc(R.type, R.k, s, R.AR, "place")).join(`<div class="page-break"></div>`);
+    R.multi = true;
+    setTimeout(()=>window.print(), 100);
+    toast(`${staff.length} ${staff.length===1?"report":"reports"}, one page per staff.`);
+  };
+  window.addEventListener("afterprint", function ap(){ if (R.multi && $("rBody")) draw(); if (!$("rBody")) window.removeEventListener("afterprint", ap); });
   $("rCopy").onclick = async ()=>{
-    const txt = reportText(k, by, AR);
+    const txt = reportText(R.type, R.k, R.staff, R.AR);
     try{ await navigator.clipboard.writeText(txt); toast("Report copied. Paste it in WhatsApp or email."); }
     catch(e){ const ta=document.createElement("textarea"); ta.value=txt; document.body.appendChild(ta); ta.select();
       try{ document.execCommand("copy"); toast("Report copied."); }catch(_){ toast("Couldn't copy on this device."); } ta.remove(); }
   };
+  S.onData = ()=>{ if ($("rBody") && !R.multi) { $("rBody").innerHTML = reportDoc(R.type, R.k, R.staff, R.AR, R.by); drawAlloc(); } };
+  draw();
 }
 
 /* ---------- Events ---------- */
@@ -1031,10 +1405,15 @@ $("prev").onclick = ()=>{ S.month = new Date(S.month.getFullYear(), S.month.getM
 $("next").onclick = ()=>{ S.month = new Date(S.month.getFullYear(), S.month.getMonth()+1, 1); renderCalendar(); };
 $("toToday").onclick = ()=>{ const n=new Date(); S.month=new Date(n.getFullYear(),n.getMonth(),1); S.sel=todayKey(); render(); };
 document.querySelector(".tabs").addEventListener("click", e=>{ const b=e.target.closest("button"); if(!b) return; S.filter=b.dataset.f; renderDay(); });
+document.querySelector(".kind-seg").addEventListener("click", e=>{ const b=e.target.closest("button"); if(!b) return; S.kind=b.dataset.kind; render(); });
 $("whoSel").onchange = e=>{ S.who = e.target.value; render(); };
+$("carryBanner").addEventListener("click", e=>{ if (e.target.closest("#carryOpen")) openCarry(); });
 $("list").addEventListener("click", e=>{
-  const d = e.target.closest("[data-done]"); if (d){ toggleDone(d.dataset.done); return; }
-  const o = e.target.closest("[data-open]"); if (o){ openSheet(S.tasks.find(t=>t.id===o.dataset.open)); }
+  const find = id => S.tasks.find(t=>t.id===id);
+  const x = e.target.closest("[data-exec]");   if (x){ toggleExec(x.dataset.exec); return; }
+  const c = e.target.closest("[data-close]");  if (c){ const t = find(c.dataset.close); if (t) openClose(t); return; }
+  const r = e.target.closest("[data-reopen]"); if (r){ const t = find(r.dataset.reopen); if (t) reopenTask(t); return; }
+  const o = e.target.closest("[data-open]");   if (o){ const t = find(o.dataset.open); if (t) openSheet(t); }
 });
 $("addBtn").onclick = ()=>openSheet(null, "task");
 $("addPrevBtn").onclick = ()=>openSheet(null, "preventive");
@@ -1060,7 +1439,7 @@ $("noAccOut").onclick = ()=>firebase.auth().signOut();
   const n = new Date(); S.month = new Date(n.getFullYear(), n.getMonth(), 1); S.sel = todayKey();
   renderLegend(); renderWhoSel(); render();
   // roll the "today" highlight over at midnight
-  setInterval(()=>{ if (S._today !== todayKey()){ S._today = todayKey(); renderCalendar(); } }, 60000); S._today = todayKey();
+  setInterval(()=>{ if (S._today !== todayKey()){ S._today = todayKey(); render(); maybeCarryPopup(); } }, 60000); S._today = todayKey();
 
   if (firebaseConfig.apiKey==="PASTE_HERE"){ $("gateNote").textContent="Setup needed: paste your Firebase config into this file."; $("enter").disabled=true; return; }
   firebase.initializeApp(firebaseConfig);
@@ -1081,15 +1460,15 @@ $("noAccOut").onclick = ()=>firebase.auth().signOut();
     stopTasks(); taskKey = key; S.tasks = []; S.ready = false; render();
     if (key==="none") return;
     let q = S.db.collection("tasks");
-    q = isWorker() ? q.where("assignee","==",S.me.name) : q.limit(1000);
+    q = isWorker() ? q.where("assignee","==",S.me.name) : q.limit(5000);
     unsubTasks = q.onSnapshot(snap=>{
-      S.tasks = snap.docs.map(d=>({id:d.id, ...d.data()})).filter(d=>d.id!==TEAM_ID && d.kind!=="team");
-      S.ready = true; render(); renderTeamList();
+      S.tasks = snap.docs.map(d=>({id:d.id, ...d.data()})).filter(d=>d.id!==TEAM_ID && d.kind!=="team").map(norm);
+      S.ready = true; render(); renderTeamList(); maybeCarryPopup();
     }, err=>{ S.ready=true; render(); toast(err.code==="permission-denied" ? "Your account can't see these tasks. Ask your manager." : "Live updates paused. Reload the page."); });
   }
   firebase.auth().onAuthStateChanged(u=>{
     stopTasks(); if (unsubTeam){ unsubTeam(); unsubTeam=null; }
-    if (!u){ Object.assign(S,{uid:null,email:"",tasks:[],workers:[],legacy:[],members:{},role:null,me:null,who:"",ready:false});
+    if (!u){ Object.assign(S,{uid:null,email:"",tasks:[],workers:[],legacy:[],members:{},role:null,me:null,who:"",ready:false,carryShown:""});
       closeSheet(); $("app").classList.add("hidden"); $("gate").classList.remove("hidden"); return; }
     S.uid=u.uid; S.email=(u.email||"").toLowerCase(); S.name=u.displayName || S.email.split("@")[0];
     $("gate").classList.add("hidden"); $("app").classList.remove("hidden"); window.scrollTo(0,0);
