@@ -264,7 +264,7 @@ ul.hist{margin:0;padding-left:18px}ul.hist li{margin:2px 0}ul.hist small{color:v
 .co-list{max-height:50vh;overflow:auto;border:1px solid var(--line);border-radius:10px;margin-bottom:12px}
 .co-h{padding:7px 12px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;color:var(--muted);background:var(--soft)}
 .co-row{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border-top:1px solid var(--line);cursor:pointer}
-.co-row input{width:18px;height:18px;margin-top:2px;accent-color:var(--ink)}
+.co-row input[type=checkbox]{width:18px;height:18px;margin-top:2px;accent-color:var(--ink);flex:none}
 .co-main{flex:1;min-width:0}.co-main b{display:block;font-weight:600}.co-main small{color:var(--muted);font-size:12px}
 .co-late{font-size:12px;font-weight:700;color:var(--red);white-space:nowrap}
 .sheet.xl{max-width:960px}
@@ -306,6 +306,51 @@ details.alloc summary{cursor:pointer;padding:10px 12px;font-weight:700;font-size
 .page-break{break-before:page;height:0}
 @media screen{.page-break{height:24px}}
 @media print{ .r-big{font-size:34px} .pill{-webkit-print-color-adjust:exact;print-color-adjust:exact} .r-titleblock{border-color:#BAB1A0} }
+
+/* v7 */
+.urg-toggle.opt b{color:var(--ink)}.urg-toggle.opt input{accent-color:var(--ink)}
+.pill.oos{background:var(--ink);color:#fff}
+.oos-bar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 16px 12px;padding:8px 12px;border:1.5px solid var(--ink);border-radius:10px;font-size:13px}
+.oos-bar span{border:1px solid var(--ink);border-radius:12px;padding:1px 9px;font-weight:600}
+.co-side{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.co-date,.co-setall input{border:1px solid var(--line);border-radius:6px;padding:4px 6px;font-size:13px;background:var(--panel);width:auto;height:auto;min-width:130px}
+.co-tools{align-items:center}.co-tools .grow{flex:1}.co-setall{font-size:13px;color:var(--muted)}
+.al-c{text-align:center}.al-tick{display:inline-flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;font-size:11px;color:var(--muted)}
+.al-tick input{width:18px;height:18px;accent-color:var(--ink)}
+.al-tab th:nth-child(1){width:34%}.al-tab th:nth-child(2){width:12%}.al-tab th:nth-child(3){width:12%}.al-tab th:nth-child(4){width:17%}.al-tab th:nth-child(5){width:25%}
+.al-tab input[type=date]{min-width:0;padding:5px 6px}
+.r-order{padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:15px;color:var(--muted)}
+/* printed report — pure black on white, no shaded areas */
+.report.pr{background:#fff;color:#000;border:1px solid #000;border-radius:0;padding:22px 24px}
+.pr *{color:#000}
+.pr-top{display:grid;grid-template-columns:1fr 2fr 1fr;align-items:center;gap:12px;padding-bottom:10px;border-bottom:2px solid #000}
+.pr-logo{height:58px;width:auto}
+.pr-mid{text-align:center}
+.pr-title{font-family:var(--display);font-size:30px;font-weight:700;line-height:1.1}
+.pr-title-ar{font-size:16px;font-weight:600}
+.pr-date{font-size:14px;margin-top:4px}
+.pr-right{text-align:right;font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:700}
+.pr-right div{letter-spacing:0;font-size:13px}
+.pr-counts{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0;border-bottom:1px solid #000;font-size:15px}
+.pr-counts b{font-size:20px;margin-left:4px}.pr-counts small{font-size:12px}
+.pr-room{break-inside:auto;margin-top:14px}
+.pr-room-h{display:flex;justify-content:space-between;font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #000;padding:2px 0 4px}
+.pj{display:grid;grid-template-columns:minmax(0,1fr) 34%;gap:16px;padding:10px 0;border-bottom:1px solid #000;break-inside:avoid}
+.pj-head{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.pj-box{flex:none;width:15px;height:15px;border:1.5px solid #000;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;transform:translateY(2px)}
+.pj-title{font-weight:700;font-size:15px}
+.pj-type{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;border:1.5px solid #000;padding:0 6px}
+.pj-ar{font-size:13px;margin:2px 0 0 23px;text-align:right}
+.pj-oos{display:inline-block;margin:4px 0 0 23px;font-size:12px;font-weight:800;letter-spacing:.5px;border:1.5px solid #000;padding:1px 6px}
+.pj-notes{margin:5px 0 0 23px;font-size:13px;border-left:2px solid #000;padding-left:8px}
+.pj-facts{margin:5px 0 0 23px;font-size:11.5px}
+.pj-done .pj-title{text-decoration:line-through}
+.pj-mat-h{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.pj-mat i{display:block;border-bottom:1px solid #000;height:20px}
+.pr-none{padding:16px 0}
+.pr-foot{display:flex;justify-content:space-between;gap:20px;margin-top:26px;font-size:13px}
+@media (max-width:640px){.pr-top{grid-template-columns:1fr;text-align:center}.pr-right{text-align:center}.pr-logo{margin:0 auto}.pj{grid-template-columns:1fr}}
+@media print{ .report.pr{border:0;padding:0} .pr-top{grid-template-columns:1fr 2fr 1fr!important} .pj{grid-template-columns:minmax(0,1fr) 34%!important} }
 </style>
 </head>
 <body>
@@ -369,6 +414,7 @@ details.alloc summary{cursor:pointer;padding:10px 12px;font-weight:700;font-size
         <button class="add alt" id="addPrevBtn">+ Add preventive</button>
         <button class="rep" id="reportBtn">Reports</button>
       </div>
+      <div class="oos-bar hidden" id="oosBar"></div>
       <div class="carry-banner hidden" id="carryBanner"></div>
       <div class="meter"><i id="meter" style="width:0"></i></div>
       <div class="ro hidden" id="roNote"></div>
@@ -516,7 +562,7 @@ const catLabel = cat => (CATS[cat]||CATS.general).label;
 const catAr = cat => (CATS[cat]||CATS.general).ar;
 const locRank = l => { const i = LOC_ORDER.indexOf(l); return i<0 ? 999 : i; };
 const isPrev = t => t.taskType==="preventive";
-const isUrgent = t => t.priority==="urgent";
+const isUrgent = t => t.priority==="urgent" || !!t.hkHours;
 const fmtTime = iso => new Date(iso).toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"});
 const fmtD  = k => k ? fromKey(k).toLocaleDateString(undefined,{day:"numeric",month:"short"}) : "";
 const fmtDY = k => k ? fromKey(k).toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"}) : "";
@@ -622,7 +668,8 @@ function taskRow(t, k){
   const status = closed ? `<span class="pill ok">Closed</span>` : isExecuted(t) ? `<span class="pill wait">Awaiting inspection</span>`
     : late ? `<span class="pill late">Not closed · ${daysBetween(t.date, today)}d late</span>` : "";
   const meta = [
-    isUrgent(t) ? `<span class="pill urg">Urgent · عاجل</span>` : "", status,
+    t.hkHours ? `<span class="pill urg">Housekeeping hours (urgent)</span>` : isUrgent(t) ? `<span class="pill urg">Urgent · عاجل</span>` : "", status,
+    t.roomClosed && !closed ? `<span class="pill oos">Room out of service</span>` : "",
     isPrev(t) ? `<span class="pill prev">${esc((FREQ_PREV[freqOf(t)]||"").split(" ")[0])} preventive</span>` : "",
     t.time ? `<span>${esc(t.time)}</span>` : "",
     !isPrev(t) && locsOf(t).length ? `<span>${esc(locSummary(locsOf(t)))}</span>` : "",
@@ -664,10 +711,14 @@ function renderDay(){
     : isReporter() ? (S.kind==="preventive" ? "Preventive checks for all maintenance staff (view only). The manager schedules and closes them." : "Tap “+ Add task” to report a job. Maintenance executes it and the manager closes it.") : "";
   $("roNote").textContent = note; $("roNote").classList.toggle("hidden", !note);
   $("whoSel").classList.toggle("hidden", isWorker());
+  // Rooms out of service: open jobs marked "room out of service" that are due today or earlier
+  const oos = [...new Set(S.tasks.filter(t=>t.roomClosed && !isClosed(t) && t.date<=today).flatMap(locsOf))].sort((a,b)=>locRank(a)-locRank(b));
+  $("oosBar").classList.toggle("hidden", !oos.length);
+  if (oos.length) $("oosBar").innerHTML = `<b>Out of service:</b> ${oos.map(r=>`<span>${esc(r)}</span>`).join("")}`;
   // Carry-over banner for the manager
   const od = isAdmin() ? overdue(today) : [];
   $("carryBanner").classList.toggle("hidden", !od.length);
-  if (od.length) $("carryBanner").innerHTML = `<span><b>${od.length}</b> ${od.length===1?"job":"jobs"} from earlier days ${od.length===1?"wasn't":"weren't"} closed.</span><button class="btn btn-y" id="carryOpen">Review &amp; move to today</button>`;
+  if (od.length) $("carryBanner").innerHTML = `<span><b>${od.length}</b> ${od.length===1?"job":"jobs"} from earlier days ${od.length===1?"wasn't":"weren't"} closed.</span><button class="btn btn-y" id="carryOpen">Review &amp; reallocate</button>`;
   document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-pressed", b.dataset.f===S.filter));
   const pass = t => S.filter==="all" || (S.filter==="closed" ? isClosed(t) : S.filter==="urgent" ? isUrgent(t)&&!isClosed(t) : S.filter==="awaiting" ? isExecuted(t) : !isClosed(t));
   const lc = carry.filter(pass), lm = main.filter(pass);
@@ -704,7 +755,7 @@ async function saveTeam(legacy, members){
 }
 function nextInstance(t, k){
   return { title:t.title, titleAr:t.titleAr||"", notes:t.notes||"", notesAr:t.notesAr||"", taskType:t.taskType, category:t.category||"general",
-    priority:t.priority||"normal", locations:locsOf(t), location:t.location||locSummary(locsOf(t)), assignee:t.assignee||"", time:t.time||"",
+    priority:t.priority||"normal", hkHours:!!t.hkHours, roomClosed:!!t.roomClosed, locations:locsOf(t), location:t.location||locSummary(locsOf(t)), assignee:t.assignee||"", time:t.time||"",
     repeat:t.repeat, seriesId:t.seriesId||t.id, recDate:k, date:k, status:"open", execution:null, realloc:[], done:{},
     createdBy:S.uid, createdAt:new Date().toISOString() };
 }
@@ -781,28 +832,36 @@ function openCarry(){
   if (!list.length){ toast("Nothing to carry over. Everything from earlier days is closed."); return; }
   const row = t => `<label class="co-row"><input type="checkbox" value="${t.id}" checked>
       <span class="co-main"><b dir="auto">${esc(fullTitle(t))}</b><small>${[!isPrev(t)&&locsOf(t).length?locSummary(locsOf(t)):"", t.assignee?`Allocated to ${t.assignee}`:"Not allocated", `Planned ${fmtD(t.date)}`, isExecuted(t)?"Executed, awaiting inspection":""].filter(Boolean).map(esc).join(" · ")}</small></span>
-      <span class="co-late">${daysBetween(t.date,today)}d</span></label>`;
+      <span class="co-side"><span class="co-late">${daysBetween(t.date,today)}d late</span><input type="date" class="co-date" data-for="${t.id}" value="${today}" min="${today}" title="Move to"></span></label>`;
   const tasks = list.filter(t=>!isPrev(t)), prev = list.filter(isPrev);
   $("sheetHost").innerHTML = `<div class="scrim" id="scrim"><div class="sheet">
     <div class="eyebrow">Not closed on time</div>
     <h3>${list.length} ${list.length===1?"job wasn't":"jobs weren't"} closed</h3>
-    <p class="lead">These were planned for earlier days and are still open. Move them to <b>today</b> so they're done today. The recommended date is kept, and the move is saved as a reallocation.</p>
-    <div class="co-tools"><button type="button" class="lk" id="coAll">Select all</button><button type="button" class="lk" id="coNone">Select none</button></div>
+    <p class="lead">These were planned for earlier days and are still open. Pick the date to move each one to (today by default). The recommended date is kept, and each move is saved as a reallocation.</p>
+    <div class="co-tools"><button type="button" class="lk" id="coAll">Select all</button><button type="button" class="lk" id="coNone">Select none</button>
+      <span class="grow"></span><span class="co-setall">Set all to <input type="date" id="coAllDate" value="${today}" min="${today}"></span></div>
     <div class="co-list" id="coList">
       ${tasks.length?`<div class="co-h">Tasks (${tasks.length})</div>${tasks.map(row).join("")}`:""}
       ${prev.length?`<div class="co-h">Preventive (${prev.length})</div>${prev.map(row).join("")}`:""}
     </div>
-    <div class="actions"><span class="grow"></span><button type="button" class="btn" id="cancel">Not now</button><button type="button" class="btn btn-y" id="coMove">Move selected to today</button></div>
+    <div class="actions"><span class="grow"></span><button type="button" class="btn" id="cancel">Not now</button><button type="button" class="btn btn-y" id="coMove">Move selected</button></div>
   </div></div>`;
   wireSheet(); $("cancel").onclick = closeSheet;
-  const boxes = [...$("coList").querySelectorAll("input")];
+  const boxes = [...$("coList").querySelectorAll("input[type=checkbox]")], dates = [...$("coList").querySelectorAll(".co-date")];
+  dates.forEach(d=>d.addEventListener("click", e=>e.stopPropagation()));
+  $("coAllDate").onchange = e=>{ if (e.target.value) dates.forEach(d=>d.value = e.target.value); };
   $("coAll").onclick = ()=>boxes.forEach(b=>b.checked=true);
   $("coNone").onclick = ()=>boxes.forEach(b=>b.checked=false);
   $("coMove").onclick = async ()=>{
     const ids = new Set(boxes.filter(b=>b.checked).map(b=>b.value)), sel = list.filter(t=>ids.has(t.id));
     if (!sel.length){ toast("Select at least one job."); return; }
-    try{ await moveToDate(sel, today); closeSheet(); S.sel = today; const n=new Date(); S.month=new Date(n.getFullYear(),n.getMonth(),1); render();
-         toast(`${sel.length} ${sel.length===1?"job":"jobs"} moved to today.`); }
+    const target = id => { const d = dates.find(x=>x.dataset.for===id); return (d && d.value) || today; };
+    try{ // group by chosen date so each batch moves to its own day
+      const byDate = {}; sel.forEach(t=>{ const k = target(t.id); (byDate[k] = byDate[k] || []).push(t); });
+      for (const k of Object.keys(byDate)) await moveToDate(byDate[k], k);
+      closeSheet(); render();
+      const days = Object.keys(byDate);
+      toast(`${sel.length} ${sel.length===1?"job":"jobs"} moved${days.length===1 ? (days[0]===today ? " to today" : ` to ${fmtDY(days[0])}`) : ` to ${days.length} different days`}.`); }
     catch(e){ writeFailed(e); }
   };
 }
@@ -863,6 +922,8 @@ function openSheet(task, kind){
     <h3>${heading}</h3>
     ${titleField}
     <label class="urg-toggle"><input type="checkbox" name="urgent" ${isUrgent(t)?"checked":""} ${dis}><span><b>Mark as urgent · عاجل</b><br><small style="color:var(--muted)">Shown in red at the top of the board and the daily report</small></span></label>
+    <label class="urg-toggle opt"><input type="checkbox" name="hkHours" ${t.hkHours?"checked":""} ${dis}><span><b>During housekeeping hours (urgent)</b><br><small style="color:var(--muted)">Optional. Shown on the report as “During Housekeeping Hours (Urgent)”</small></span></label>
+    <label class="urg-toggle opt"><input type="checkbox" name="roomClosed" ${t.roomClosed?"checked":""} ${dis}><span><b>Room out of service while this job is open</b><br><small style="color:var(--muted)">For bigger jobs: the room shows as closed on the board until the job is closed</small></span></label>
     <div class="f"><span>Where <small>— ${prev ? (task ? "extra places become separate checks" : "each place becomes its own check") : "choose one or more places"}</small></span>
       <button type="button" class="loc-btn" id="locBtn" ${dis}><span id="locSum"></span><i>▾</i></button>
       ${locPicker}
@@ -902,6 +963,7 @@ function openSheet(task, kind){
   $("cancel").onclick = closeSheet;
   setTimeout(()=>{ if(!ro) f.title.focus(); }, 50);
   // Urgent tick box and Priority stay in sync
+  f.hkHours.onchange = ()=>{ if (f.hkHours.checked){ f.urgent.checked = true; f.priority.value = "urgent"; } };
   f.urgent.onchange = ()=>{ f.priority.value = f.urgent.checked ? "urgent" : (f.priority.value==="urgent" ? "normal" : f.priority.value); };
   f.priority.onchange = ()=>{ f.urgent.checked = f.priority.value==="urgent"; };
   // Where: multi-place picker
@@ -926,7 +988,9 @@ function openSheet(task, kind){
   if (!prev && !ro){
     const auto = {title: t.titleAr||"", notes: t.notesAr||""};
     async function suggest(which, force){
+      if (!document.body.contains(f)) return;               // form already closed
       const en = f[which].value.trim(), box = $(which+"ArBox"), inp = f[which+"Ar"], hint = $(which+"ArHint");
+      if (!box || !inp || !hint) return;
       const arabicTyped = hasArabic(en);
       box.classList.toggle("hidden", !en || arabicTyped);
       if (!en || arabicTyped) return;
@@ -934,7 +998,7 @@ function openSheet(task, kind){
       const g = glossaryAr(en);
       let out = g, src = g ? "dict" : "";
       if (!g){ hint.textContent = "Translating…"; out = await translateOne(en); src = out ? "machine" : "none"; }
-      if (f[which].value.trim()!==en) return; // text changed meanwhile
+      if (!document.body.contains(f) || f[which].value.trim()!==en) return; // closed or text changed meanwhile
       if (out){ inp.value = out; auto[which] = out; }
       hint.textContent = src==="dict" ? "✓ From the maintenance dictionary" : src==="machine" ? "Machine translation — please check it and correct if needed" : "Couldn't translate automatically. Type the Arabic yourself.";
       hint.className = "ar-hint " + (src==="dict" ? "ok" : "warn");
@@ -959,6 +1023,7 @@ function openSheet(task, kind){
     if (!f.date.value){ f.date.focus(); toast("Pick a date."); return; }
     const places = picked(), assignee = canonName(f.assignee.value, S.workers), now = new Date().toISOString();
     const body = { title, taskType: prev?"preventive":"task", category:f.category.value, priority:f.priority.value, assignee,
+      hkHours: f.hkHours.checked, roomClosed: f.roomClosed.checked,
       titleAr: (!prev && f.titleAr && !hasArabic(title)) ? f.titleAr.value.trim() : "",
       notesAr: (!prev && f.notesAr && f.notes.value.trim() && !hasArabic(f.notes.value)) ? f.notesAr.value.trim() : "",
       time:f.time.value, repeat:f.repeat.value, notes:f.notes.value.trim() };
@@ -1174,7 +1239,7 @@ async function translateMany(texts){
 
 /* ---------- Reports ---------- */
 const REPORT_TITLE = {
-  daily:["Daily Report","التقرير اليومي"], weekly:["Weekly Report","التقرير الأسبوعي"], monthly:["Monthly Report","التقرير الشهري"],
+  daily:["Daily Tasks","المهام اليومية"], weekly:["Weekly Report","التقرير الأسبوعي"], monthly:["Monthly Report","التقرير الشهري"],
   midyear:["Mid-Year Report","تقرير نصف السنة"], yearly:["Yearly Report","التقرير السنوي"]
 };
 function period(type, k){
@@ -1197,7 +1262,7 @@ const staffMatch = (t, staff) => !staff || (staff==="__none" ? !t.assignee : t.a
 /* Which jobs belong in a report. Tasks and preventive checks are never mixed. */
 function scope(type, k, staff){
   const [s,e] = period(type,k);
-  const fits = type==="daily" ? (t=>!isPrev(t)) : (t=>isPrev(t) && freqOf(t)===type);
+  const fits = type==="daily" ? (t=>true) : (t=>isPrev(t) && freqOf(t)===type);
   const items = S.tasks.filter(t=>fits(t) && t.date>=s && t.date<=e && staffMatch(t,staff));
   const carry = S.tasks.filter(t=>fits(t) && !isClosed(t) && t.date && t.date<s && staffMatch(t,staff));
   return {items:items.sort(byRank), carry:carry.sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:byRank(a,b)), s, e};
@@ -1211,87 +1276,76 @@ function staffList(type, k){
 }
 const staffLabel = s => s==="__none" ? ["Not allocated","غير مخصص"] : s ? [s, ""] : ["All staff","جميع الموظفين"];
 
-function reportDoc(type, k, staff, AR, by){
-  const prevRep = type!=="daily";
+/* ---------- Printed report: black & white, sorted by room, tasks + preventive together ---------- */
+const roomOf = t => locsOf(t).length ? locsOf(t) : ["No room set"];
+function jobTypeLabel(t){
+  if (t.hkHours) return ["During Housekeeping Hours (Urgent)", "خلال ساعات التدبير المنزلي (عاجل)"];
+  if (isUrgent(t)) return ["Urgent", "عاجل"];
+  return null;
+}
+function reportDoc(type, k, staff, AR){
   const {items, carry} = scope(type, k, staff);
   const all = [...carry, ...items];
-  const open = all.filter(t=>!isClosed(t)), closed = all.filter(isClosed);
-  const urgent = open.filter(isUrgent), normal = open.filter(t=>!isUrgent(t));
   const ar = s => (AR && AR[s]) || "";
-  const [tEn, tAr] = REPORT_TITLE[type], [sEn, sAr] = staffLabel(staff);
-  const carryIds = new Set(carry.map(t=>t.id));
-  const groupKey = t => prevRep ? t.title : by==="staff" ? (t.assignee||"Not allocated") : (locsOf(t).length===1 ? locsOf(t)[0] : locsOf(t).length ? "Multiple places" : "No place set");
-  const groupAr = g => prevRep ? ((PREV_MAP[g]&&PREV_MAP[g].ar) || ar(g) || glossaryAr(g)) : by==="staff" ? (g==="Not allocated"?"غير مخصص":"") : (locAr(g)||ar(g));
-  const groupOrder = (a,b) => prevRep ? a.localeCompare(b)
-    : by==="staff" ? ((a==="Not allocated")-(b==="Not allocated") || a.localeCompare(b))
-    : ((a==="Multiple places")-(b==="Multiple places") || (a==="No place set")-(b==="No place set") || locRank(a)-locRank(b) || a.localeCompare(b));
-  const line = t => {
-    const c = isClosed(t);
-    // Preventive reports are grouped by check, so each line is the place: "AC Filter" › "Room 101"
-    const en = prevRep ? (locsOf(t)[0] || t.title) : t.title;
-    const arT = prevRep ? (locsOf(t)[0] ? (locAr(locsOf(t)[0]) || ar(locsOf(t)[0])) : titleArOf(t, AR)) : (hasArabic(t.title) ? "" : titleArOf(t, AR));
-    const enMeta = [t.time, !prevRep && (by==="staff" || locsOf(t).length>1) ? locSummary(locsOf(t)) : "", !prevRep ? catLabel(t.category) : "",
-      !staff && by!=="staff" ? (t.assignee ? `Allocated to ${t.assignee}` : "Not allocated") : ""].filter(Boolean).map(esc).join(" · ");
-    const arMeta = [t.time, !prevRep && (by==="staff" || locsOf(t).length>1) ? locSummary(locsOf(t), true) : "", !prevRep ? catAr(t.category) : ""].filter(Boolean).map(esc).join(" · ");
+  const [tEn, tAr] = REPORT_TITLE[type], [sEn] = staffLabel(staff);
+  const urgentCount = all.filter(t=>!isClosed(t) && isUrgent(t)).length;
+  // One block per room; a job covering several rooms is listed under each of them
+  const rooms = new Map();
+  all.forEach(t=>roomOf(t).forEach(r=>{ if (!rooms.has(r)) rooms.set(r, []); rooms.get(r).push(t); }));
+  const order = [...rooms.keys()].sort((a,b)=>(a==="No room set")-(b==="No room set") || locRank(a)-locRank(b) || a.localeCompare(b));
+  const job = (t, room) => {
+    const c = isClosed(t), typ = jobTypeLabel(t);
+    const arT = hasArabic(t.title) ? "" : (t.titleAr || (PREV_MAP[t.title] && PREV_MAP[t.title].ar) || ar(t.title) || glossaryAr(t.title) || "");
     const notesAr = t.notes && !hasArabic(t.notes) ? (t.notesAr || ar(t.notes)) : "";
-    const pills = (isUrgent(t)&&!c?`<span class="pill urg">URGENT · عاجل</span>`:"") + (carryIds.has(t.id)?`<span class="pill late">Carried over · مُرحّل</span>`:"") + (isExecuted(t)?`<span class="pill wait">Awaiting inspection · بانتظار التفتيش</span>`:"") + (c?`<span class="pill ok">Closed · مغلق</span>`:"");
-    const exec = c ? (t.executedBy || (t.execution&&t.execution.name) || "") : ((t.execution&&t.execution.name) || "");
-    return `<li class="r-item ${c?"ok":""}"><span class="r-box"></span><div class="r-body">
-      ${pills?`<div class="r-pills">${pills}</div>`:""}
-      <div class="r-two">
-        <div>${hasArabic(en)?"":`<div class="r-t">${esc(en)}</div>`}${enMeta?`<div class="r-m">${enMeta}</div>`:""}${t.notes?`<div class="r-m" dir="auto">${esc(t.notes)}</div>`:""}</div>
-        <div class="r-ar">${hasArabic(en)?`<div class="r-t">${esc(en)}</div>`:(arT?`<div class="r-t">${esc(arT)}</div>`:`<div class="r-t r-m">—</div>`)}${arMeta?`<div class="r-m">${arMeta}</div>`:""}${notesAr?`<div class="r-m">${esc(notesAr)}</div>`:""}</div>
+    const others = locsOf(t).filter(r=>r!==room);
+    const facts = [
+      isPrev(t) ? `Preventive (${(FREQ_PREV[freqOf(t)]||"").split(" ")[0]})` : "",
+      t.time ? `Time ${t.time}` : "",
+      !staff ? (t.assignee ? `Allocated to ${t.assignee}` : "Not allocated") : "",
+      `Recommended ${fmtD(t.recDate)||"—"}`, t.date!==t.recDate ? `Reallocated to ${fmtD(t.date)}` : "",
+      others.length ? `Also in ${others.map(shortLoc).join(", ")}` : "",
+      c ? `Closed ${fmtD(t.closedDate)}${t.inspectedBy?` · Inspected by ${t.inspectedBy}`:""}` : isExecuted(t) ? "Executed – awaiting inspection" : ""
+    ].filter(Boolean).map(esc).join(" · ");
+    return `<div class="pj ${c?"pj-done":""}">
+      <div class="pj-left">
+        <div class="pj-head"><span class="pj-box">${c?"✓":""}</span><span class="pj-title" dir="auto">${esc(t.title)}</span>${typ?`<span class="pj-type">${esc(typ[0])}</span>`:""}</div>
+        ${arT||typ?`<div class="pj-ar" dir="rtl">${esc(arT)}${typ?` <b>– ${esc(typ[1])}</b>`:""}</div>`:""}
+        ${t.roomClosed && !c ? `<div class="pj-oos">ROOM OUT OF SERVICE · الغرفة خارج الخدمة</div>` : ""}
+        ${t.notes ? `<div class="pj-notes"><b>Notes:</b> <span dir="auto">${esc(t.notes)}</span>${notesAr?`<div dir="rtl">${esc(notesAr)}</div>`:""}</div>` : ""}
+        <div class="pj-facts">${facts}</div>
       </div>
-      <div class="r-dates">
-        <span><bdi>Recommended · الموصى به</bdi> <b>${esc(fmtD(t.recDate)||"—")}</b></span>
-        <span><bdi>Reallocated · أعيدت جدولته</bdi> <b>${t.date!==t.recDate?esc(fmtD(t.date)):"—"}</b></span>
-        <span><bdi>Closed · الإغلاق</bdi> ${c?`<b>${esc(fmtD(t.closedDate))}</b>`:`<i class="blank short"></i>`}</span>
-      </div>
-      <div class="r-sig">
-        <span><bdi>Executed by · المنفّذ</bdi>: ${exec?`<b dir="auto">${esc(exec)}</b>`:`<i class="blank"></i>`}</span>
-        <span><bdi>Inspected by · المفتّش</bdi>: ${c&&t.inspectedBy?`<b dir="auto">${esc(t.inspectedBy)}</b>`:`<i class="blank"></i>`}</span>
-      </div></div></li>`;
+      <div class="pj-mat"><div class="pj-mat-h">Materials used <span dir="rtl">· المواد المستعملة</span></div><i></i><i></i><i></i></div>
+    </div>`;
   };
-  const grouped = (list, empty) => {
-    if (!list.length) return `<div class="r-none">${empty}</div>`;
-    const map = new Map(); list.forEach(t=>{ const g = groupKey(t); if (!map.has(g)) map.set(g,[]); map.get(g).push(t); });
-    return [...map.keys()].sort(groupOrder).map(g=>`<div class="r-grp"><span dir="auto">${esc(g)}${prevRep?` <small>(${map.get(g).length})</small>`:""}</span><span dir="rtl">${esc(groupAr(g)||"")}</span></div><ul>${map.get(g).sort((a,b)=>prevRep?locRank(locsOf(a)[0])-locRank(locsOf(b)[0]):byRank(a,b)).map(line).join("")}</ul>`).join("");
-  };
-  const sec = (en, arr, cls="") => `<div class="r-sec ${cls}"><span>${en}</span><span class="ar">${arr}</span></div>`;
-  return `<div class="report">
-    <div class="r-top"><img class="r-logo" src="${LOGO_INK}" alt="${esc(HOTEL)}"><div class="r-kind"><span>${prevRep?"Preventive maintenance":"Maintenance tasks"}</span><span dir="rtl">${prevRep?"الصيانة الوقائية":"مهام الصيانة"}</span></div></div>
-    <div class="r-titleblock">
-      <h1 class="r-big">${tEn}</h1><div class="r-big-ar" dir="rtl">${tAr}</div>
-      <div class="r-staff" dir="auto">${esc(sEn)}${sAr?` · <span dir="rtl">${sAr}</span>`:""}</div>
-      <div class="r-period"><span>${esc(periodLabel(type,k))}</span><span dir="rtl">${esc(periodLabel(type,k,true))}</span></div>
+  const body = order.length ? order.map(r=>{
+    const rAr = r==="No room set" ? "بدون غرفة" : (locAr(r) || ar(r));
+    return `<section class="pr-room"><div class="pr-room-h"><span>${esc(r)}</span><span dir="rtl">${esc(rAr||"")}</span></div>${rooms.get(r).sort(byRank).map(t=>job(t, r)).join("")}</section>`;
+  }).join("") : `<p class="pr-none">No jobs. · لا توجد مهام</p>`;
+  return `<div class="report pr">
+    <div class="pr-top">
+      <img class="pr-logo" src="${LOGO_INK}" alt="${esc(HOTEL)}">
+      <div class="pr-mid"><div class="pr-title">${tEn} – <span dir="auto">${esc(sEn)}</span></div><div class="pr-title-ar" dir="rtl">${tAr}</div>
+        <div class="pr-date">${esc(periodLabel(type,k))}</div></div>
+      <div class="pr-right">Maintenance Work<div dir="rtl">أعمال الصيانة</div></div>
     </div>
-    <div class="r-sum">
-      <div class="u"><b>${urgent.length}</b>Urgent · عاجل</div>
-      <div><b>${open.length}</b>Open · مفتوح</div>
-      <div><b>${all.filter(t=>t.recDate && t.date!==t.recDate).length + carry.length}</b>Reallocated / carried over · أعيدت جدولتها</div>
-      <div><b>${closed.length}</b>Closed · مغلق</div>
-    </div>
-    ${urgent.length ? sec("Urgent","عاجل","u") + grouped(urgent,"") : ""}
-    ${sec(prevRep?"Checks to do":"To do", prevRep?"الفحوصات المطلوبة":"المهام المطلوبة")}${grouped(normal, (urgent.length?"Nothing else open.":"Nothing open.")+" · لا يوجد")}
-    ${sec("Closed","المغلقة")}${grouped(closed, "Nothing closed yet. · لم يُغلق شيء بعد")}
-    <div class="r-foot"><div><span>Prepared by</span><span dir="rtl">أعدّه</span></div><div><span>Manager signature</span><span dir="rtl">توقيع المدير</span></div></div>
+    <div class="pr-counts"><span>Number of jobs: <b>${all.length}</b> <small dir="rtl">عدد المهام</small></span><span><small dir="rtl">المهام العاجلة</small> Urgent jobs: <b>${urgentCount}</b></span></div>
+    ${body}
+    <div class="pr-foot"><span>Executed by: ____________________</span><span>Inspected by: ____________________</span></div>
   </div>`;
 }
 function reportText(type, k, staff, AR){
-  const prevRep = type!=="daily", {items, carry} = scope(type, k, staff), all = [...carry, ...items], ar = s => (AR && AR[s]) || "";
-  const open = all.filter(t=>!isClosed(t)), closed = all.filter(isClosed), carryIds = new Set(carry.map(t=>t.id));
-  const [tEn, tAr] = REPORT_TITLE[type], [sEn, sAr] = staffLabel(staff);
-  const bil = (en, a) => a && a!==en ? `${en} | ${a}` : en;
-  const L = [`*${tEn} | ${tAr}*`, `${sEn}${sAr?` | ${sAr}`:""}`, `${HOTEL} – ${periodLabel(type,k)}`, `Open/مفتوح: ${open.length} | Closed/مغلق: ${closed.length}${carry.length?` | Carried over/مُرحّل: ${carry.length}`:""}`];
-  const one = t => {
-    const where = !prevRep && locsOf(t).length ? ` @ ${bil(locSummary(locsOf(t)), locSummary(locsOf(t), true))}` : "";
-    const who = !staff ? (t.assignee ? `\n   Allocated to: ${t.assignee}` : `\n   Not allocated`) : "";
-    const dates = `\n   Recommended ${fmtD(t.recDate)}${t.date!==t.recDate?` · Reallocated ${fmtD(t.date)}`:""}${isClosed(t)?` · Closed ${fmtD(t.closedDate)} · Inspected by ${t.inspectedBy||"—"}`:""}`;
-    return `${isUrgent(t)&&!isClosed(t)?"🔴 URGENT عاجل – ":isClosed(t)?"✓ ":"☐ "}${carryIds.has(t.id)?"[carried over] ":""}${bil(fullTitle(t), titleArOf(t, AR))}${t.time?` (${t.time})`:""}${where}${who}${dates}`;
-  };
-  if (open.length){ L.push("", prevRep ? "*CHECKS TO DO | الفحوصات المطلوبة*" : "*TO DO | المطلوب*"); open.forEach(t=>L.push(one(t))); }
-  else L.push("", "Nothing open | لا يوجد");
-  if (closed.length){ L.push("", "*CLOSED | المغلقة*"); closed.forEach(t=>L.push(one(t))); }
+  const {items, carry} = scope(type, k, staff), all = [...carry, ...items], ar = s => (AR && AR[s]) || "";
+  const [tEn] = REPORT_TITLE[type], [sEn] = staffLabel(staff);
+  const L = [`*${tEn} – ${sEn}*`, `${HOTEL} · ${periodLabel(type,k)}`, `Number of jobs: ${all.length} | Urgent jobs: ${all.filter(t=>!isClosed(t)&&isUrgent(t)).length}`];
+  const rooms = new Map(); all.forEach(t=>roomOf(t).forEach(r=>{ if(!rooms.has(r)) rooms.set(r,[]); rooms.get(r).push(t); }));
+  [...rooms.keys()].sort((a,b)=>(a==="No room set")-(b==="No room set") || locRank(a)-locRank(b)).forEach(r=>{
+    L.push("", `*${r}*${locAr(r)?` | ${locAr(r)}`:""}`);
+    rooms.get(r).sort(byRank).forEach(t=>{
+      const typ = jobTypeLabel(t), arT = hasArabic(t.title) ? "" : (t.titleAr || (PREV_MAP[t.title]&&PREV_MAP[t.title].ar) || ar(t.title) || glossaryAr(t.title));
+      L.push(`${isClosed(t)?"✓":"☐"} ${t.title}${arT?` | ${arT}`:""}${typ?` – ${typ[0]}`:""}${t.roomClosed&&!isClosed(t)?" – ROOM OUT OF SERVICE":""}${!staff&&t.assignee?` (${t.assignee})`:""}`);
+      if (t.notes) L.push(`   Notes: ${t.notes}`);
+    });
+  });
   return L.join("\n");
 }
 
@@ -1302,13 +1356,13 @@ async function openReport(){
     <div class="no-print">
       <div class="eyebrow">Reports</div><h3>Reports dashboard</h3>
       <div class="dash-types">
-        <div><span class="dl">Tasks</span><div class="seg" id="rTypesT">${typeBtn("daily","Daily Report")}</div></div>
-        <div><span class="dl">Preventive</span><div class="seg" id="rTypesP">${typeBtn("weekly","Weekly")}${typeBtn("monthly","Monthly")}${typeBtn("midyear","Mid-Year")}${typeBtn("yearly","Yearly")}</div></div>
+        <div><span class="dl">Every day · tasks + preventive</span><div class="seg" id="rTypesT">${typeBtn("daily","Daily Tasks")}</div></div>
+        <div><span class="dl">Preventive only</span><div class="seg" id="rTypesP">${typeBtn("weekly","Weekly")}${typeBtn("monthly","Monthly")}${typeBtn("midyear","Mid-Year")}${typeBtn("yearly","Yearly")}</div></div>
       </div>
       <div class="dash-row">
         <label class="f"><span>Date</span><input type="date" id="rDate" value="${R.k}"></label>
         <label class="f"><span>Staff</span><select id="rStaff" ${isWorker()?"disabled":""}></select></label>
-        <label class="f" id="rByWrap"><span>Group by</span><select id="rBy"><option value="place">Place</option><option value="staff">Staff</option></select></label>
+        <div class="f" id="rByWrap"><span>Order</span><div class="r-order">Sorted by room</div></div>
       </div>
       <div class="r-period-note" id="rPeriodNote"></div>
       ${isAdmin() ? `<details class="alloc" id="alloc" open><summary>Allocate jobs <span id="allocCount"></span></summary><div id="allocBody"></div></details>` : ""}
@@ -1332,17 +1386,26 @@ async function openReport(){
   }
   function drawAlloc(){
     if (!isAdmin() || !$("allocBody")) return;
-    if ($("allocBody").contains(document.activeElement) && document.activeElement.tagName==="INPUT") return; // don't disturb typing
+    if ($("allocBody").contains(document.activeElement) && document.activeElement.tagName==="INPUT" && document.activeElement.type!=="checkbox") return; // don't disturb typing
     const {items, carry} = scope(R.type, R.k, R.staff), list = [...carry, ...items].filter(t=>!isClosed(t));
     const un = list.filter(t=>!t.assignee).length;
     $("allocCount").textContent = `· ${list.length} open${un?` · ${un} not allocated`:""}`;
     $("allocBody").innerHTML = !list.length ? `<p class="note">No open jobs in this report.</p>` : `
       <div class="al-bulk"><span>Allocate all <b>not allocated</b> jobs to</span><input id="alBulk" list="dlAl" dir="auto" placeholder="Name…" autocomplete="off"><button type="button" class="btn" id="alBulkGo" ${un?"":"disabled"}>Apply</button></div>
-      <table class="al-tab"><thead><tr><th>Job</th><th>Date</th><th>Allocated to</th></tr></thead><tbody>
+      <table class="al-tab"><thead><tr><th>Job</th><th title="During housekeeping hours (urgent)">Housekeeping hours</th><th>Room out of service</th><th>Date</th><th>Allocated to</th></tr></thead><tbody>
       ${list.map(t=>`<tr class="${t.assignee?"":"un"}"><td><span dir="auto">${esc(fullTitle(t))}</span>${!isPrev(t)&&locsOf(t).length?`<small>${esc(locSummary(locsOf(t)))}</small>`:""}</td>
-        <td>${esc(fmtD(t.date))}${t.date!==t.recDate?`<small>rec. ${esc(fmtD(t.recDate))}</small>`:""}</td>
+        <td class="al-c"><label class="al-tick"><input type="checkbox" data-hk="${t.id}" ${t.hkHours?"checked":""}><span>${t.hkHours?"Yes":""}</span></label></td>
+        <td class="al-c"><label class="al-tick"><input type="checkbox" data-oos="${t.id}" ${t.roomClosed?"checked":""}><span>${t.roomClosed?"Closed":""}</span></label></td>
+        <td><input type="date" data-dt="${t.id}" value="${esc(t.date)}">${t.date!==t.recDate?`<small>rec. ${esc(fmtD(t.recDate))}</small>`:""}</td>
         <td><input data-al="${t.id}" list="dlAl" dir="auto" value="${esc(t.assignee||"")}" placeholder="Not allocated" autocomplete="off"></td></tr>`).join("")}
       </tbody></table>${dl("dlAl", S.workers)}`;
+    const upd = async (id, data, msg) => { try{ await tasksCol().doc(id).update(data); if (msg) toast(msg); }catch(e){ writeFailed(e); } };
+    $("allocBody").querySelectorAll("[data-hk]").forEach(cb=>cb.onchange = ()=>{ const t = S.tasks.find(x=>x.id===cb.dataset.hk); if (t) upd(t.id, {hkHours:cb.checked, recDate:t.recDate||t.date}, cb.checked ? "Marked: during housekeeping hours (urgent)" : "Housekeeping hours removed"); });
+    $("allocBody").querySelectorAll("[data-oos]").forEach(cb=>cb.onchange = ()=>{ const t = S.tasks.find(x=>x.id===cb.dataset.oos); if (t) upd(t.id, {roomClosed:cb.checked, recDate:t.recDate||t.date}, cb.checked ? "Room marked out of service" : "Room back in service"); });
+    $("allocBody").querySelectorAll("[data-dt]").forEach(inp=>inp.onchange = ()=>{
+      const t = S.tasks.find(x=>x.id===inp.dataset.dt); if (!t || !inp.value || inp.value===t.date) return;
+      upd(t.id, {date:inp.value, recDate:t.recDate||t.date, realloc:[...(t.realloc||[]), reallocEntry("date", t.date, inp.value)]}, `Moved to ${fmtDY(inp.value)}`);
+    });
     $("allocBody").querySelectorAll("[data-al]").forEach(inp=>inp.onchange = async ()=>{
       const t = S.tasks.find(x=>x.id===inp.dataset.al); if (!t) return;
       inp.blur(); await saveAllocation(t, inp.value); toast(inp.value.trim() ? `Allocated to ${canonName(inp.value, S.workers)}` : "Allocation removed");
@@ -1357,9 +1420,9 @@ async function openReport(){
   }
   async function draw(){
     document.querySelectorAll(".dash-types [data-type]").forEach(b=>b.setAttribute("aria-pressed", b.dataset.type===R.type));
-    $("rByWrap").classList.toggle("hidden", R.type!=="daily");
+
     const [s,e] = period(R.type, R.k);
-    $("rPeriodNote").textContent = R.type==="daily" ? `Tasks scheduled for ${periodLabel("daily",R.k)}, plus open tasks carried over from earlier days.`
+    $("rPeriodNote").textContent = R.type==="daily" ? `All jobs (tasks and preventive) scheduled for ${periodLabel("daily",R.k)}, plus open jobs carried over from earlier days. Sorted by room.`
       : `${FREQ_PREV[R.type]} preventive checks scheduled ${fmtDY(s)} – ${fmtDY(e)}, plus open ones carried over.`;
     fillStaff();
     // Arabic for anything typed freely (dictionary first, then machine translation; cached)
@@ -1374,18 +1437,18 @@ async function openReport(){
     if (need.length){ const res = await translateMany(need); Object.assign(R.AR, res.map); R.failed = res.failed; }
     if (!$("rBody")) return;
     R.multi = false;
-    $("rBody").innerHTML = reportDoc(R.type, R.k, R.staff, R.AR, R.by) + (R.failed ? `<p class="note no-print">Some free text couldn't be translated automatically (no internet or the service was busy). Open the job and fill in “Arabic for the report”, or reopen this report to retry.</p>` : "");
+    $("rBody").innerHTML = reportDoc(R.type, R.k, R.staff, R.AR) + (R.failed ? `<p class="note no-print">Some free text couldn't be translated automatically (no internet or the service was busy). Open the job and fill in “Arabic for the report”, or reopen this report to retry.</p>` : "");
     drawAlloc();
   }
   document.querySelectorAll(".dash-types [data-type]").forEach(b=>b.onclick = ()=>{ R.type = b.dataset.type; draw(); });
   $("rDate").onchange = e=>{ if (e.target.value){ R.k = e.target.value; draw(); } };
   $("rStaff").onchange = e=>{ R.staff = e.target.value; draw(); };
-  $("rBy").onchange = e=>{ R.by = e.target.value; draw(); };
+
   $("rPrint").onclick = ()=>window.print();
   if ($("rEach")) $("rEach").onclick = ()=>{
     const staff = staffList(R.type, R.k);
     if (!staff.length){ toast("No jobs in this report yet."); return; }
-    $("rBody").innerHTML = staff.map(s=>reportDoc(R.type, R.k, s, R.AR, "place")).join(`<div class="page-break"></div>`);
+    $("rBody").innerHTML = staff.map(s=>reportDoc(R.type, R.k, s, R.AR)).join(`<div class="page-break"></div>`);
     R.multi = true;
     setTimeout(()=>window.print(), 100);
     toast(`${staff.length} ${staff.length===1?"report":"reports"}, one page per staff.`);
@@ -1397,7 +1460,7 @@ async function openReport(){
     catch(e){ const ta=document.createElement("textarea"); ta.value=txt; document.body.appendChild(ta); ta.select();
       try{ document.execCommand("copy"); toast("Report copied."); }catch(_){ toast("Couldn't copy on this device."); } ta.remove(); }
   };
-  S.onData = ()=>{ if ($("rBody") && !R.multi) { $("rBody").innerHTML = reportDoc(R.type, R.k, R.staff, R.AR, R.by); drawAlloc(); } };
+  S.onData = ()=>{ if ($("rBody") && !R.multi) { $("rBody").innerHTML = reportDoc(R.type, R.k, R.staff, R.AR); drawAlloc(); } };
   draw();
 }
 
