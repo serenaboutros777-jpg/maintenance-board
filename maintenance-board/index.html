@@ -351,6 +351,15 @@ details.alloc summary{cursor:pointer;padding:10px 12px;font-weight:700;font-size
 .pr-foot{display:flex;justify-content:space-between;gap:20px;margin-top:26px;font-size:13px}
 @media (max-width:640px){.pr-top{grid-template-columns:1fr;text-align:center}.pr-right{text-align:center}.pr-logo{margin:0 auto}.pj{grid-template-columns:1fr}}
 @media print{ .report.pr{border:0;padding:0} .pr-top{grid-template-columns:1fr 2fr 1fr!important} .pj{grid-template-columns:minmax(0,1fr) 34%!important} }
+
+/* v8 */
+.pill.crit{background:#7A1E14;color:#fff;letter-spacing:.3px;text-transform:uppercase}
+.crit-note{margin:0 0 12px;padding:8px 10px;border:1.5px solid #7A1E14;border-radius:8px;font-size:13px;color:#7A1E14}
+.pj-type.pj-crit{border-width:2.5px;font-weight:900}
+.al-tab tr.al-sub td{border-bottom:1px dashed var(--line)}
+.al-tab td.al-room{font-size:12px;white-space:nowrap}
+.al-tab td small.al-crit{color:#7A1E14;font-weight:700;text-transform:uppercase;letter-spacing:.3px}
+.al-tab th:nth-child(1){width:30%}.al-tab th:nth-child(2){width:14%}.al-tab th:nth-child(3){width:14%}.al-tab th:nth-child(4){width:17%}.al-tab th:nth-child(5){width:25%}
 </style>
 </head>
 <body>
@@ -504,30 +513,31 @@ const PREVENTIVE = [
     ["Door Stopper","مصدّ الباب","general"], ["Net Door","باب الناموسية","general"], ["Hangers","علّاقات الملابس","general"],
     ["Laundry Wire","حبل الغسيل","general"], ["Shampoo Bottles","عبوات الشامبو","cleaning"], ["Mattress Turning","قلب الفرشات","cleaning"],
     ["WC Drainage","تصريف المرحاض","plumbing"], ["WC Aspirator","شفّاط المرحاض","plumbing"], ["Sink Drainage","تصريف المغسلة","plumbing"],
-    ["Shower Head Silicone","سيليكون رأس الدوش","plumbing"], ["Water Hose","خرطوم المياه","plumbing"], ["Water Hose Filter","فلتر خرطوم المياه","plumbing"]]},
+    ["Shower Head Silicone","سيليكون رأس الدوش","plumbing"], ["Water Hose","خرطوم المياه","plumbing"], ["Water Hose Filter","فلتر خرطوم المياه","plumbing",true]]},
   {group:"Heating & AC", items:[
-    ["AC Filter","فلتر المكيّف","hvac"], ["AC Radiator","رادياتير المكيّف","hvac"]]},
+    ["AC Filter","فلتر المكيّف","hvac",true], ["AC Radiator","رادياتير المكيّف","hvac"]]},
   {group:"Pool & Jacuzzi", items:[
-    ["Pool Water Test","فحص مياه المسبح","pool"], ["Chlorine Filters","فلاتر الكلور","pool"],
+    ["Pool Water Test","فحص مياه المسبح","pool",true], ["Chlorine Filters","فلاتر الكلور","pool",true],
     ["Jacuzzi Indoor Test","فحص الجاكوزي الداخلي","pool"], ["Jacuzzi Outdoor Hot Water Test","فحص المياه الساخنة للجاكوزي الخارجي","pool"],
-    ["Jacuzzi Outdoor Leak Check","فحص تسرّب الجاكوزي الخارجي","pool"], ["Jacuzzi Paint Condition","حالة دهان الجاكوزي","pool"]]},
+    ["Jacuzzi Outdoor Leak Check","فحص تسرّب الجاكوزي الخارجي","pool",true], ["Jacuzzi Paint Condition","حالة دهان الجاكوزي","pool"]]},
   {group:"Outdoor Drainage", items:[
-    ["Outdoor Drainage","التصريف الخارجي","plumbing"], ["Terrace Drainage","تصريف التراس","plumbing"]]},
+    ["Outdoor Drainage","التصريف الخارجي","plumbing",true], ["Terrace Drainage","تصريف التراس","plumbing",true]]},
   {group:"Garden & Plants", items:[
-    ["Watering – Indoor","ريّ النباتات – داخلي","grounds"], ["Watering – Outdoor","ريّ النباتات – خارجي","grounds"],
+    ["Watering – Indoor","ريّ النباتات – داخلي","grounds",true], ["Watering – Outdoor","ريّ النباتات – خارجي","grounds",true],
     ["Plant Vitamins – Indoor","فيتامينات النباتات – داخلي","grounds"], ["Plant Vitamins – Outdoor","فيتامينات النباتات – خارجي","grounds"],
     ["Plant Pesticide – Indoor","مبيد النباتات – داخلي","grounds"], ["Plant Pesticide – Outdoor","مبيد النباتات – خارجي","grounds"],
     ["Tree Trimming","تقليم الأشجار","grounds"]]},
   {group:"Pest Control", items:[
     ["Pest Control","مكافحة الحشرات","pest"], ["Mosquito Fogging","رشّ البعوض (تدخين)","pest"]]},
   {group:"Utilities & Levels", items:[
-    ["Fuel Level","مستوى الوقود","safety"], ["Gas Bottles","قوارير الغاز","safety"], ["Hot Water","المياه الساخنة","safety"],
-    ["Water Level","مستوى المياه","safety"], ["Water Pressure","ضغط المياه","safety"]]},
+    ["Fuel Level","مستوى الوقود","safety",true], ["Gas Bottles","قوارير الغاز","safety",true], ["Hot Water","المياه الساخنة","safety",true],
+    ["Water Level","مستوى المياه","safety",true], ["Water Pressure","ضغط المياه","safety",true]]},
   {group:"Finishes & Retouching", items:[
     ["Epoxy","الإيبوكسي","general"], ["Paint Retouch – Indoor","ترميم الدهان – داخلي","general"], ["Paint Retouch – Outdoor","ترميم الدهان – خارجي","general"],
     ["Wood Retouch – Indoor","ترميم الخشب – داخلي","general"], ["Wood Retouch – Outdoor","ترميم الخشب – خارجي","general"]]}
 ];
-const PREV_MAP = {}; PREVENTIVE.forEach(g=>g.items.forEach(([en,ar,cat])=>PREV_MAP[en]={ar,cat,group:g.group}));
+/* The 4th value (true) marks a CRITICAL DELAY check: late = risk of damage or loss of service. Treated as super urgent. */
+const PREV_MAP = {}; PREVENTIVE.forEach(g=>g.items.forEach(([en,ar,cat,crit])=>PREV_MAP[en]={ar,cat,group:g.group,critical:!!crit}));
 
 /* The team list is stored as one special document inside the "tasks" collection. */
 const TEAM_ID = "_team_settings";
@@ -562,7 +572,11 @@ const catLabel = cat => (CATS[cat]||CATS.general).label;
 const catAr = cat => (CATS[cat]||CATS.general).ar;
 const locRank = l => { const i = LOC_ORDER.indexOf(l); return i<0 ? 999 : i; };
 const isPrev = t => t.taskType==="preventive";
-const isUrgent = t => t.priority==="urgent" || !!t.hkHours;
+const isCritical = t => t.taskType==="preventive" && !!(PREV_MAP[t.title] && PREV_MAP[t.title].critical);
+/* Housekeeping hours can be set per room (occupied rooms). Older jobs used one flag for all rooms. */
+const hkFor = (t, room) => Array.isArray(t.hkRooms) ? (room==="No room set" || !room ? !!t.hkHours : t.hkRooms.includes(room)) : !!t.hkHours;
+const anyHk = t => Array.isArray(t.hkRooms) ? (t.hkRooms.length>0 || (!(t.locations||[]).length && !t.location && !!t.hkHours)) : !!t.hkHours;
+const isUrgent = t => t.priority==="urgent" || anyHk(t) || isCritical(t);
 const fmtTime = iso => new Date(iso).toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"});
 const fmtD  = k => k ? fromKey(k).toLocaleDateString(undefined,{day:"numeric",month:"short"}) : "";
 const fmtDY = k => k ? fromKey(k).toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"}) : "";
@@ -604,7 +618,7 @@ function norm(t){
 const isClosed = t => t.status==="closed";
 const isExecuted = t => t.status==="executed";
 const rank = {urgent:0,normal:1,low:2};
-const byRank = (a,b) => (rank[a.priority]??1)-(rank[b.priority]??1) || ((a.time||"99")<(b.time||"99")?-1:(a.time||"99")>(b.time||"99")?1:0)
+const byRank = (a,b) => (isCritical(b)-isCritical(a)) || (isUrgent(b)-isUrgent(a)) || (rank[a.priority]??1)-(rank[b.priority]??1) || ((a.time||"99")<(b.time||"99")?-1:(a.time||"99")>(b.time||"99")?1:0)
   || (a.title||"").localeCompare(b.title||"") || locRank(locsOf(a)[0])-locRank(locsOf(b)[0]);
 const forWho = t => !S.who || (S.who==="__none" ? !t.assignee : t.assignee===S.who);
 const ofKind = (t, kind) => !kind || ((kind==="preventive") === isPrev(t));
@@ -668,7 +682,8 @@ function taskRow(t, k){
   const status = closed ? `<span class="pill ok">Closed</span>` : isExecuted(t) ? `<span class="pill wait">Awaiting inspection</span>`
     : late ? `<span class="pill late">Not closed · ${daysBetween(t.date, today)}d late</span>` : "";
   const meta = [
-    t.hkHours ? `<span class="pill urg">Housekeeping hours (urgent)</span>` : isUrgent(t) ? `<span class="pill urg">Urgent · عاجل</span>` : "", status,
+    isCritical(t) ? `<span class="pill crit">Critical delay</span>` : "",
+    anyHk(t) ? `<span class="pill urg">Housekeeping hours${Array.isArray(t.hkRooms) && t.hkRooms.length && t.hkRooms.length<locsOf(t).length ? ": "+t.hkRooms.map(shortLoc).join(", ") : ""} (urgent)</span>` : (isUrgent(t) && !isCritical(t)) ? `<span class="pill urg">Urgent · عاجل</span>` : "", status,
     t.roomClosed && !closed ? `<span class="pill oos">Room out of service</span>` : "",
     isPrev(t) ? `<span class="pill prev">${esc((FREQ_PREV[freqOf(t)]||"").split(" ")[0])} preventive</span>` : "",
     t.time ? `<span>${esc(t.time)}</span>` : "",
@@ -755,7 +770,7 @@ async function saveTeam(legacy, members){
 }
 function nextInstance(t, k){
   return { title:t.title, titleAr:t.titleAr||"", notes:t.notes||"", notesAr:t.notesAr||"", taskType:t.taskType, category:t.category||"general",
-    priority:t.priority||"normal", hkHours:!!t.hkHours, roomClosed:!!t.roomClosed, locations:locsOf(t), location:t.location||locSummary(locsOf(t)), assignee:t.assignee||"", time:t.time||"",
+    priority:t.priority||"normal", hkHours:!!t.hkHours, hkRooms:Array.isArray(t.hkRooms)?t.hkRooms:[], roomClosed:!!t.roomClosed, locations:locsOf(t), location:t.location||locSummary(locsOf(t)), assignee:t.assignee||"", time:t.time||"",
     repeat:t.repeat, seriesId:t.seriesId||t.id, recDate:k, date:k, status:"open", execution:null, realloc:[], done:{},
     createdBy:S.uid, createdAt:new Date().toISOString() };
 }
@@ -763,7 +778,9 @@ async function closeTask(t, {executedBy, inspectedBy, closedDate}){
   const batch = S.db.batch(), upd = { recDate:t.recDate||t.date, status:"closed", executedBy, inspectedBy, closedDate, closedAt:new Date().toISOString(), closedBy:S.name };
   let next = null;
   if (t.repeat && t.repeat!=="none" && !t.nextId){
-    let nk = addInterval(t.recDate || t.date, t.repeat), guard = 0;
+    // Preventive: next one counts from the day it was actually closed (weekly closed on the 9th → due the 16th).
+    // Tasks: keep their original rhythm.
+    let nk = addInterval(isPrev(t) ? closedDate : (t.recDate || t.date), t.repeat), guard = 0;
     while (nk && nk <= closedDate && guard++ < 800) nk = addInterval(nk, t.repeat);
     if (nk){ const ref = tasksCol().doc(); batch.set(ref, nextInstance(t, nk)); upd.nextId = ref.id; next = nk; }
   }
@@ -809,7 +826,7 @@ function openClose(t){
     <label class="f"><span>Executed by <small>(optional)</small></span><input name="exec" list="dlExec" dir="auto" maxlength="60" autocomplete="off" value="${esc((t.execution&&t.execution.name)||t.assignee||"")}" placeholder="Who did the job"></label>
     <label class="f"><span>Inspected by <small style="color:var(--red)">— required to close</small></span><input name="insp" list="dlInsp" dir="auto" maxlength="60" autocomplete="off" placeholder="Type who inspected it" required></label>
     <label class="f"><span>Closing date</span><input type="date" name="cdate" value="${today}" max="${today}" required></label>
-    ${t.repeat && t.repeat!=="none" && !t.nextId ? `<p class="note">This repeats (${esc(REPEAT_LABEL[t.repeat]||t.repeat)}). The next one will be scheduled automatically when you close it.</p>` : ""}
+    ${t.repeat && t.repeat!=="none" && !t.nextId ? `<p class="note">This repeats (${esc(REPEAT_LABEL[t.repeat]||t.repeat)}). The next one will be scheduled automatically${isPrev(t)?", counted from the closing date":""}.</p>` : ""}
     ${dl("dlExec", S.workers)}${dl("dlInsp", checkers())}
     <div class="actions"><span class="grow"></span><button type="button" class="btn" id="cancel">Cancel</button><button type="submit" class="btn btn-y">Close job</button></div>
   </form></div>`;
@@ -908,10 +925,11 @@ function openSheet(task, kind){
     </div>`;
   const prevOpts = `<option value="">Choose a preventive check…</option>` +
     (t.title && !PREV_MAP[t.title] ? `<option value="${esc(t.title)}" selected>${esc(t.title)}</option>` : "") +
-    PREVENTIVE.map(g=>`<optgroup label="${esc(g.group)}">${g.items.map(([en,ar])=>`<option value="${esc(en)}" ${en===t.title?"selected":""}>${esc(en)}</option>`).join("")}</optgroup>`).join("");
+    PREVENTIVE.map(g=>`<optgroup label="${esc(g.group)}">${g.items.map(([en,ar,cat,crit])=>`<option value="${esc(en)}" ${en===t.title?"selected":""}>${esc(en)}${crit?"  —  CRITICAL DELAY":""}</option>`).join("")}</optgroup>`).join("");
   const titleField = prev
     ? `<label class="f"><span>Preventive check</span><select name="title" required ${dis}>${prevOpts}</select></label>
-       <p class="note" id="prevAr" dir="rtl" style="margin:-6px 0 12px;text-align:right">${t.title&&PREV_MAP[t.title]?esc(PREV_MAP[t.title].ar):""}</p>`
+       <p class="note" id="prevAr" dir="rtl" style="margin:-6px 0 6px;text-align:right">${t.title&&PREV_MAP[t.title]?esc(PREV_MAP[t.title].ar):""}</p>
+       <p class="crit-note ${t.title&&PREV_MAP[t.title]&&PREV_MAP[t.title].critical?"":"hidden"}" id="critNote"><b>Critical delay</b> — super urgent. If this is late it can cause damage or a loss of service, so it is always shown first.</p>`
     : `<label class="f"><span>What needs doing? <small>English or العربية</small></span><input name="title" dir="auto" required maxlength="120" value="${esc(t.title)}" placeholder="e.g. Fix shower drain / تصليح مصرف الدوش" ${dis}></label>
        <div class="f ar-box ${hasArabic(t.title)?"hidden":""}" id="titleArBox"><span>Arabic for the report <small>— filled in automatically, correct it if needed</small></span>
          <div class="ar-row"><input name="titleAr" dir="rtl" maxlength="160" value="${esc(t.titleAr||"")}" placeholder="الترجمة العربية" ${dis}>${ro?"":`<button type="button" class="btn" id="trTitle" title="Suggest Arabic again">↻</button>`}</div>
@@ -922,7 +940,7 @@ function openSheet(task, kind){
     <h3>${heading}</h3>
     ${titleField}
     <label class="urg-toggle"><input type="checkbox" name="urgent" ${isUrgent(t)?"checked":""} ${dis}><span><b>Mark as urgent · عاجل</b><br><small style="color:var(--muted)">Shown in red at the top of the board and the daily report</small></span></label>
-    <label class="urg-toggle opt"><input type="checkbox" name="hkHours" ${t.hkHours?"checked":""} ${dis}><span><b>During housekeeping hours (urgent)</b><br><small style="color:var(--muted)">Optional. Shown on the report as “During Housekeeping Hours (Urgent)”</small></span></label>
+    <label class="urg-toggle opt"><input type="checkbox" name="hkHours" ${anyHk(t)?"checked":""} ${dis}><span><b>During housekeeping hours (urgent)</b><br><small style="color:var(--muted)">Optional. Applies to all chosen rooms — choose per room in Reports › Allocate jobs</small></span></label>
     <label class="urg-toggle opt"><input type="checkbox" name="roomClosed" ${t.roomClosed?"checked":""} ${dis}><span><b>Room out of service while this job is open</b><br><small style="color:var(--muted)">For bigger jobs: the room shows as closed on the board until the job is closed</small></span></label>
     <div class="f"><span>Where <small>— ${prev ? (task ? "extra places become separate checks" : "each place becomes its own check") : "choose one or more places"}</small></span>
       <button type="button" class="loc-btn" id="locBtn" ${dis}><span id="locSum"></span><i>▾</i></button>
@@ -983,7 +1001,7 @@ function openSheet(task, kind){
   panel.addEventListener("change", syncLoc);
   panel.querySelectorAll('[data-grp]').forEach(btn=>btn.onclick = ()=>{ const gb = boxes.filter(b=>b.dataset.g===btn.dataset.grp), all = gb.every(b=>b.checked); gb.forEach(b=>b.checked=!all); syncLoc(); });
   // Preventive checks fill in the Type automatically
-  if (prev && !ro) f.title.onchange = ()=>{ const p = PREV_MAP[f.title.value]; if (p){ f.category.value = p.cat; $("prevAr").textContent = p.ar; } };
+  if (prev && !ro) f.title.onchange = ()=>{ const p = PREV_MAP[f.title.value]; if (p){ f.category.value = p.cat; $("prevAr").textContent = p.ar; } $("critNote").classList.toggle("hidden", !(p && p.critical)); };
   // Arabic suggestions for the report (dictionary first, machine translation as a fallback)
   if (!prev && !ro){
     const auto = {title: t.titleAr||"", notes: t.notesAr||""};
@@ -1024,10 +1042,11 @@ function openSheet(task, kind){
     const places = picked(), assignee = canonName(f.assignee.value, S.workers), now = new Date().toISOString();
     const body = { title, taskType: prev?"preventive":"task", category:f.category.value, priority:f.priority.value, assignee,
       hkHours: f.hkHours.checked, roomClosed: f.roomClosed.checked,
+      hkRooms: (task && f.hkHours.checked===anyHk(task) && Array.isArray(task.hkRooms)) ? task.hkRooms.filter(r=>places.includes(r)) : (f.hkHours.checked ? places.slice() : []),
       titleAr: (!prev && f.titleAr && !hasArabic(title)) ? f.titleAr.value.trim() : "",
       notesAr: (!prev && f.notesAr && f.notes.value.trim() && !hasArabic(f.notes.value)) ? f.notesAr.value.trim() : "",
       time:f.time.value, repeat:f.repeat.value, notes:f.notes.value.trim() };
-    const fresh = (k, locs) => ({ ...body, locations:locs, location:locSummary(locs), recDate:k, date:k, status:"open", execution:null, realloc:[], done:{}, createdBy:S.uid, createdAt:now });
+    const fresh = (k, locs) => ({ ...body, hkRooms: body.hkRooms.filter(r=>locs.includes(r)), locations:locs, location:locSummary(locs), recDate:k, date:k, status:"open", execution:null, realloc:[], done:{}, createdBy:S.uid, createdAt:now });
     try{
       const batch = S.db.batch(); let added = 0;
       if (!task){
@@ -1039,7 +1058,7 @@ function openSheet(task, kind){
         if (f.date.value !== task.date) realloc.push(reallocEntry("date", task.date, f.date.value));
         if (assignee !== (task.assignee||"")) realloc.push(reallocEntry("user", task.assignee, assignee));
         const mine = prev ? (places.length ? [places[0]] : []) : places;
-        batch.update(tasksCol().doc(task.id), { ...body, locations:mine, location:locSummary(mine), date:f.date.value, realloc, recDate: task.recDate || task.date });
+        batch.update(tasksCol().doc(task.id), { ...body, hkRooms: body.hkRooms.filter(r=>mine.includes(r)), locations:mine, location:locSummary(mine), date:f.date.value, realloc, recDate: task.recDate || task.date });
         if (prev) places.slice(1).forEach(p=>{ batch.set(tasksCol().doc(), {...fresh(f.date.value, [p]), recDate: f.date.value}); added++; });
       }
       await batch.commit();
@@ -1278,23 +1297,25 @@ const staffLabel = s => s==="__none" ? ["Not allocated","غير مخصص"] : s ?
 
 /* ---------- Printed report: black & white, sorted by room, tasks + preventive together ---------- */
 const roomOf = t => locsOf(t).length ? locsOf(t) : ["No room set"];
-function jobTypeLabel(t){
-  if (t.hkHours) return ["During Housekeeping Hours (Urgent)", "خلال ساعات التدبير المنزلي (عاجل)"];
-  if (isUrgent(t)) return ["Urgent", "عاجل"];
-  return null;
+function jobLabels(t, room){
+  const L = [];
+  if (isCritical(t)) L.push(["CRITICAL DELAY – Super urgent", "تأخير حرج – عاجل جداً"]);
+  if (hkFor(t, room)) L.push(["During Housekeeping Hours (Urgent)", "خلال ساعات التدبير المنزلي – عاجل"]);
+  if (!L.length && t.priority==="urgent") L.push(["Urgent", "عاجل"]);
+  return L;
 }
 function reportDoc(type, k, staff, AR){
   const {items, carry} = scope(type, k, staff);
   const all = [...carry, ...items];
   const ar = s => (AR && AR[s]) || "";
   const [tEn, tAr] = REPORT_TITLE[type], [sEn] = staffLabel(staff);
-  const urgentCount = all.filter(t=>!isClosed(t) && isUrgent(t)).length;
+  const urgentCount = all.filter(t=>!isClosed(t) && isUrgent(t)).length, critCount = all.filter(t=>!isClosed(t) && isCritical(t)).length;
   // One block per room; a job covering several rooms is listed under each of them
   const rooms = new Map();
   all.forEach(t=>roomOf(t).forEach(r=>{ if (!rooms.has(r)) rooms.set(r, []); rooms.get(r).push(t); }));
   const order = [...rooms.keys()].sort((a,b)=>(a==="No room set")-(b==="No room set") || locRank(a)-locRank(b) || a.localeCompare(b));
   const job = (t, room) => {
-    const c = isClosed(t), typ = jobTypeLabel(t);
+    const c = isClosed(t), labs = jobLabels(t, room);
     const arT = hasArabic(t.title) ? "" : (t.titleAr || (PREV_MAP[t.title] && PREV_MAP[t.title].ar) || ar(t.title) || glossaryAr(t.title) || "");
     const notesAr = t.notes && !hasArabic(t.notes) ? (t.notesAr || ar(t.notes)) : "";
     const others = locsOf(t).filter(r=>r!==room);
@@ -1308,9 +1329,8 @@ function reportDoc(type, k, staff, AR){
     ].filter(Boolean).map(esc).join(" · ");
     return `<div class="pj ${c?"pj-done":""}">
       <div class="pj-left">
-        <div class="pj-head"><span class="pj-box">${c?"✓":""}</span><span class="pj-title" dir="auto">${esc(t.title)}</span>${typ?`<span class="pj-type">${esc(typ[0])}</span>`:""}</div>
-        ${arT||typ?`<div class="pj-ar" dir="rtl">${esc(arT)}${typ?` <b>– ${esc(typ[1])}</b>`:""}</div>`:""}
-        ${t.roomClosed && !c ? `<div class="pj-oos">ROOM OUT OF SERVICE · الغرفة خارج الخدمة</div>` : ""}
+        <div class="pj-head"><span class="pj-box">${c?"✓":""}</span><span class="pj-title" dir="auto">${esc(t.title)}</span>${labs.map(l=>`<span class="pj-type ${l[0].startsWith("CRITICAL")?"pj-crit":""}">${esc(l[0])}</span>`).join("")}</div>
+        ${arT||labs.length?`<div class="pj-ar" dir="rtl">${esc(arT)}${labs.length?` <b>– ${labs.map(l=>esc(l[1])).join(" · ")}</b>`:""}</div>`:""}
         ${t.notes ? `<div class="pj-notes"><b>Notes:</b> <span dir="auto">${esc(t.notes)}</span>${notesAr?`<div dir="rtl">${esc(notesAr)}</div>`:""}</div>` : ""}
         <div class="pj-facts">${facts}</div>
       </div>
@@ -1328,7 +1348,7 @@ function reportDoc(type, k, staff, AR){
         <div class="pr-date">${esc(periodLabel(type,k))}</div></div>
       <div class="pr-right">Maintenance Work<div dir="rtl">أعمال الصيانة</div></div>
     </div>
-    <div class="pr-counts"><span>Number of jobs: <b>${all.length}</b> <small dir="rtl">عدد المهام</small></span><span><small dir="rtl">المهام العاجلة</small> Urgent jobs: <b>${urgentCount}</b></span></div>
+    <div class="pr-counts"><span>Number of jobs: <b>${all.length}</b> <small dir="rtl">عدد المهام</small></span><span><small dir="rtl">المهام العاجلة</small> Urgent jobs: <b>${urgentCount}</b>${critCount?` <small>(incl. ${critCount} critical delay)</small>`:""}</span></div>
     ${body}
     <div class="pr-foot"><span>Executed by: ____________________</span><span>Inspected by: ____________________</span></div>
   </div>`;
@@ -1341,8 +1361,8 @@ function reportText(type, k, staff, AR){
   [...rooms.keys()].sort((a,b)=>(a==="No room set")-(b==="No room set") || locRank(a)-locRank(b)).forEach(r=>{
     L.push("", `*${r}*${locAr(r)?` | ${locAr(r)}`:""}`);
     rooms.get(r).sort(byRank).forEach(t=>{
-      const typ = jobTypeLabel(t), arT = hasArabic(t.title) ? "" : (t.titleAr || (PREV_MAP[t.title]&&PREV_MAP[t.title].ar) || ar(t.title) || glossaryAr(t.title));
-      L.push(`${isClosed(t)?"✓":"☐"} ${t.title}${arT?` | ${arT}`:""}${typ?` – ${typ[0]}`:""}${t.roomClosed&&!isClosed(t)?" – ROOM OUT OF SERVICE":""}${!staff&&t.assignee?` (${t.assignee})`:""}`);
+      const typ = jobLabels(t, r).map(l=>l[0]).join(", "), arT = hasArabic(t.title) ? "" : (t.titleAr || (PREV_MAP[t.title]&&PREV_MAP[t.title].ar) || ar(t.title) || glossaryAr(t.title));
+      L.push(`${isClosed(t)?"✓":"☐"} ${t.title}${arT?` | ${arT}`:""}${typ?` – ${typ}`:""}${!staff&&t.assignee?` (${t.assignee})`:""}`);
       if (t.notes) L.push(`   Notes: ${t.notes}`);
     });
   });
@@ -1392,16 +1412,28 @@ async function openReport(){
     $("allocCount").textContent = `· ${list.length} open${un?` · ${un} not allocated`:""}`;
     $("allocBody").innerHTML = !list.length ? `<p class="note">No open jobs in this report.</p>` : `
       <div class="al-bulk"><span>Allocate all <b>not allocated</b> jobs to</span><input id="alBulk" list="dlAl" dir="auto" placeholder="Name…" autocomplete="off"><button type="button" class="btn" id="alBulkGo" ${un?"":"disabled"}>Apply</button></div>
-      <table class="al-tab"><thead><tr><th>Job</th><th title="During housekeeping hours (urgent)">Housekeeping hours</th><th>Room out of service</th><th>Date</th><th>Allocated to</th></tr></thead><tbody>
-      ${list.map(t=>`<tr class="${t.assignee?"":"un"}"><td><span dir="auto">${esc(fullTitle(t))}</span>${!isPrev(t)&&locsOf(t).length?`<small>${esc(locSummary(locsOf(t)))}</small>`:""}</td>
-        <td class="al-c"><label class="al-tick"><input type="checkbox" data-hk="${t.id}" ${t.hkHours?"checked":""}><span>${t.hkHours?"Yes":""}</span></label></td>
-        <td class="al-c"><label class="al-tick"><input type="checkbox" data-oos="${t.id}" ${t.roomClosed?"checked":""}><span>${t.roomClosed?"Closed":""}</span></label></td>
-        <td><input type="date" data-dt="${t.id}" value="${esc(t.date)}">${t.date!==t.recDate?`<small>rec. ${esc(fmtD(t.recDate))}</small>`:""}</td>
-        <td><input data-al="${t.id}" list="dlAl" dir="auto" value="${esc(t.assignee||"")}" placeholder="Not allocated" autocomplete="off"></td></tr>`).join("")}
+      <table class="al-tab"><thead><tr><th>Job</th><th>Room</th><th title="During housekeeping hours (urgent) — tick only the occupied rooms">Housekeeping hours</th><th>Date</th><th>Allocated to</th></tr></thead><tbody>
+      ${list.map(t=>{
+        const rs = locsOf(t).length ? locsOf(t) : [""], n = rs.length;
+        return rs.map((r,i)=>`<tr class="${t.assignee?"":"un"} ${i<n-1?"al-sub":""}">
+          ${i===0 ? `<td rowspan="${n}"><span dir="auto">${esc(t.title)}</span>${isCritical(t)?`<small class="al-crit">Critical delay</small>`:""}${n>1?`<small>${n} rooms</small>`:""}</td>` : ""}
+          <td class="al-room">${r ? esc(r) : `<small>No room</small>`}</td>
+          <td class="al-c"><label class="al-tick"><input type="checkbox" data-hk="${t.id}" data-room="${esc(r)}" ${hkFor(t, r||"No room set")?"checked":""}><span>${hkFor(t, r||"No room set")?"Yes":""}</span></label></td>
+          ${i===0 ? `<td rowspan="${n}"><input type="date" data-dt="${t.id}" value="${esc(t.date)}">${t.date!==t.recDate?`<small>rec. ${esc(fmtD(t.recDate))}</small>`:""}</td>
+          <td rowspan="${n}"><input data-al="${t.id}" list="dlAl" dir="auto" value="${esc(t.assignee||"")}" placeholder="Not allocated" autocomplete="off"></td>` : ""}</tr>`).join("");
+      }).join("")}
       </tbody></table>${dl("dlAl", S.workers)}`;
     const upd = async (id, data, msg) => { try{ await tasksCol().doc(id).update(data); if (msg) toast(msg); }catch(e){ writeFailed(e); } };
-    $("allocBody").querySelectorAll("[data-hk]").forEach(cb=>cb.onchange = ()=>{ const t = S.tasks.find(x=>x.id===cb.dataset.hk); if (t) upd(t.id, {hkHours:cb.checked, recDate:t.recDate||t.date}, cb.checked ? "Marked: during housekeeping hours (urgent)" : "Housekeeping hours removed"); });
-    $("allocBody").querySelectorAll("[data-oos]").forEach(cb=>cb.onchange = ()=>{ const t = S.tasks.find(x=>x.id===cb.dataset.oos); if (t) upd(t.id, {roomClosed:cb.checked, recDate:t.recDate||t.date}, cb.checked ? "Room marked out of service" : "Room back in service"); });
+    $("allocBody").querySelectorAll("[data-hk]").forEach(cb=>cb.onchange = ()=>{
+      const t = S.tasks.find(x=>x.id===cb.dataset.hk); if (!t) return;
+      const room = cb.dataset.room;
+      if (!room){ upd(t.id, {hkHours:cb.checked, hkRooms:[], recDate:t.recDate||t.date}); return; }
+      // start from the current per-room list (older jobs: one flag meant every room)
+      const cur = new Set(Array.isArray(t.hkRooms) ? t.hkRooms : (t.hkHours ? locsOf(t) : []));
+      cb.checked ? cur.add(room) : cur.delete(room);
+      const list2 = locsOf(t).filter(r=>cur.has(r));
+      upd(t.id, {hkRooms:list2, hkHours:list2.length>0, recDate:t.recDate||t.date}, cb.checked ? `${room}: during housekeeping hours (urgent)` : `${room}: housekeeping hours removed`);
+    });
     $("allocBody").querySelectorAll("[data-dt]").forEach(inp=>inp.onchange = ()=>{
       const t = S.tasks.find(x=>x.id===inp.dataset.dt); if (!t || !inp.value || inp.value===t.date) return;
       upd(t.id, {date:inp.value, recDate:t.recDate||t.date, realloc:[...(t.realloc||[]), reallocEntry("date", t.date, inp.value)]}, `Moved to ${fmtDY(inp.value)}`);
