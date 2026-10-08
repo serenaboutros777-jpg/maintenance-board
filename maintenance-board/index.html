@@ -431,6 +431,58 @@ table.pt td.pt-room{font-size:10px;line-height:1.2}
 table.pt td.pt-room div{font-size:8.5px}
 table.pt .pt-mat{width:24%}
 .pr-foot{margin-top:8px;break-inside:avoid}
+
+/* v13 */
+.pill.slot{background:var(--ink);color:#fff}
+.task.is-crossed .t-title{text-decoration:line-through;color:var(--muted)}
+.ppl-chips{display:flex;flex-wrap:wrap;gap:6px}
+.f.is-missing .ppl-chips .chip span{border-color:var(--red)}
+.pp{position:fixed;z-index:60;width:240px;background:var(--panel);border:1.5px solid var(--ink);border-radius:10px;padding:10px;box-shadow:0 10px 30px rgba(0,0,0,.18);max-height:60vh;overflow:auto}
+.pp-h{font-weight:700;font-size:13px;margin-bottom:6px}.pp-h small{font-weight:400;color:var(--muted)}
+.pp-row{display:flex;align-items:center;gap:8px;padding:5px 2px;font-size:14px;cursor:pointer}.pp-row input{width:18px;height:18px;accent-color:var(--ink)}
+.pp-row em{margin-left:auto;font-size:11px;color:var(--red);font-style:normal}
+.pp-act{display:flex;align-items:center;gap:8px;margin-top:8px;border-top:1px solid var(--line);padding-top:8px}.pp-act .grow{flex:1}.pp-act .btn{padding:6px 14px}
+.pp-btn{display:flex;align-items:center;gap:4px;flex-wrap:wrap;width:100%;min-height:32px;padding:4px 8px;border:1px solid var(--line);border-radius:6px;background:var(--panel);text-align:left;font-size:13px}
+.pp-btn span{background:var(--soft);border-radius:10px;padding:0 8px;font-weight:600}.pp-btn span.abs{background:#F6E3DF;color:var(--red);text-decoration:line-through}
+.pp-btn.empty{color:var(--red);border-color:var(--red)}.pp-btn i{margin-left:auto;font-style:normal;color:var(--muted)}
+.ms{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:12px;background:var(--bg)}
+.ms-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px}.ms-h small{color:var(--muted)}
+.ms-b{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px}.ms-b .btn{margin-left:auto;padding:7px 12px;font-size:13px}
+.att{display:flex;flex-direction:column;gap:4px}
+.att-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:5px 6px;border-radius:8px;background:var(--panel)}
+.att-row.is-abs{background:#F6E3DF}
+.att-n{min-width:110px;font-weight:600}
+.att-pa{display:inline-flex;border:1px solid var(--ink);border-radius:8px;overflow:hidden}
+.att-pa button{border:0;background:var(--panel);padding:4px 12px;font-weight:700}.att-pa button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.att-pa button[data-v="A"][aria-pressed="true"]{background:var(--red)}
+.att-j{font-size:12px;color:var(--muted)}
+.att-move{margin-left:auto;font-size:12px}.att-move select{border:1px solid var(--line);border-radius:6px;padding:4px 6px}
+.ms-alloc summary{font-size:14px}
+.al2 th:nth-child(1){width:20%}.al2 th:nth-child(2){width:20%}.al2 th:nth-child(3){width:17%}.al2 th:nth-child(4){width:17%}.al2 th:nth-child(5){width:26%}
+.al2 select{width:100%;padding:5px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);font-size:12px}
+.al2 tr.al-gh td{background:var(--soft);border-top:2px solid var(--ink)}
+.al2 tr.al-x td{opacity:.6}.al2 tr.al-x td.al-room{text-decoration:line-through}
+.al-main small{display:block;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+.occ-tag{display:inline-block;font-size:11px;font-weight:600;border:1px solid var(--ink);border-radius:10px;padding:0 7px;margin-right:4px}
+.occ-tag.x{background:var(--ink);color:#fff}
+.imp-drop{display:flex;align-items:center;justify-content:center;border:2px dashed var(--ink);border-radius:12px;padding:22px;margin-bottom:12px;cursor:pointer;font-weight:600;position:relative}
+.imp-drop input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.imp-map{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media (max-width:640px){.imp-map{grid-template-columns:1fr 1fr}}
+.imp-res{border:1.5px solid var(--ink);border-radius:10px;padding:10px 12px;font-size:13px;margin:4px 0 10px}.imp-day{margin-top:4px}
+.imp-prev{overflow:auto;max-height:200px;border:1px solid var(--line);border-radius:8px}
+.imp-prev table{border-collapse:collapse;font-size:11px;white-space:nowrap}.imp-prev th,.imp-prev td{border-bottom:1px solid var(--line);padding:3px 8px;text-align:left}
+/* printed report: slot sections + bigger materials */
+.pr-slot{margin-top:10px;break-inside:auto}
+.pr-slot-h{display:flex;justify-content:space-between;font-size:12.5px;font-weight:800;text-transform:uppercase;letter-spacing:1px;border:2px solid #000;padding:3px 8px}
+.pr-slot-h small{font-weight:600}
+.pr-slot-note{font-size:10px;padding:3px 8px;border:1px solid #000;border-top:0;font-style:italic}
+.pt-extra{font-size:9.5px;margin:1px 0 0 17px}
+table.pt .pt-mat{width:34%}
+table.pt td.pt-mat i{height:17px}
+table.pt td.pt-mat i:last-child{border-bottom:1px solid #000}
+
+.pp-btn.mixed{color:var(--muted);font-style:italic}
 </style>
 </head>
 <body>
@@ -623,14 +675,14 @@ const ROLES = {
 };
 
 const S = { db:null, uid:null, email:"", name:"", tasks:[], workers:[], legacy:[], members:{}, role:null, me:null,
-  month:null, sel:null, kind:"task", filter:"all", who:"", ready:false, carryShown:"", onData:null, selMode:false, selected:new Set() };
+  month:null, sel:null, kind:"task", filter:"all", who:"", ready:false, carryShown:"", onData:null, selMode:false, selected:new Set(), occ:{days:{}}, att:{days:{}} };
 
 /* ----- Permissions ----- */
 const isAdmin    = () => S.role==="admin";
 const isWorker   = () => S.role==="worker";
 const isReporter = () => S.role==="reporter";
 const canAdd     = () => isAdmin() || isReporter();
-const canExec    = t => isWorker() && !!S.me && t.assignee===S.me.name && !isClosed(t);
+const canExec    = t => isWorker() && !!S.me && assigneesOf(t).includes(S.me.name) && !isClosed(t);
 const canEdit    = t => isAdmin() || (isReporter() && t.createdBy===S.uid && !isClosed(t));
 
 const $ = id => document.getElementById(id);
@@ -685,20 +737,21 @@ function norm(t){
   return { ...t, taskType: t.taskType || "task", recDate: t.recDate || t.date || "", status,
     closedDate: t.closedDate || (status==="closed" && legacyDone ? t.date : ""),
     execution: t.execution || (legacyDone ? {name: legacyDone.name || "", at: legacyDone.at} : null),
-    realloc: Array.isArray(t.realloc) ? t.realloc : [] };
+    realloc: Array.isArray(t.realloc) ? t.realloc : [],
+    assignees: Array.isArray(t.assignees) && t.assignees.length ? t.assignees : (t.assignee ? [t.assignee] : []) };
 }
 const isClosed = t => t.status==="closed";
 const isExecuted = t => t.status==="executed";
 const rank = {urgent:0,normal:1,low:2};
 const byRank = (a,b) => (isCritical(b)-isCritical(a)) || (isUrgent(b)-isUrgent(a)) || (rank[a.priority]??1)-(rank[b.priority]??1) || ((a.time||"99")<(b.time||"99")?-1:(a.time||"99")>(b.time||"99")?1:0)
   || (a.title||"").localeCompare(b.title||"") || locRank(locsOf(a)[0])-locRank(locsOf(b)[0]);
-const forWho = t => !S.who || (S.who==="__none" ? !t.assignee : t.assignee===S.who);
+const forWho = t => !S.who || (S.who==="__none" ? !assigneesOf(t).length : assigneesOf(t).includes(S.who));
 const ofKind = (t, kind) => !kind || ((kind==="preventive") === isPrev(t));
 const onDay = (k, kind) => S.tasks.filter(t=>t.date===k && ofKind(t,kind)).sort(byRank);
 const overdue = (before, kind) => S.tasks.filter(t=>!isClosed(t) && t.date && t.date<before && ofKind(t,kind))
   .sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:byRank(a,b));
 /* Preventive checks are one per place: "AC Filter – Room 101" */
-const fullTitle = t => isPrev(t) && locsOf(t).length===1 ? `${t.title} – ${locsOf(t)[0]}` : t.title;
+const fullTitle = t => locsOf(t).length===1 ? `${t.title} – ${locsOf(t)[0]}` : t.title;
 function titleArOf(t, AR){
   const base = hasArabic(t.title) ? t.title : (t.titleAr || (PREV_MAP[t.title] && PREV_MAP[t.title].ar) || (AR && AR[t.title]) || glossaryAr(t.title) || "");
   if (isPrev(t) && locsOf(t).length===1 && base) return `${base} – ${locAr(locsOf(t)[0]) || (AR && AR[locsOf(t)[0]]) || locsOf(t)[0]}`;
@@ -758,12 +811,12 @@ function taskRow(t, k){
     anyHk(t) ? `<span class="pill urg">Housekeeping hours${Array.isArray(t.hkRooms) && t.hkRooms.length && t.hkRooms.length<locsOf(t).length ? ": "+t.hkRooms.map(shortLoc).join(", ") : ""} (urgent)</span>` : (isUrgent(t) && !isCritical(t)) ? `<span class="pill urg">Urgent · عاجل</span>` : "", status,
     t.roomClosed && !closed ? `<span class="pill oos">Room out of service</span>` : "",
     isPrev(t) ? `<span class="pill prev">${esc((FREQ_PREV[freqOf(t)]||"").split(" ")[0])} preventive</span>` : "",
-    !isPrev(t) && locsOf(t).length ? `<span>${esc(locSummary(locsOf(t)))}</span>` : "",
+    !closed ? (()=>{ const d = dayOf(t, k), o = occFor(locsOf(t)[0], d); return (isCrossed(t, k) ? `<span class="pill oos">Occupied · crossed off</span>` : `<span class="pill slot">${esc(SLOTS[slotOf(t, k)[0]].label)}</span>`) + (o && !isCrossed(t,k) ? `<span>${esc(OCC[o].label)}</span>` : ""); })() : "",
     `<span class="tag"><b style="background:${color(t.category)}"></b>${esc(catLabel(t.category))}</span>`,
     !isPrev(t) && t.repeat && t.repeat!=="none" ? `<span>${esc(REPEAT_LABEL[t.repeat]||"")}</span>` : ""
   ].join("");
   const people = [
-    t.assignee ? `Allocated to <span class="person" dir="auto">${esc(t.assignee)}</span>` : `<span style="color:var(--red)">Not allocated</span>`,
+    assigneesOf(t).length ? `Allocated to <span class="person" dir="auto">${esc(assigneesOf(t).join(", "))}</span>` : `<span style="color:var(--red)">Not allocated</span>`,
     t.execution && t.execution.name ? `Executed by <span class="person" dir="auto">${esc(closed && t.executedBy ? t.executedBy : t.execution.name)}</span>` : (closed && t.executedBy ? `Executed by <span class="person" dir="auto">${esc(t.executedBy)}</span>` : ""),
     closed && t.inspectedBy ? `Inspected by <span class="person" dir="auto">${esc(t.inspectedBy)}</span>` : ""
   ].filter(Boolean).join(" · ");
@@ -775,7 +828,7 @@ function taskRow(t, k){
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></button>`;
   const picking = S.selMode && isAdmin(), picked = picking && S.selected.has(t.id);
   const pick = picking ? `<label class="sel-pick" title="Select"><input type="checkbox" data-pick="${t.id}" ${picked?"checked":""} aria-label="Select ${esc(fullTitle(t))}"></label>` : "";
-  return `<li class="task ${closed?"is-done":""} ${isUrgent(t)&&!closed?"urgent-row":""} ${picked?"is-picked":""}">${pick}${picking?"":box}
+  return `<li class="task ${closed?"is-done":""} ${isUrgent(t)&&!closed?"urgent-row":""} ${picked?"is-picked":""} ${isCrossed(t,k)?"is-crossed":""}">${pick}${picking?"":box}
     <button class="t-main" ${picking?`data-pickrow="${t.id}"`:`data-open="${t.id}"`}><span class="t-title" dir="auto">${esc(fullTitle(t))}</span><span class="t-meta">${meta}</span>
       <span class="t-meta">${people}</span><span class="t-dates">${datesLine(t)}</span>
       ${t.notes?`<span class="t-notes" dir="auto">${esc(t.notes)}</span>`:""}</button></li>`;
@@ -809,7 +862,8 @@ function renderDay(){
   if (od.length) $("carryBanner").innerHTML = `<span><b>${od.length}</b> ${od.length===1?"job":"jobs"} from earlier days ${od.length===1?"wasn't":"weren't"} closed.</span><button class="btn btn-y" id="carryOpen">Review &amp; reallocate</button>`;
   document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-pressed", b.dataset.f===S.filter));
   const pass = t => S.filter==="all" || (S.filter==="closed" ? isClosed(t) : S.filter==="urgent" ? isUrgent(t)&&!isClosed(t) : S.filter==="awaiting" ? isExecuted(t) : !isClosed(t));
-  const lc = carry.filter(pass), lm = main.filter(pass);
+  const bySlot = (a,b) => (isCrossed(a,k)-isCrossed(b,k)) || SLOTS[slotOf(a,k)[0]].order-SLOTS[slotOf(b,k)[0]].order || byRank(a,b);
+  const lc = carry.filter(pass).sort(bySlot), lm = main.filter(pass).sort(bySlot);
   if (!S.ready){ $("list").innerHTML = `<li class="empty">Loading…</li>`; renderSelBar([]); return; }
   if (!lc.length && !lm.length){
     const what = S.kind==="preventive" ? "preventive checks" : "tasks";
@@ -874,7 +928,7 @@ async function saveTeam(legacy, members){
 }
 function nextInstance(t, k){
   return { title:t.title, titleAr:t.titleAr||"", notes:t.notes||"", notesAr:t.notesAr||"", taskType:t.taskType, category:t.category||"general",
-    priority:t.priority||"normal", hkHours:!!t.hkHours, hkRooms:Array.isArray(t.hkRooms)?t.hkRooms:[], roomClosed:!!t.roomClosed, locations:locsOf(t), location:t.location||locSummary(locsOf(t)), assignee:t.assignee||"", time:t.time||"",
+    priority:t.priority||"normal", hkHours:!!t.hkHours, hkRooms:Array.isArray(t.hkRooms)?t.hkRooms:[], roomClosed:!!t.roomClosed, locations:locsOf(t), location:t.location||locSummary(locsOf(t)), assignee:assigneesOf(t)[0]||"", assignees:assigneesOf(t), slot:t.slot||"", slotManual:!!t.slotManual, groupId:t.groupId||"", time:"",
     repeat:t.repeat, seriesId:t.seriesId||t.id, recDate:k, date:k, status:"open", execution:null, realloc:[], done:{},
     createdBy:S.uid, createdAt:new Date().toISOString() };
 }
@@ -895,12 +949,6 @@ async function closeTask(t, {executedBy, inspectedBy, closedDate}){
 async function reopenTask(t){
   if (!confirm("Reopen this job? It will need to be closed again with an inspector.")) return;
   try{ await tasksCol().doc(t.id).update({ status: t.execution ? "executed" : "open", closedDate:"", closedAt:"", inspectedBy:"", executedBy:"" }); toast("Reopened"); }
-  catch(e){ writeFailed(e); }
-}
-async function saveAllocation(t, name){
-  name = canonName(name, S.workers);
-  if (name === (t.assignee||"")) return;
-  try{ await tasksCol().doc(t.id).update({ assignee:name, recDate:t.recDate||t.date, realloc:[...(t.realloc||[]), reallocEntry("user", t.assignee, name)] }); }
   catch(e){ writeFailed(e); }
 }
 async function moveToDate(list, k){
@@ -926,8 +974,8 @@ function openClose(t){
   $("sheetHost").innerHTML = `<div class="scrim" id="scrim"><form class="sheet" id="cForm" novalidate>
     <div class="eyebrow">${isPrev(t)?"Close preventive check":"Close task"}</div>
     <h3 dir="auto">${esc(fullTitle(t))}</h3>
-    <p class="lead">${datesLine(t)}${t.assignee?` · Allocated to <b>${esc(t.assignee)}</b>`:""}</p>
-    <label class="f"><span>Executed by <small>(optional)</small></span><input name="exec" list="dlExec" dir="auto" maxlength="60" autocomplete="off" value="${esc((t.execution&&t.execution.name)||t.assignee||"")}" placeholder="Who did the job"></label>
+    <p class="lead">${datesLine(t)}${assigneesOf(t).length?` · Allocated to <b>${esc(assigneesOf(t).join(", "))}</b>`:""}</p>
+    <label class="f"><span>Executed by <small>(optional)</small></span><input name="exec" list="dlExec" dir="auto" maxlength="60" autocomplete="off" value="${esc((t.execution&&t.execution.name)||assigneesOf(t).join(", ")||"")}" placeholder="Who did the job"></label>
     <label class="f"><span>Inspected by <small style="color:var(--red)">— required to close</small></span><input name="insp" list="dlInsp" dir="auto" maxlength="60" autocomplete="off" placeholder="Type who inspected it" required></label>
     <label class="f"><span>Closing date</span><input type="date" name="cdate" value="${today}" max="${today}" required></label>
     ${t.repeat && t.repeat!=="none" && !t.nextId ? `<p class="note">This repeats (${esc(REPEAT_LABEL[t.repeat]||t.repeat)}). The next one will be scheduled automatically${isPrev(t)?", counted from the closing date":""}.</p>` : ""}
@@ -938,7 +986,7 @@ function openClose(t){
   const f = $("cForm"); setTimeout(()=>f.insp.focus(), 50);
   f.onsubmit = async e=>{
     e.preventDefault();
-    const insp = canonName(f.insp.value, checkers()), exec = canonName(f.exec.value, S.workers), cd = f.cdate.value || today;
+    const insp = canonName(f.insp.value, checkers()), exec = f.exec.value.split(",").map(x=>canonName(x, S.workers)).filter(Boolean).join(", "), cd = f.cdate.value || today;
     if (!insp){ f.insp.focus(); toast("Add who inspected it. A job can't be closed without an inspector."); return; }
     try{ const next = await closeTask(t, {executedBy:exec, inspectedBy:insp, closedDate:cd}); closeSheet();
          toast(next ? `Closed. Next one scheduled for ${fmtDY(next)}.` : "Closed"); }
@@ -952,7 +1000,7 @@ function openCarry(){
   const today = todayKey(), list = overdue(today);
   if (!list.length){ toast("Nothing to carry over. Everything from earlier days is closed."); return; }
   const row = t => `<label class="co-row"><input type="checkbox" value="${t.id}" checked>
-      <span class="co-main"><b dir="auto">${esc(fullTitle(t))}</b><small>${[!isPrev(t)&&locsOf(t).length?locSummary(locsOf(t)):"", t.assignee?`Allocated to ${t.assignee}`:"Not allocated", `Planned ${fmtD(t.date)}`, isExecuted(t)?"Executed, awaiting inspection":""].filter(Boolean).map(esc).join(" · ")}</small></span>
+      <span class="co-main"><b dir="auto">${esc(fullTitle(t))}</b><small>${[!isPrev(t)&&locsOf(t).length?locSummary(locsOf(t)):"", assigneesOf(t).length?`Allocated to ${assigneesOf(t).join(", ")}`:"Not allocated", `Planned ${fmtD(t.date)}`, isExecuted(t)?"Executed, awaiting inspection":""].filter(Boolean).map(esc).join(" · ")}</small></span>
       <span class="co-side"><span class="co-late">${daysBetween(t.date,today)}d late</span><input type="date" class="co-date" data-for="${t.id}" value="${today}" min="${today}" title="Move to"></span></label>`;
   const tasks = list.filter(t=>!isPrev(t)), prev = list.filter(isPrev);
   $("sheetHost").innerHTML = `<div class="scrim" id="scrim"><div class="sheet">
@@ -985,13 +1033,6 @@ function openCarry(){
       toast(`${sel.length} ${sel.length===1?"job":"jobs"} moved${days.length===1 ? (days[0]===today ? " to today" : ` to ${fmtDY(days[0])}`) : ` to ${days.length} different days`}.`); }
     catch(e){ writeFailed(e); }
   };
-}
-/* Older tasks were saved without a type. Label them once so staff (who only load "task") can still see them. */
-let _labelled = false;
-async function labelOldTasks(raw){
-  if (_labelled) return; const old = raw.filter(d=>!d.taskType); _labelled = true; if (!old.length) return;
-  try{ for (let i=0;i<old.length;i+=400){ const b = S.db.batch(); old.slice(i,i+400).forEach(d=>b.update(tasksCol().doc(d.id), {taskType:"task"})); await b.commit(); } }
-  catch(e){ _labelled = false; }
 }
 function maybeCarryPopup(){
   const today = todayKey();
@@ -1047,7 +1088,7 @@ function openSheet(task, kind){
     <label class="urg-toggle"><input type="checkbox" name="urgent" ${isUrgent(t)?"checked":""} ${dis}><span><b>Mark as urgent · عاجل</b><br><small style="color:var(--muted)">Shown in red at the top of the board and the daily report</small></span></label>
     <label class="urg-toggle opt"><input type="checkbox" name="hkHours" ${anyHk(t)?"checked":""} ${dis}><span><b>During housekeeping hours (urgent)</b><br><small style="color:var(--muted)">Optional. Applies to all chosen rooms — choose per room in Reports › Allocate jobs</small></span></label>
     <label class="urg-toggle opt"><input type="checkbox" name="roomClosed" ${t.roomClosed?"checked":""} ${dis}><span><b>Room out of service while this job is open</b><br><small style="color:var(--muted)">For bigger jobs: the room shows as closed on the board until the job is closed</small></span></label>
-    <div class="f" data-req="where"><span>Where <b class="req" title="Required">*</b> <small>— ${prev ? (task ? "extra places become separate checks" : "each place becomes its own check") : "choose one or more places"}</small></span>
+    <div class="f" data-req="where"><span>Where <b class="req" title="Required">*</b> <small>— ${task ? "extra rooms become separate jobs" : "each room becomes its own job"}</small></span>
       <button type="button" class="loc-btn" id="locBtn" ${dis}><span id="locSum"></span><i>▾</i></button>
       ${locPicker}
     </div>
@@ -1066,8 +1107,9 @@ function openSheet(task, kind){
       <div class="ar-row"><textarea name="notesAr" dir="rtl" rows="2" maxlength="800" placeholder="الملاحظات بالعربية" ${dis}>${esc(t.notesAr||"")}</textarea>${ro?"":`<button type="button" class="btn" id="trNotes" title="Suggest Arabic again">↻</button>`}</div>
       <small class="ar-hint" id="notesArHint"></small></div>
     <div class="sec-label">Allocation</div>
-    <label class="f" data-req="assignee"><span>Allocated to <b class="req" title="Required">*</b> <small>— the maintenance person who will execute it</small></span><input name="assignee" required list="dlExec" dir="auto" maxlength="60" autocomplete="off" value="${esc(t.assignee||"")}" placeholder="Type a name…" ${dis}></label>
-    ${dl("dlExec", S.workers)}
+    <div class="f" data-req="assignee"><span>Allocated to <b class="req" title="Required">*</b> <small>— choose one or several maintenance staff</small></span>
+      <div class="ppl-chips">${[...new Set([...S.workers, ...assigneesOf(t)])].map(n=>`<label class="chip"><input type="checkbox" name="ppl" value="${esc(n)}" ${assigneesOf(t).includes(n)?"checked":""} ${dis}><span dir="auto">${esc(n)}${isAbsent(n, t.date||S.sel)?" · absent":""}</span></label>`).join("") || `<small style="color:var(--red)">No maintenance workers yet — add them under Team first.</small>`}</div></div>
+    ${isAdmin() ? `<label class="f"><span>Time slot</span><select name="slot" ${dis}><option value="">Automatic (from the room's guest status)</option>${SLOT_ORDER.map(x=>`<option value="${x}" ${t.slotManual&&t.slot===x?"selected":""}>${esc(SLOTS[x].label)}</option>`).join("")}</select></label>` : ""}
     <p class="note" style="margin:-4px 0 12px">“Inspected by” is added when you close the job.</p>
     ${task ? statusBlock(t) : ""}
     ${!S.workers.length && isAdmin() ? `<p class="note" style="margin:-4px 0 12px">Tip: add your maintenance workers under <b>Team</b> so their names are suggested and the task shows on their phone.</p>` : ""}
@@ -1149,14 +1191,16 @@ function openSheet(task, kind){
     if (!f.category.value) missing.push(["category", "Type"]);
     if (!f.priority.value) missing.push(["priority", "Priority"]);
     if (!f.date.value) missing.push(["date", "Date"]);
-    if (!f.assignee.value.trim()) missing.push(["assignee", "Allocated to"]);
+    const people = [...f.querySelectorAll('input[name=ppl]:checked')].map(i=>i.value);
+    if (!people.length) missing.push(["assignee", "Allocated to"]);
     f.querySelectorAll("[data-req]").forEach(el=>el.classList.toggle("is-missing", missing.some(m=>m[0]===el.dataset.req)));
     if (missing.length){
       const first = f.querySelector(".is-missing"); if (first){ first.scrollIntoView({block:"center", behavior:"smooth"}); const inp = first.querySelector("input:not([type=checkbox]),select,button"); if (inp) inp.focus(); }
       toast(`Please fill in: ${missing.map(m=>m[1]).join(", ")}.`); return;
     }
-    const places = picked(), assignee = canonName(f.assignee.value, S.workers), now = new Date().toISOString();
-    const body = { title, taskType: prev?"preventive":"task", category:f.category.value, priority:f.priority.value, assignee,
+    const places = picked(), now = new Date().toISOString(), assignees = cleanPeople(people), assignee = assignees[0] || "";
+    const slotSet = f.slot ? (f.slot.value ? {slot:f.slot.value, slotManual:true} : {slot:"", slotManual:false}) : {};
+    const body = { title, taskType: prev?"preventive":"task", category:f.category.value, priority:f.priority.value, assignee, assignees, ...slotSet,
       hkHours: f.hkHours.checked, roomClosed: f.roomClosed.checked,
       hkRooms: (task && f.hkHours.checked===anyHk(task) && Array.isArray(task.hkRooms)) ? task.hkRooms.filter(r=>places.includes(r)) : (f.hkHours.checked ? places.slice() : []),
       titleAr: (!prev && f.titleAr && !hasArabic(title)) ? f.titleAr.value.trim() : "",
@@ -1166,21 +1210,21 @@ function openSheet(task, kind){
     try{
       const batch = S.db.batch(); let added = 0;
       if (!task){
-        // Preventive: one separate check per place. Tasks: one task covering all chosen places.
-        const groups = prev ? (places.length ? places.map(p=>[p]) : [[]]) : [places];
-        groups.forEach(locs=>{ batch.set(tasksCol().doc(), fresh(f.date.value, locs)); added++; });
+        // Every room becomes its own job (editable by itself); they share a groupId so they stay together.
+        const refs = (places.length ? places : [""]).map(()=>tasksCol().doc()), gid = refs[0].id;
+        (places.length ? places : [""]).forEach((p,i)=>{ batch.set(refs[i], {...fresh(f.date.value, p ? [p] : []), groupId: gid}); added++; });
       } else {
         const realloc = [...(task.realloc||[])];
         if (f.date.value !== task.date) realloc.push(reallocEntry("date", task.date, f.date.value));
-        if (assignee !== (task.assignee||"")) realloc.push(reallocEntry("user", task.assignee, assignee));
-        const mine = prev ? (places.length ? [places[0]] : []) : places;
+        if (!samePeople(assignees, assigneesOf(task))) realloc.push(reallocEntry("user", assigneesOf(task).join(", "), assignees.join(", ")));
+        const mine = places.length ? [places[0]] : [];
         batch.update(tasksCol().doc(task.id), { ...body, hkRooms: body.hkRooms.filter(r=>mine.includes(r)), locations:mine, location:locSummary(mine), date:f.date.value, realloc, recDate: task.recDate || task.date });
-        if (prev) places.slice(1).forEach(p=>{ batch.set(tasksCol().doc(), {...fresh(f.date.value, [p]), recDate: f.date.value}); added++; });
+        places.slice(1).forEach(p=>{ batch.set(tasksCol().doc(), {...fresh(f.date.value, [p]), recDate: f.date.value, groupId: task.groupId || task.id}); added++; });
       }
       await batch.commit();
       closeSheet();
-      toast(task ? (added ? `Saved, and ${added} more ${added===1?"check":"checks"} added (one per place).` : "Changes saved")
-                 : (prev ? (added>1 ? `${added} preventive checks added, one per place.` : "Preventive check added") : "Task added"));
+      toast(task ? (added ? `Saved, and ${added} more ${added===1?"job":"jobs"} added (one per room).` : "Changes saved")
+                 : (added>1 ? `${added} ${prev?"preventive checks":"jobs"} added, one per room.` : (prev ? "Preventive check added" : "Task added")));
       if (!task && f.date.value !== S.sel){ S.sel = f.date.value; const d=fromKey(S.sel); S.month=new Date(d.getFullYear(),d.getMonth(),1); }
       if (!task){ S.kind = prev ? "preventive" : "task"; }
       render();
@@ -1232,7 +1276,7 @@ function renderTeamList(){
   if (!people.length){ ul.innerHTML = `<li><small>Nobody added yet.</small></li>`; return; }
   const today = todayKey();
   ul.innerHTML = people.map(p=>{
-    const n = p.role==="worker" ? S.tasks.filter(t=>t.assignee===p.name && !isClosed(t) && t.date<=today).length : null;
+    const n = p.role==="worker" ? S.tasks.filter(t=>assigneesOf(t).includes(p.name) && !isClosed(t) && t.date<=today).length : null;
     const sub = [p.email || "No login (name only)", n!==null ? `${n} open` : ""].filter(Boolean).join(" · ");
     return `<li><div class="p-info"><span dir="auto">${esc(p.name)}<em class="badge ${p.role}" style="font-style:normal">${esc((ROLES[p.role]||ROLES.worker).label)}</em></span><small>${esc(sub)}</small></div><button class="x" data-rm="${esc(p.key)}">Remove</button></li>`;
   }).join("");
@@ -1372,10 +1416,283 @@ async function translateMany(texts){
 }
 
 
-/* ---------- Reports ---------- */
+/* ======================================================================================
+   v13 — one job per room · several people per job · Aiosell stays · time slots · P/A
+   ====================================================================================== */
+const OCC_ID = "_occupancy", ATT_ID = "_attendance";
+const isMetaDoc = id => id===TEAM_ID || id===OCC_ID || id===ATT_ID;
+const assigneesOf = t => Array.isArray(t.assignees) && t.assignees.length ? t.assignees.filter(Boolean) : (t.assignee ? [t.assignee] : []);
+const groupOf = t => t.groupId || t.id;
+const addDays = (k, n) => { const d = fromKey(k); d.setDate(d.getDate()+n); return keyOf(d); };
+
+/* ----- Time slots ----- */
+const SLOTS = {
+  am:   {label:"AM",                 ar:"صباحاً",                         order:0},
+  hk:   {label:"Housekeeping hours", short:"HK hours", ar:"خلال ساعات التدبير المنزلي",       order:1},
+  pm:   {label:"PM",                 ar:"بعد الظهر",                       order:2},
+  ampm: {label:"AM / PM",            ar:"صباحاً أو بعد الظهر",             order:3}
+};
+const SLOT_ORDER = ["am","hk","pm","ampm"];
+const HK_NOTE = ["Housekeeping must tell maintenance when each room can be accessed.", "على التدبير المنزلي إبلاغ الصيانة بموعد الدخول إلى الغرفة."];
+
+/* ----- Guest stays (from the Aiosell export) ----- */
+const OCC = {
+  stayover:  {label:"Occupied",                ar:"مشغولة"},
+  departure: {label:"Check-out today",         ar:"مغادرة اليوم"},
+  arrival:   {label:"Check-in today",          ar:"وصول اليوم"},
+  turnover:  {label:"Check-out + check-in",    ar:"مغادرة ووصول"}
+};
+const occFor = (room, k) => (S.occ && S.occ.days && S.occ.days[k] && S.occ.days[k][room]) || "";
+const hasOccData = k => !!(S.occ && S.occ.days && S.occ.days[k]);
+/* The day a job is looked at: carried-over jobs use today's stays */
+const dayOf = (t, k) => (k && t.date < k) ? k : t.date;
+/* Occupied rooms are crossed off for that day, unless the manager chose "Do anyway" */
+const isCrossed = (t, k) => { const d = dayOf(t, k); return !isClosed(t) && occFor(locsOf(t)[0], d)==="stayover" && t.occOverride!==d; };
+
+function autoSlot(t, k){
+  const room = locsOf(t)[0] || "", occ = occFor(room, k), title = (t.title||"").toLowerCase();
+  if (anyHk(t)) return ["hk", "Marked: during housekeeping hours"];
+  if (occ==="stayover") return ["hk", "Guest in the room – during housekeeping"];
+  if (occ==="turnover") return ["hk", "Between check-out and the new check-in"];
+  if (occ==="departure") return ["pm", "After the guest checks out"];
+  if (occ==="arrival") return ["am", "Before the guest checks in"];
+  if (/watering|pool water|chlorine|jacuzzi|fuel|gas bottle|water level|water pressure|hot water|tree trimming/.test(title)) return ["am", "Best done in the morning"];
+  if (/mosquito|pest|pesticide/.test(title)) return ["pm", "Best done later in the day"];
+  if (room==="Breakfast Area") return ["pm", "After breakfast service"];
+  if (room==="Room Service Kitchen") return ["pm", "After the morning service"];
+  if (["Lobby GF","Hotel Front Area","Pool / Outdoor Area"].includes(room)) return ["am", "Before guests are around"];
+  if (isUrgent(t)) return ["am", "Urgent – first thing"];
+  return ["ampm", /^Room \d+$/.test(room) && hasOccData(k) ? "Room vacant – any time" : "Any time"];
+}
+const slotOf = (t, k) => (t.slotManual && SLOTS[t.slot]) ? [t.slot, "Set by the manager"] : autoSlot(t, dayOf(t, k));
+
+/* ----- Staff availability (P / A) ----- */
+const attOf = (name, k) => (S.att && S.att.days && S.att.days[k] && S.att.days[k][name]) || "";
+const isAbsent = (name, k) => attOf(name, k)==="A";
+const presentWorkers = k => S.workers.filter(w=>!isAbsent(w, k));
+async function setAtt(name, k, v){
+  const days = JSON.parse(JSON.stringify((S.att && S.att.days) || {})), keep = addDays(todayKey(), -60);
+  Object.keys(days).forEach(d=>{ if (d < keep) delete days[d]; });
+  days[k] = {...(days[k]||{}), [name]: v};
+  try{ await tasksCol().doc(ATT_ID).set({kind:"attendance", days, updatedAt:new Date().toISOString(), by:S.name}); S.att = {days}; }
+  catch(e){ writeFailed(e); }
+}
+
+/* ----- Allocation (one or several people) ----- */
+const samePeople = (a, b) => a.length===b.length && a.every((x,i)=>x===b[i]);
+const cleanPeople = names => [...new Set((names||[]).map(n=>canonName(n, S.workers)).filter(Boolean))];
+async function setAssigneesMany(list, names, msg){
+  names = cleanPeople(names);
+  const todo = list.filter(t=>!samePeople(assigneesOf(t), names));
+  if (!todo.length) return;
+  try{
+    for (let i=0;i<todo.length;i+=400){
+      const b = S.db.batch();
+      todo.slice(i,i+400).forEach(t=>b.update(tasksCol().doc(t.id), { assignees:names, assignee:names[0]||"", recDate:t.recDate||t.date,
+        realloc:[...(t.realloc||[]), reallocEntry("user", assigneesOf(t).join(", "), names.join(", "))] }));
+      await b.commit();
+    }
+    if (msg) toast(msg);
+  }catch(e){ writeFailed(e); }
+}
+const setAssignees = (t, names, msg) => setAssigneesMany([t], names, msg);
+
+/* A small drop-down with tick boxes to choose one or several people */
+function pickPeople(anchor, current, onDone, k){
+  document.querySelectorAll(".pp").forEach(x=>x.remove());
+  const names = [...new Set([...S.workers, ...current])];
+  const box = document.createElement("div"); box.className = "pp";
+  box.innerHTML = `<div class="pp-h">Allocate to <small>(one or several)</small></div>
+    ${names.length ? names.map(n=>`<label class="pp-row"><input type="checkbox" value="${esc(n)}" ${current.includes(n)?"checked":""}><span dir="auto">${esc(n)}</span>${k && isAbsent(n,k)?`<em>absent</em>`:""}</label>`).join("")
+      : `<p class="note" style="margin:6px 0">No maintenance workers yet. Add them under Team.</p>`}
+    <div class="pp-act"><button type="button" class="lk" data-pp="clear">Clear</button><span class="grow"></span><button type="button" class="btn btn-y" data-pp="done">Done</button></div>`;
+  document.body.appendChild(box);
+  const r = anchor.getBoundingClientRect(), w = 240;
+  box.style.left = Math.max(8, Math.min(window.innerWidth - w - 8, r.left)) + "px";
+  const below = window.innerHeight - r.bottom > 260;
+  box.style.top = (below ? r.bottom + 4 : Math.max(8, r.top - box.offsetHeight - 4)) + "px";
+  const finish = apply => { const picked = [...box.querySelectorAll("input:checked")].map(i=>i.value); box.remove(); document.removeEventListener("mousedown", out, true); if (apply) onDone(picked); };
+  const out = e => { if (!box.contains(e.target) && e.target!==anchor) finish(false); };
+  setTimeout(()=>document.addEventListener("mousedown", out, true), 0);
+  box.addEventListener("click", e=>{ const b = e.target.closest("[data-pp]"); if (!b) return;
+    if (b.dataset.pp==="clear") box.querySelectorAll("input").forEach(i=>i.checked=false); else finish(true); });
+}
+const peopleBtn = (attr, list, k) => `<button type="button" class="pp-btn ${list.length?"":"empty"}" ${attr}>${list.length ? list.map(n=>`<span class="${k&&isAbsent(n,k)?"abs":""}">${esc(n)}</span>`).join("") : "Choose…"}<i>▾</i></button>`;
+
+/* Automatic allocation: open jobs of the day go to present maintenance staff, by priority, keeping a job's rooms together */
+async function autoAllocate(k, {reassignAbsent=true} = {}){
+  const present = presentWorkers(k);
+  if (!present.length){ toast("Nobody is marked present. Add staff under Team or mark them P."); return; }
+  const {items, carry} = scope("daily", k, "");
+  const open = [...carry, ...items].filter(t=>!isClosed(t) && !isCrossed(t, k));
+  const needs = t => { const a = assigneesOf(t); return !a.length || (reassignAbsent && a.every(n=>isAbsent(n,k))); };
+  const load = {}; present.forEach(w=>load[w]=0);
+  open.filter(t=>!needs(t)).forEach(t=>assigneesOf(t).forEach(n=>{ if (n in load) load[n]++; }));
+  const groups = new Map(); open.filter(needs).forEach(t=>{ const g = groupOf(t); if (!groups.has(g)) groups.set(g, []); groups.get(g).push(t); });
+  const prio = list => Math.min(...list.map(t=>isCritical(t)?0:isUrgent(t)?1:t.priority==="low"?3:2));
+  const ordered = [...groups.values()].sort((a,b)=>prio(a)-prio(b) || SLOTS[slotOf(a[0],k)[0]].order-SLOTS[slotOf(b[0],k)[0]].order || locRank(locsOf(a[0])[0])-locRank(locsOf(b[0])[0]));
+  const plan = [];
+  ordered.forEach(list=>{ const w = present.slice().sort((x,y)=>load[x]-load[y] || present.indexOf(x)-present.indexOf(y))[0]; load[w] += list.length; list.forEach(t=>plan.push([t, w])); });
+  if (!plan.length){ toast("Everything open is already allocated to present staff."); return; }
+  try{
+    for (let i=0;i<plan.length;i+=400){ const b = S.db.batch();
+      plan.slice(i,i+400).forEach(([t,w])=>b.update(tasksCol().doc(t.id), {assignees:[w], assignee:w, recDate:t.recDate||t.date, realloc:[...(t.realloc||[]), reallocEntry("user", assigneesOf(t).join(", "), w)]}));
+      await b.commit(); }
+    const per = {}; plan.forEach(([,w])=>per[w]=(per[w]||0)+1);
+    toast(`Allocated ${plan.length} ${plan.length===1?"job":"jobs"}: ${Object.entries(per).map(([w,n])=>`${w} ${n}`).join(", ")}`);
+  }catch(e){ writeFailed(e); }
+}
+
+/* ----- One-time tidy-up of older data (manager only) -----
+   · jobs without a type become "task" · single "assignee" becomes a list · a task covering several rooms becomes one job per room */
+let _migrated = false;
+async function migrateOld(raw){
+  if (_migrated) return; _migrated = true;
+  const ops = [];
+  raw.forEach(d=>{
+    const upd = {};
+    if (!d.taskType) upd.taskType = "task";
+    if (!Array.isArray(d.assignees)) upd.assignees = d.assignee ? [d.assignee] : [];
+    const locs = Array.isArray(d.locations) && d.locations.length ? d.locations : (d.location ? [d.location] : []);
+    if (locs.length > 1){
+      upd.locations = [locs[0]]; upd.location = locs[0]; upd.groupId = d.groupId || d.id;
+      if (Array.isArray(d.hkRooms)) upd.hkRooms = d.hkRooms.filter(r=>r===locs[0]);
+      locs.slice(1).forEach(r=>{ const copy = {...d}; delete copy.id;
+        ops.push(["set", null, {...copy, ...upd, locations:[r], location:r, hkRooms: Array.isArray(d.hkRooms) ? d.hkRooms.filter(x=>x===r) : [], nextId: ""}]); });
+    }
+    if (Object.keys(upd).length) ops.push(["update", d.id, upd]);
+  });
+  if (!ops.length) return;
+  try{ for (let i=0;i<ops.length;i+=400){ const b = S.db.batch(); ops.slice(i,i+400).forEach(([op,id,data])=> op==="set" ? b.set(tasksCol().doc(), data) : b.update(tasksCol().doc(id), data)); await b.commit(); } }
+  catch(e){ _migrated = false; }
+}
+
+/* ----- Aiosell stays import (CSV or Excel) ----- */
+async function loadXLSX(){
+  if (window.XLSX) return;
+  await new Promise((res, rej)=>{ const s = document.createElement("script"); s.src = "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"; s.onload = res; s.onerror = ()=>rej(new Error("load")); document.head.appendChild(s); });
+}
+const MON = {jan:1,feb:2,mar:3,apr:4,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12};
+function parseDateAny(v){
+  if (v===null || v===undefined || v==="") return "";
+  if (v instanceof Date && !isNaN(v)) return keyOf(v);
+  if (typeof v==="number" && v>20000 && v<80000){ const d = new Date(Math.round((v-25569)*864e5)); return keyOf(new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate())); }
+  const s = String(v).trim(); let m;
+  const mk = (y,mo,d) => { y = +y; if (y<100) y += 2000; mo = +mo; d = +d; if (mo<1||mo>12||d<1||d>31) return ""; return `${y}-${pad(mo)}-${pad(d)}`; };
+  if ((m = /^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})/.exec(s))) return mk(m[1], m[2], m[3]);
+  if ((m = /^(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{2,4})/.exec(s))) return +m[2] > 12 ? mk(m[3], m[1], m[2]) : mk(m[3], m[2], m[1]);   // day first (Lebanon), unless impossible
+  if ((m = /^(\d{1,2})[\s\-]([A-Za-z]{3,})[\s\-,]+(\d{2,4})/.exec(s)) && MON[m[2].slice(0,3).toLowerCase()]) return mk(m[3], MON[m[2].slice(0,3).toLowerCase()], m[1]);
+  if ((m = /^([A-Za-z]{3,})\s+(\d{1,2}),?\s+(\d{4})/.exec(s)) && MON[m[1].slice(0,3).toLowerCase()]) return mk(m[3], MON[m[1].slice(0,3).toLowerCase()], m[2]);
+  const t = Date.parse(s); return isNaN(t) ? "" : keyOf(new Date(t));
+}
+function roomFromCell(v){
+  const s = String(v ?? ""), m = /(\d{3})/.exec(s);
+  if (m && LOC_ORDER.includes("Room "+m[1])) return "Room "+m[1];
+  if (/spa/i.test(s)) return "Spa Room M";
+  return "";
+}
+const COLS = {
+  room:   /^(room|room\s*(no|number|#|num)\.?|unit|room\s*name)$|room/i,
+  arr:    /arriv|check[\s-]*in|from\s*date|start/i,
+  dep:    /depart|check[\s-]*out|to\s*date|end\s*date/i,
+  status: /status|state/i
+};
+function findHeader(rows){
+  for (let i=0;i<Math.min(rows.length, 25);i++){
+    const cells = rows[i].map(c=>String(c||"").trim());
+    if (cells.some(c=>/room/i.test(c)) && cells.some(c=>COLS.arr.test(c) || COLS.dep.test(c))) return i;
+  }
+  return 0;
+}
+function guessMap(header){
+  const find = re => header.findIndex(h=>re.test(String(h||"")));
+  return { room: find(COLS.room), arr: find(COLS.arr), dep: find(COLS.dep), status: find(COLS.status) };
+}
+function buildOccupancy(rows, map){
+  const bookings = [];
+  rows.forEach(r=>{
+    const room = roomFromCell(r[map.room]), a = parseDateAny(r[map.arr]), d = parseDateAny(r[map.dep]);
+    const st = map.status>=0 ? String(r[map.status]||"").toLowerCase() : "";
+    if (!room || !a || !d || d < a) return;
+    if (/cancel|no[\s-]?show|void|declin|reject/.test(st)) return;
+    bookings.push({room, a, d});
+  });
+  const days = {}, start = addDays(todayKey(), -1);
+  for (let i=0;i<45;i++){
+    const k = addDays(start, i), day = {};
+    [...new Set(bookings.map(b=>b.room))].forEach(room=>{
+      const bs = bookings.filter(b=>b.room===room);
+      const arr = bs.some(b=>b.a===k), dep = bs.some(b=>b.d===k), stay = bs.some(b=>b.a<k && b.d>k);
+      const st = dep && arr ? "turnover" : stay ? "stayover" : dep ? "departure" : arr ? "arrival" : "";
+      if (st) day[room] = st;
+    });
+    days[k] = day;
+  }
+  return {days, bookings: bookings.length, rooms: new Set(bookings.map(b=>b.room)).size, last: bookings.reduce((m,b)=>b.d>m?b.d:m, "")};
+}
+function openImport(k, after){
+  if (!(isAdmin() || isReporter())) return;
+  let rows = [], header = [], map = null, fileName = "";
+  $("sheetHost").innerHTML = `<div class="scrim" id="scrim"><div class="sheet wide">
+    <div class="eyebrow">Step 1 · Guest stays</div><h3>Upload the stays file from Aiosell</h3>
+    <p class="lead">In Aiosell, export the bookings / stays list (Excel or CSV) and choose the file here. The board reads only the <b>room number</b>, <b>arrival</b> and <b>departure</b> dates (and status, to skip cancellations). Guest names are not saved.</p>
+    <label class="imp-drop"><input type="file" id="impFile" accept=".csv,.xlsx,.xls,.txt"><span id="impName">Choose the file…</span></label>
+    <div id="impBody"></div>
+    <div class="actions"><span class="grow"></span><button type="button" class="btn" id="cancel">Close</button><button type="button" class="btn btn-y hidden" id="impSave">Save stays</button></div>
+  </div></div>`;
+  wireSheet(); $("cancel").onclick = ()=>{ closeSheet(); if (after) after(); };
+  const draw = () => {
+    const opts = sel => `<option value="-1">— not in file —</option>` + header.map((h,i)=>`<option value="${i}" ${i===sel?"selected":""}>${esc(String(h||`Column ${i+1}`))}</option>`).join("");
+    const data = rows.slice(findHeader(rows)+1);
+    const res = map.room>=0 && map.arr>=0 && map.dep>=0 ? buildOccupancy(data, map) : null;
+    const today = res && res.days[k] ? res.days[k] : {};
+    const cnt = st => Object.values(today).filter(v=>v===st).length;
+    $("impBody").innerHTML = `
+      <div class="imp-map">
+        <label class="f"><span>Room number column</span><select data-m="room">${opts(map.room)}</select></label>
+        <label class="f"><span>Arrival / check-in date</span><select data-m="arr">${opts(map.arr)}</select></label>
+        <label class="f"><span>Departure / check-out date</span><select data-m="dep">${opts(map.dep)}</select></label>
+        <label class="f"><span>Status <small>(optional)</small></span><select data-m="status">${opts(map.status)}</select></label>
+      </div>
+      ${res ? `<div class="imp-res"><b>${res.bookings}</b> bookings read for <b>${res.rooms}</b> rooms${res.last?`, up to ${esc(fmtDY(res.last))}`:""}.
+          <div class="imp-day">For <b>${esc(fmtDY(k))}</b>: ${cnt("stayover")} occupied (crossed off) · ${cnt("departure")} check-outs (PM) · ${cnt("arrival")} check-ins (AM) · ${cnt("turnover")} check-out + check-in (housekeeping hours)</div>
+          ${res.bookings ? "" : `<p class="note" style="color:var(--red)">No bookings could be read. Check that the right columns are chosen above.</p>`}</div>`
+        : `<p class="note" style="color:var(--red)">Choose the room, arrival and departure columns.</p>`}
+      <div class="imp-prev"><table><thead><tr>${header.map(h=>`<th>${esc(String(h||""))}</th>`).join("")}</tr></thead><tbody>${data.slice(0,5).map(r=>`<tr>${header.map((_,i)=>`<td>${esc(String(r[i] instanceof Date ? keyOf(r[i]) : (r[i] ?? "")))}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+    $("impBody").querySelectorAll("[data-m]").forEach(s=>s.onchange = ()=>{ map[s.dataset.m] = +s.value; try{ localStorage.setItem("mb_imp_map", JSON.stringify({header:header.join("|"), map})); }catch(e){} draw(); });
+    $("impSave").classList.toggle("hidden", !(res && res.bookings));
+    $("impSave").onclick = async ()=>{
+      // keep the last 14 days already saved, replace the rest with the new file
+      const keepFrom = addDays(todayKey(), -14), old = (S.occ && S.occ.days) || {}, days = {};
+      Object.keys(old).forEach(d=>{ if (d >= keepFrom && !(d in res.days)) days[d] = old[d]; });
+      Object.assign(days, res.days);
+      try{ await tasksCol().doc(OCC_ID).set({kind:"occupancy", days, file:fileName, updatedAt:new Date().toISOString(), by:S.name});
+           S.occ = {...S.occ, days, file:fileName, updatedAt:new Date().toISOString(), by:S.name};
+           toast("Stays saved. Occupied rooms are crossed off and time slots updated."); closeSheet(); if (after) after(); }
+      catch(e){ writeFailed(e); }
+    };
+  };
+  $("impFile").onchange = async e=>{
+    const file = e.target.files[0]; if (!file) return;
+    fileName = file.name; $("impName").textContent = file.name; $("impBody").innerHTML = `<p class="note">Reading the file…</p>`;
+    try{
+      await loadXLSX();
+      const wb = XLSX.read(await file.arrayBuffer(), {type:"array", cellDates:true});
+      rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header:1, raw:true, defval:""});
+      header = rows[findHeader(rows)] || [];
+      map = guessMap(header);
+      try{ const saved = JSON.parse(localStorage.getItem("mb_imp_map")||"null"); if (saved && saved.header===header.join("|")) map = saved.map; }catch(_){}
+      draw();
+    }catch(err){ $("impBody").innerHTML = `<p class="note" style="color:var(--red)">Couldn't read this file. Export it from Aiosell as Excel (.xlsx) or CSV and try again.</p>`; }
+  };
+}
+
+/* ======================================================================================
+   Reports — tasks and preventive together, by time slot, then by room
+   ====================================================================================== */
 const REPORT_TITLE = {
-  daily:["Daily Tasks","المهام اليومية"], weekly:["Weekly Report","التقرير الأسبوعي"], monthly:["Monthly Report","التقرير الشهري"],
-  midyear:["Mid-Year Report","تقرير نصف السنة"], yearly:["Yearly Report","التقرير السنوي"]
+  daily:["Daily Tasks","المهام اليومية"], weekly:["Weekly Tasks","المهام الأسبوعية"], monthly:["Monthly Tasks","المهام الشهرية"],
+  midyear:["Mid-Year Tasks","مهام نصف السنة"], yearly:["Yearly Tasks","المهام السنوية"]
 };
 function period(type, k){
   const d = fromKey(k), y = d.getFullYear(), m = d.getMonth();
@@ -1393,60 +1710,69 @@ function periodLabel(type, k, ar){
   if (type==="midyear") return ar ? `${d.getMonth()<6?"النصف الأول":"النصف الثاني"} ${d.toLocaleDateString(loc,{year:"numeric"})}` : `${d.getMonth()<6?"January – June":"July – December"} ${d.getFullYear()}`;
   return d.toLocaleDateString(loc,{year:"numeric"});
 }
-const staffMatch = (t, staff) => !staff || (staff==="__none" ? !t.assignee : t.assignee===staff);
-/* Which jobs belong in a report. Tasks and preventive checks are never mixed. */
+const staffMatch = (t, staff) => !staff || (staff==="__none" ? !assigneesOf(t).length : assigneesOf(t).includes(staff));
 function scope(type, k, staff){
   const [s,e] = period(type,k);
-  const fits = type==="daily" ? (t=>true) : (t=>isPrev(t) && freqOf(t)===type);
-  const items = S.tasks.filter(t=>fits(t) && t.date>=s && t.date<=e && staffMatch(t,staff));
-  const carry = S.tasks.filter(t=>fits(t) && !isClosed(t) && t.date && t.date<s && staffMatch(t,staff));
+  const items = S.tasks.filter(t=>t.date>=s && t.date<=e && staffMatch(t,staff));
+  const carry = S.tasks.filter(t=>!isClosed(t) && t.date && t.date<s && staffMatch(t,staff));
   return {items:items.sort(byRank), carry:carry.sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:byRank(a,b)), s, e};
 }
 function staffList(type, k){
   const {items, carry} = scope(type, k, "");
-  const names = [...new Set([...items, ...carry].map(t=>t.assignee).filter(Boolean))];
+  const names = [...new Set([...items, ...carry].flatMap(assigneesOf))];
   const order = [...S.workers.filter(w=>names.includes(w)), ...names.filter(n=>!S.workers.includes(n)).sort()];
-  if ([...items, ...carry].some(t=>!t.assignee)) order.push("__none");
+  if ([...items, ...carry].some(t=>!assigneesOf(t).length)) order.push("__none");
   return order;
 }
 const staffLabel = s => s==="__none" ? ["Not allocated","غير مخصص"] : s ? [s, ""] : ["All staff","جميع الموظفين"];
-
-/* ---------- Printed report: black & white, sorted by room, tasks + preventive together ---------- */
-const roomOf = t => locsOf(t).length ? locsOf(t) : ["No room set"];
-function jobLabels(t, room){
+function jobLabels(t){
   const L = [];
   if (isCritical(t)) L.push(["CRITICAL DELAY – Super urgent", "تأخير حرج – عاجل جداً"]);
-  if (hkFor(t, room)) L.push(["During Housekeeping Hours (Urgent)", "خلال ساعات التدبير المنزلي – عاجل"]);
-  if (!L.length && t.priority==="urgent") L.push(["Urgent", "عاجل"]);
+  else if (isUrgent(t)) L.push(["Urgent", "عاجل"]);
   return L;
 }
 function reportDoc(type, k, staff, AR){
   const {items, carry} = scope(type, k, staff);
   const all = [...carry, ...items];
   const ar = s => (AR && AR[s]) || "";
+  const dk = t => type==="daily" ? k : t.date;
+  const crossed = all.filter(t=>isCrossed(t, dk(t))), active = all.filter(t=>!isCrossed(t, dk(t)));
   const [tEn, tAr] = REPORT_TITLE[type], [sEn] = staffLabel(staff);
-  const urgentCount = all.filter(t=>!isClosed(t) && isUrgent(t)).length, critCount = all.filter(t=>!isClosed(t) && isCritical(t)).length;
-  // One block per room; a job covering several rooms is listed under each of them
-  const rooms = new Map();
-  all.forEach(t=>roomOf(t).forEach(r=>{ if (!rooms.has(r)) rooms.set(r, []); rooms.get(r).push(t); }));
-  const order = [...rooms.keys()].sort((a,b)=>(a==="No room set")-(b==="No room set") || locRank(a)-locRank(b) || a.localeCompare(b));
-  // Compact table: Room | Job | Materials used — the room is written once beside its jobs
-  const row = (t, room, first, span) => {
-    const c = isClosed(t), labs = jobLabels(t, room);
+  const urgentCount = active.filter(t=>!isClosed(t) && isUrgent(t)).length, critCount = active.filter(t=>!isClosed(t) && isCritical(t)).length;
+  const row = (t, room, first, span, struck) => {
+    const c = isClosed(t), labs = jobLabels(t);
     const arT = hasArabic(t.title) ? "" : (t.titleAr || (PREV_MAP[t.title] && PREV_MAP[t.title].ar) || ar(t.title) || glossaryAr(t.title) || "");
     const notesAr = t.notes && !hasArabic(t.notes) ? (t.notesAr || ar(t.notes)) : "";
     const rAr = room==="No room set" ? "بدون غرفة" : (locAr(room) || ar(room));
-    return `<tr class="${c?"pj-done":""} ${first?"pt-first":""}">
+    const occ = occFor(room, dk(t)), people = assigneesOf(t);
+    const others = staff && staff!=="__none" ? people.filter(n=>n!==staff) : [];
+    const extra = [
+      occ && OCC[occ] ? `${OCC[occ].label}` : "",
+      others.length ? `With ${others.join(", ")}` : (!staff && people.length ? `Allocated: ${people.join(", ")}` : (!staff ? "Not allocated" : ""))
+    ].filter(Boolean).map(esc).join(" · ");
+    return `<tr class="${c||struck?"pj-done":""} ${first?"pt-first":""}">
       ${first ? `<td class="pt-room" rowspan="${span}"><b>${esc(shortLoc(room))}</b>${/^Room \d+$/.test(room) || !rAr ? "" : `<div dir="rtl">${esc(rAr)}</div>`}</td>` : ""}
       <td class="pt-job">
-        <div class="pt-line"><span class="pj-box">${c?"✓":""}</span><span class="pj-title" dir="auto">${esc(t.title)}</span>${labs.map(l=>`<span class="pj-type ${l[0].startsWith("CRITICAL")?"pj-crit":""}">${esc(l[0])}</span>`).join("")}<span class="pt-ar" dir="rtl">${esc(arT)}${labs.length?` – ${labs.map(l=>esc(l[1])).join(" · ")}`:""}</span></div>
+        <div class="pt-line"><span class="pj-box">${c?"✓":struck?"✕":""}</span><span class="pj-title" dir="auto">${esc(t.title)}</span>${labs.map(l=>`<span class="pj-type ${l[0].startsWith("CRITICAL")?"pj-crit":""}">${esc(l[0])}</span>`).join("")}<span class="pt-ar" dir="rtl">${esc(arT)}${labs.length?` – ${labs.map(l=>esc(l[1])).join(" · ")}`:""}</span></div>
+        ${extra ? `<div class="pt-extra">${extra}</div>` : ""}
         ${t.notes ? `<div class="pt-notes"><b>Notes:</b> <span dir="auto">${esc(t.notes)}</span>${notesAr?` <span dir="rtl">· ${esc(notesAr)}</span>`:""}</div>` : ""}
       </td>
-      <td class="pt-mat"><i></i><i></i></td></tr>`;
+      <td class="pt-mat">${struck ? "" : "<i></i><i></i><i></i>"}</td></tr>`;
   };
-  const body = order.length ? `<table class="pt"><thead><tr><th class="pt-room">Room <span dir="rtl">· الغرفة</span></th><th>Job <span dir="rtl">· المهمة</span></th><th class="pt-mat">Materials used <span dir="rtl">· المواد المستعملة</span></th></tr></thead><tbody>` +
-    order.map(r=>{ const list = rooms.get(r).sort(byRank); return list.map((t,i)=>row(t, r, i===0, list.length)).join(""); }).join("") + `</tbody></table>`
-    : `<p class="pr-none">No jobs. · لا توجد مهام</p>`;
+  const table = (list, struck) => {
+    const rooms = new Map(); list.forEach(t=>{ const r = locsOf(t)[0] || "No room set"; if (!rooms.has(r)) rooms.set(r, []); rooms.get(r).push(t); });
+    const order = [...rooms.keys()].sort((a,b)=>(a==="No room set")-(b==="No room set") || locRank(a)-locRank(b) || a.localeCompare(b));
+    return `<table class="pt"><thead><tr><th class="pt-room">Room <span dir="rtl">· الغرفة</span></th><th>Job <span dir="rtl">· المهمة</span></th><th class="pt-mat">${struck?"":`Materials used <span dir="rtl">· المواد المستعملة</span>`}</th></tr></thead><tbody>` +
+      order.map(r=>{ const l = rooms.get(r).sort(byRank); return l.map((t,i)=>row(t, r, i===0, l.length, struck)).join(""); }).join("") + `</tbody></table>`;
+  };
+  const sections = SLOT_ORDER.map(s=>{
+    const list = active.filter(t=>slotOf(t, dk(t))[0]===s);
+    if (!list.length) return "";
+    return `<div class="pr-slot"><div class="pr-slot-h"><span>${SLOTS[s].label} <small>(${list.length})</small></span><span dir="rtl">${SLOTS[s].ar}</span></div>
+      ${s==="hk" ? `<div class="pr-slot-note">${esc(HK_NOTE[0])} <span dir="rtl">${esc(HK_NOTE[1])}</span></div>` : ""}${table(list)}</div>`;
+  }).join("");
+  const crossedSec = crossed.length ? `<div class="pr-slot"><div class="pr-slot-h"><span>Occupied rooms – not today <small>(${crossed.length})</small></span><span dir="rtl">غرف مشغولة – ليس اليوم</span></div>
+      <div class="pr-slot-note">Crossed off because a guest is staying. They move to the next day automatically.</div>${table(crossed, true)}</div>` : "";
   return `<div class="report pr">
     <div class="pr-top">
       <img class="pr-logo" src="${LOGO_INK}" alt="${esc(HOTEL)}">
@@ -1454,44 +1780,44 @@ function reportDoc(type, k, staff, AR){
         <div class="pr-date">${esc(periodLabel(type,k))}</div></div>
       <div class="pr-right">Maintenance Work<div dir="rtl">أعمال الصيانة</div></div>
     </div>
-    <div class="pr-counts"><span>Number of jobs: <b>${all.length}</b> <small dir="rtl">عدد المهام</small></span><span><small dir="rtl">المهام العاجلة</small> Urgent jobs: <b>${urgentCount}</b>${critCount?` <small>(incl. ${critCount} critical delay)</small>`:""}</span></div>
-    ${body}
+    <div class="pr-counts"><span>Number of jobs: <b>${active.length}</b> <small dir="rtl">عدد المهام</small>${crossed.length?` <small>· ${crossed.length} occupied, crossed off</small>`:""}</span><span><small dir="rtl">المهام العاجلة</small> Urgent jobs: <b>${urgentCount}</b>${critCount?` <small>(incl. ${critCount} critical delay)</small>`:""}</span></div>
+    ${sections || (crossed.length ? "" : `<p class="pr-none">No jobs. · لا توجد مهام</p>`)}
+    ${crossedSec}
     <div class="pr-foot"><span>Executed by: ____________________</span><span>Inspected by: ____________________</span></div>
   </div>`;
 }
 function reportText(type, k, staff, AR){
   const {items, carry} = scope(type, k, staff), all = [...carry, ...items], ar = s => (AR && AR[s]) || "";
+  const dk = t => type==="daily" ? k : t.date;
   const [tEn] = REPORT_TITLE[type], [sEn] = staffLabel(staff);
-  const L = [`*${tEn} – ${sEn}*`, `${HOTEL} · ${periodLabel(type,k)}`, `Number of jobs: ${all.length} | Urgent jobs: ${all.filter(t=>!isClosed(t)&&isUrgent(t)).length}`];
-  const rooms = new Map(); all.forEach(t=>roomOf(t).forEach(r=>{ if(!rooms.has(r)) rooms.set(r,[]); rooms.get(r).push(t); }));
-  [...rooms.keys()].sort((a,b)=>(a==="No room set")-(b==="No room set") || locRank(a)-locRank(b)).forEach(r=>{
-    L.push("", `*${r}*${locAr(r)?` | ${locAr(r)}`:""}`);
-    rooms.get(r).sort(byRank).forEach(t=>{
-      const typ = jobLabels(t, r).map(l=>l[0]).join(", "), arT = hasArabic(t.title) ? "" : (t.titleAr || (PREV_MAP[t.title]&&PREV_MAP[t.title].ar) || ar(t.title) || glossaryAr(t.title));
-      L.push(`${isClosed(t)?"✓":"☐"} ${t.title}${arT?` | ${arT}`:""}${typ?` – ${typ}`:""}${!staff&&t.assignee?` (${t.assignee})`:""}`);
-      if (t.notes) L.push(`   Notes: ${t.notes}`);
-    });
-  });
+  const active = all.filter(t=>!isCrossed(t, dk(t))), crossed = all.filter(t=>isCrossed(t, dk(t)));
+  const L = [`*${tEn} – ${sEn}*`, `${HOTEL} · ${periodLabel(type,k)}`, `Number of jobs: ${active.length} | Urgent jobs: ${active.filter(t=>!isClosed(t)&&isUrgent(t)).length}`];
+  const line = t => { const typ = jobLabels(t).map(l=>l[0]).join(", "), arT = hasArabic(t.title) ? "" : (t.titleAr || (PREV_MAP[t.title]&&PREV_MAP[t.title].ar) || ar(t.title) || glossaryAr(t.title));
+    const others = staff && staff!=="__none" ? assigneesOf(t).filter(n=>n!==staff) : [];
+    return `${isClosed(t)?"✓":"☐"} ${shortLoc(locsOf(t)[0]||"—")} – ${t.title}${arT?` | ${arT}`:""}${typ?` – ${typ}`:""}${others.length?` (with ${others.join(", ")})`:(!staff&&assigneesOf(t).length?` (${assigneesOf(t).join(", ")})`:"")}${t.notes?`\n   Notes: ${t.notes}`:""}`; };
+  SLOT_ORDER.forEach(s=>{ const list = active.filter(t=>slotOf(t, dk(t))[0]===s).sort((a,b)=>locRank(locsOf(a)[0])-locRank(locsOf(b)[0]) || byRank(a,b));
+    if (list.length){ L.push("", `*${SLOTS[s].label} | ${SLOTS[s].ar}*`); if (s==="hk") L.push(`_${HK_NOTE[0]}_`); list.forEach(t=>L.push(line(t))); } });
+  if (crossed.length){ L.push("", "*Occupied – not today*"); crossed.forEach(t=>L.push(`✕ ${shortLoc(locsOf(t)[0]||"—")} – ${t.title}`)); }
   return L.join("\n");
 }
 
+/* ======================================================================================
+   Reports dashboard — morning setup: stays → staff P/A → allocation → print
+   ====================================================================================== */
 async function openReport(){
-  const R = { type: S.kind==="preventive" ? "monthly" : "daily", k: S.sel, staff: isWorker() ? (S.me&&S.me.name||"") : (S.who||""), by:"place", AR:{}, failed:0, multi:false };
+  const R = { type:"daily", k:S.sel, staff: isWorker() ? (S.me&&S.me.name||"") : (S.who||""), AR:{}, failed:0, multi:false };
   const typeBtn = (v, l) => `<button type="button" data-type="${v}">${l}</button>`;
   $("sheetHost").innerHTML = `<div class="scrim" id="scrim"><div class="sheet wide xl">
     <div class="no-print">
       <div class="eyebrow">Reports</div><h3>Reports dashboard</h3>
-      <div class="dash-types">
-        <div><span class="dl">Every day · tasks + preventive</span><div class="seg" id="rTypesT">${typeBtn("daily","Daily Tasks")}</div></div>
-        <div><span class="dl">Preventive only</span><div class="seg" id="rTypesP">${typeBtn("weekly","Weekly")}${typeBtn("monthly","Monthly")}${typeBtn("midyear","Mid-Year")}${typeBtn("yearly","Yearly")}</div></div>
-      </div>
       <div class="dash-row">
         <label class="f"><span>Date</span><input type="date" id="rDate" value="${R.k}"></label>
+        <label class="f"><span>Report</span><div class="seg" id="rTypes">${typeBtn("daily","Daily")}${typeBtn("weekly","Weekly")}${typeBtn("monthly","Monthly")}${typeBtn("midyear","Mid-Year")}${typeBtn("yearly","Yearly")}</div></label>
         <label class="f"><span>Staff</span><select id="rStaff" ${isWorker()?"disabled":""}></select></label>
-        <div class="f" id="rByWrap"><span>Order</span><div class="r-order">Sorted by room</div></div>
       </div>
-      <div class="r-period-note" id="rPeriodNote"></div>
-      ${isAdmin() ? `<details class="alloc" id="alloc" open><summary>Allocate jobs <span id="allocCount"></span></summary><div id="allocBody"></div></details>` : ""}
+      ${isAdmin()||isReporter() ? `<div class="ms" id="msStays"></div>` : ""}
+      ${isAdmin() ? `<div class="ms" id="msAtt"></div>
+        <details class="alloc ms-alloc" id="alloc" open><summary>Step 3 · Allocate jobs <span id="allocCount"></span></summary><div id="allocBody"></div></details>` : ""}
     </div>
     <div id="rBody"><div class="r-wait">Preparing the report…</div></div>
     <div class="actions no-print" style="margin-top:14px">
@@ -1503,69 +1829,88 @@ async function openReport(){
     </div>
   </div></div>`;
   wireSheet(); $("cancel").onclick = closeSheet;
+  const reopen = () => openReportAgain(R);
 
   function fillStaff(){
-    const names = [...new Set([...S.workers, ...staffList(R.type, R.k).filter(n=>n!=="__none")])];
     if (isWorker()){ $("rStaff").innerHTML = `<option>${esc(R.staff)}</option>`; return; }
-    $("rStaff").innerHTML = `<option value="">All staff</option>` + names.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join("") + `<option value="__none">Not allocated</option>`;
+    const names = [...new Set([...S.workers, ...staffList(R.type, R.k).filter(n=>n!=="__none")])];
+    $("rStaff").innerHTML = `<option value="">All staff</option>` + names.map(n=>`<option value="${esc(n)}">${esc(n)}${isAbsent(n,R.k)?" (absent)":""}</option>`).join("") + `<option value="__none">Not allocated</option>`;
     $("rStaff").value = R.staff;
+  }
+  function drawStays(){
+    if (!$("msStays")) return;
+    const has = hasOccData(R.k), day = has ? S.occ.days[R.k] : {};
+    const cnt = st => Object.values(day).filter(v=>v===st).length;
+    $("msStays").innerHTML = `<div class="ms-h"><b>Step 1 · Guest stays</b>${S.occ && S.occ.updatedAt ? `<small>Uploaded ${esc(new Date(S.occ.updatedAt).toLocaleString(undefined,{day:"numeric",month:"short",hour:"numeric",minute:"2-digit"}))}${S.occ.by?` by ${esc(S.occ.by)}`:""}${S.occ.file?` · ${esc(S.occ.file)}`:""}</small>`:""}</div>
+      <div class="ms-b">${has ? `${fmtD(R.k)}: <b>${cnt("stayover")}</b> occupied (crossed off) · <b>${cnt("departure")}</b> check-outs · <b>${cnt("arrival")}</b> check-ins · <b>${cnt("turnover")}</b> check-out + check-in`
+        : `<span style="color:var(--red)">No stays uploaded for ${esc(fmtD(R.k))}.</span> Time slots are guessed from the job only.`}
+        <button type="button" class="btn" id="msUpload">Upload Aiosell file</button></div>`;
+    $("msUpload").onclick = ()=>openImport(R.k, reopen);
+  }
+  function drawAtt(){
+    if (!$("msAtt")) return;
+    const {items, carry} = scope("daily", R.k, ""), open = [...carry, ...items].filter(t=>!isClosed(t));
+    $("msAtt").innerHTML = `<div class="ms-h"><b>Step 2 · Staff availability</b><small>${esc(fmtDY(R.k))} · P = present, A = absent</small></div>
+      ${S.workers.length ? `<div class="att">${S.workers.map(w=>{ const v = attOf(w, R.k) || "P", jobs = open.filter(t=>assigneesOf(t).includes(w));
+        return `<div class="att-row ${v==="A"?"is-abs":""}"><span class="att-n" dir="auto">${esc(w)}</span>
+          <span class="att-pa"><button type="button" data-att="${esc(w)}" data-v="P" aria-pressed="${v==="P"}">P</button><button type="button" data-att="${esc(w)}" data-v="A" aria-pressed="${v==="A"}">A</button></span>
+          <span class="att-j">${jobs.length} open ${jobs.length===1?"job":"jobs"}</span>
+          ${v==="A" && jobs.length ? `<span class="att-move">Give to <select data-movefrom="${esc(w)}"><option value="">choose…</option><option value="__auto">Share among present staff</option>${presentWorkers(R.k).map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join("")}</select></span>` : ""}</div>`; }).join("")}</div>`
+        : `<p class="note">Add your maintenance workers under <b>Team</b> first.</p>`}`;
+    $("msAtt").querySelectorAll("[data-att]").forEach(b=>b.onclick = async ()=>{ await setAtt(b.dataset.att, R.k, b.dataset.v); drawAtt(); fillStaff(); drawAlloc(); });
+    $("msAtt").querySelectorAll("[data-movefrom]").forEach(sel=>sel.onchange = async ()=>{
+      const from = sel.dataset.movefrom, to = sel.value; if (!to) return;
+      const jobs = open.filter(t=>assigneesOf(t).includes(from));
+      if (to==="__auto"){ await autoAllocate(R.k, {reassignAbsent:true}); return; }
+      try{ for (let i=0;i<jobs.length;i+=400){ const b = S.db.batch(); jobs.slice(i,i+400).forEach(t=>{ const names = [...new Set(assigneesOf(t).map(n=>n===from?to:n))];
+          b.update(tasksCol().doc(t.id), {assignees:names, assignee:names[0], recDate:t.recDate||t.date, realloc:[...(t.realloc||[]), reallocEntry("user", assigneesOf(t).join(", "), names.join(", "))]}); }); await b.commit(); }
+        toast(`${jobs.length} ${jobs.length===1?"job":"jobs"} moved from ${from} to ${to}.`); }catch(e){ writeFailed(e); }
+    });
   }
   function drawAlloc(){
     if (!isAdmin() || !$("allocBody")) return;
-    if ($("allocBody").contains(document.activeElement) && document.activeElement.tagName==="INPUT" && document.activeElement.type!=="checkbox") return; // don't disturb typing
+    if (document.querySelector(".pp")) return;                                   // a drop-down is open
+    const ae = document.activeElement; if ($("allocBody").contains(ae) && ae.tagName==="INPUT" && ae.type!=="checkbox") return;
     const {items, carry} = scope(R.type, R.k, R.staff), list = [...carry, ...items].filter(t=>!isClosed(t));
-    const un = list.filter(t=>!t.assignee).length;
+    const un = list.filter(t=>!assigneesOf(t).length).length;
     $("allocCount").textContent = `· ${list.length} open${un?` · ${un} not allocated`:""}`;
+    const groups = new Map(); list.forEach(t=>{ const g = groupOf(t); if (!groups.has(g)) groups.set(g, []); groups.get(g).push(t); });
+    const gl = [...groups.values()].sort((a,b)=>byRank(a[0],b[0]));
+    const slotSel = (t) => { const [auto, why] = autoSlot(t, dayOf(t, R.type==="daily"?R.k:t.date)), cur = t.slotManual && SLOTS[t.slot] ? t.slot : "";
+      return `<select data-slot="${t.id}" title="${esc(why)}"><option value="" ${cur?"":"selected"}>Auto · ${esc(SLOTS[auto].short||SLOTS[auto].label)}</option>${SLOT_ORDER.map(s=>`<option value="${s}" ${cur===s?"selected":""}>${esc(SLOTS[s].short||SLOTS[s].label)}</option>`).join("")}</select>`; };
+    const occCell = t => { const d = dayOf(t, R.type==="daily"?R.k:t.date), occ = occFor(locsOf(t)[0], d);
+      if (!occ) return hasOccData(d) ? `<small>Vacant</small>` : `<small>—</small>`;
+      if (occ==="stayover") return `<span class="occ-tag ${isCrossed(t, d)?"x":""}">${isCrossed(t, d)?"Occupied · crossed off":"Occupied · doing anyway"}</span><button type="button" class="lk" data-occ="${t.id}" data-day="${d}">${isCrossed(t, d)?"Do anyway":"Cross off"}</button>`;
+      return `<span class="occ-tag">${esc(OCC[occ].label)}</span>`; };
     $("allocBody").innerHTML = !list.length ? `<p class="note">No open jobs in this report.</p>` : `
-      <div class="al-bulk"><span>Allocate all <b>not allocated</b> jobs to</span><input id="alBulk" list="dlAl" dir="auto" placeholder="Name…" autocomplete="off"><button type="button" class="btn" id="alBulkGo" ${un?"":"disabled"}>Apply</button></div>
-      <table class="al-tab"><thead><tr><th>Job</th><th>Room</th><th title="During housekeeping hours (urgent) — tick only the occupied rooms">Housekeeping hours</th><th>Date</th><th>Allocated to</th></tr></thead><tbody>
-      ${list.map(t=>{
-        const rs = locsOf(t).length ? locsOf(t) : [""], n = rs.length;
-        return rs.map((r,i)=>`<tr class="${t.assignee?"":"un"} ${i<n-1?"al-sub":""}">
-          ${i===0 ? `<td rowspan="${n}"><span dir="auto">${esc(t.title)}</span>${isCritical(t)?`<small class="al-crit">Critical delay</small>`:""}${n>1?`<small>${n} rooms</small>`:""}</td>` : ""}
-          <td class="al-room">${r ? esc(r) : `<small>No room</small>`}</td>
-          <td class="al-c"><label class="al-tick"><input type="checkbox" data-hk="${t.id}" data-room="${esc(r)}" ${hkFor(t, r||"No room set")?"checked":""}><span>${hkFor(t, r||"No room set")?"Yes":""}</span></label></td>
-          ${i===0 ? `<td rowspan="${n}"><input type="date" data-dt="${t.id}" value="${esc(t.date)}">${t.date!==t.recDate?`<small>rec. ${esc(fmtD(t.recDate))}</small>`:""}</td>
-          <td rowspan="${n}"><input data-al="${t.id}" list="dlAl" dir="auto" value="${esc(t.assignee||"")}" placeholder="Not allocated" autocomplete="off"></td>` : ""}</tr>`).join("");
-      }).join("")}
-      </tbody></table>${dl("dlAl", S.workers)}`;
+      <div class="al-bulk"><button type="button" class="btn btn-y" id="alAuto">Auto-allocate</button>
+        <span>Gives every job that has nobody (or only absent staff) to the present maintenance staff, most urgent first, keeping a job's rooms together. You can change anything afterwards.</span></div>
+      <table class="al-tab al2"><thead><tr><th>Room</th><th>Guest</th><th>Time slot</th><th>Date</th><th>Allocated to</th></tr></thead><tbody>
+      ${gl.map(g=>{ const first = g[0], gp = cleanPeople(g.length ? (g.every(t=>samePeople(assigneesOf(t), assigneesOf(first))) ? assigneesOf(first) : []) : []);
+        return `<tr class="al-gh"><td colspan="4"><b dir="auto">${esc(first.title)}</b>${isCritical(first)?` <small class="al-crit">Critical delay</small>`:isUrgent(first)?` <small class="al-crit">Urgent</small>`:""} <small>${g.length} ${g.length===1?"room":"rooms"}${isPrev(first)?" · preventive":""}</small></td>
+          <td>${g.length>1 ? `<div class="al-main"><small>Main allocation (all rooms)</small>${gp.length || g.every(t=>!assigneesOf(t).length) ? peopleBtn(`data-main="${esc(groupOf(first))}"`, gp, R.k) : `<button type="button" class="pp-btn mixed" data-main="${esc(groupOf(first))}">Mixed – choose to set all rooms<i>▾</i></button>`}</div>` : ""}</td></tr>` +
+          g.sort((a,b)=>locRank(locsOf(a)[0])-locRank(locsOf(b)[0])).map(t=>`<tr class="${assigneesOf(t).length?"":"un"} ${isCrossed(t, R.type==="daily"?R.k:t.date)?"al-x":""}">
+            <td class="al-room">${esc(locsOf(t)[0]||"No room")}</td><td class="al-occ">${occCell(t)}</td><td>${slotSel(t)}</td>
+            <td><input type="date" data-dt="${t.id}" value="${esc(t.date)}">${t.date!==t.recDate?`<small>rec. ${esc(fmtD(t.recDate))}</small>`:""}</td>
+            <td>${peopleBtn(`data-who="${t.id}"`, assigneesOf(t), R.k)}</td></tr>`).join(""); }).join("")}
+      </tbody></table>`;
+    const find = id => S.tasks.find(x=>x.id===id);
     const upd = async (id, data, msg) => { try{ await tasksCol().doc(id).update(data); if (msg) toast(msg); }catch(e){ writeFailed(e); } };
-    $("allocBody").querySelectorAll("[data-hk]").forEach(cb=>cb.onchange = ()=>{
-      const t = S.tasks.find(x=>x.id===cb.dataset.hk); if (!t) return;
-      const room = cb.dataset.room;
-      if (!room){ upd(t.id, {hkHours:cb.checked, hkRooms:[], recDate:t.recDate||t.date}); return; }
-      // start from the current per-room list (older jobs: one flag meant every room)
-      const cur = new Set(Array.isArray(t.hkRooms) ? t.hkRooms : (t.hkHours ? locsOf(t) : []));
-      cb.checked ? cur.add(room) : cur.delete(room);
-      const list2 = locsOf(t).filter(r=>cur.has(r));
-      upd(t.id, {hkRooms:list2, hkHours:list2.length>0, recDate:t.recDate||t.date}, cb.checked ? `${room}: during housekeeping hours (urgent)` : `${room}: housekeeping hours removed`);
-    });
-    $("allocBody").querySelectorAll("[data-dt]").forEach(inp=>inp.onchange = ()=>{
-      const t = S.tasks.find(x=>x.id===inp.dataset.dt); if (!t || !inp.value || inp.value===t.date) return;
-      upd(t.id, {date:inp.value, recDate:t.recDate||t.date, realloc:[...(t.realloc||[]), reallocEntry("date", t.date, inp.value)]}, `Moved to ${fmtDY(inp.value)}`);
-    });
-    $("allocBody").querySelectorAll("[data-al]").forEach(inp=>inp.onchange = async ()=>{
-      const t = S.tasks.find(x=>x.id===inp.dataset.al); if (!t) return;
-      inp.blur(); await saveAllocation(t, inp.value); toast(inp.value.trim() ? `Allocated to ${canonName(inp.value, S.workers)}` : "Allocation removed");
-    });
-    if ($("alBulkGo")) $("alBulkGo").onclick = async ()=>{
-      const name = canonName($("alBulk").value, S.workers); if (!name){ $("alBulk").focus(); toast("Type a name first."); return; }
-      const todo = list.filter(t=>!t.assignee);
-      try{ for (let i=0;i<todo.length;i+=400){ const b = S.db.batch(); todo.slice(i,i+400).forEach(t=>b.update(tasksCol().doc(t.id), {assignee:name, recDate:t.recDate||t.date, realloc:[...(t.realloc||[]), reallocEntry("user","",name)]})); await b.commit(); }
-           toast(`${todo.length} ${todo.length===1?"job":"jobs"} allocated to ${name}`); }
-      catch(e){ writeFailed(e); }
-    };
+    if ($("alAuto")) $("alAuto").onclick = ()=>autoAllocate(R.k, {reassignAbsent:true});
+    $("allocBody").querySelectorAll("[data-who]").forEach(b=>b.onclick = ()=>{ const t = find(b.dataset.who); if (t) pickPeople(b, assigneesOf(t), names=>setAssignees(t, names, names.length?`Allocated to ${names.join(", ")}`:"Allocation removed"), R.k); });
+    $("allocBody").querySelectorAll("[data-main]").forEach(b=>b.onclick = ()=>{ const g = gl.find(x=>groupOf(x[0])===b.dataset.main); if (!g) return;
+      pickPeople(b, [], names=>setAssigneesMany(g, names, `${g.length} rooms allocated to ${names.join(", ")||"nobody"}`), R.k); });
+    $("allocBody").querySelectorAll("[data-slot]").forEach(s=>s.onchange = ()=>{ const t = find(s.dataset.slot); if (!t) return;
+      upd(t.id, s.value ? {slot:s.value, slotManual:true} : {slot:"", slotManual:false}, s.value ? `Time slot: ${SLOTS[s.value].label}` : "Time slot set back to automatic"); });
+    $("allocBody").querySelectorAll("[data-occ]").forEach(b=>b.onclick = ()=>{ const t = find(b.dataset.occ); if (!t) return; const d = b.dataset.day;
+      upd(t.id, {occOverride: t.occOverride===d ? "" : d}, t.occOverride===d ? "Crossed off – the room is occupied" : "Doing it anyway – housekeeping hours"); });
+    $("allocBody").querySelectorAll("[data-dt]").forEach(inp=>inp.onchange = ()=>{ const t = find(inp.dataset.dt); if (!t || !inp.value || inp.value===t.date) return;
+      upd(t.id, {date:inp.value, recDate:t.recDate||t.date, realloc:[...(t.realloc||[]), reallocEntry("date", t.date, inp.value)]}, `Moved to ${fmtDY(inp.value)}`); });
   }
   async function draw(){
-    document.querySelectorAll(".dash-types [data-type]").forEach(b=>b.setAttribute("aria-pressed", b.dataset.type===R.type));
-
-    const [s,e] = period(R.type, R.k);
-    $("rPeriodNote").textContent = R.type==="daily" ? `All jobs (tasks and preventive) scheduled for ${periodLabel("daily",R.k)}, plus open jobs carried over from earlier days. Sorted by room.`
-      : `${FREQ_PREV[R.type]} preventive checks scheduled ${fmtDY(s)} – ${fmtDY(e)}, plus open ones carried over.`;
-    fillStaff();
-    // Arabic for anything typed freely (dictionary first, then machine translation; cached)
-    const {items, carry} = scope(R.type, R.k, "");
-    const texts = [];
+    document.querySelectorAll("#rTypes [data-type]").forEach(b=>b.setAttribute("aria-pressed", b.dataset.type===R.type));
+    fillStaff(); drawStays(); drawAtt();
+    const {items, carry} = scope(R.type, R.k, ""), texts = [];
     [...items, ...carry].forEach(t=>{
       if (t.title && !t.titleAr && !hasArabic(t.title) && !PREV_MAP[t.title] && !glossaryAr(t.title)) texts.push(t.title);
       if (t.notes && !t.notesAr && !hasArabic(t.notes)) texts.push(t.notes);
@@ -1575,20 +1920,18 @@ async function openReport(){
     if (need.length){ const res = await translateMany(need); Object.assign(R.AR, res.map); R.failed = res.failed; }
     if (!$("rBody")) return;
     R.multi = false;
-    $("rBody").innerHTML = reportDoc(R.type, R.k, R.staff, R.AR) + (R.failed ? `<p class="note no-print">Some free text couldn't be translated automatically (no internet or the service was busy). Open the job and fill in “Arabic for the report”, or reopen this report to retry.</p>` : "");
+    $("rBody").innerHTML = reportDoc(R.type, R.k, R.staff, R.AR) + (R.failed ? `<p class="note no-print">Some free text couldn't be translated automatically. Open the job and fill in “Arabic for the report”, or reopen this report to retry.</p>` : "");
     drawAlloc();
   }
-  document.querySelectorAll(".dash-types [data-type]").forEach(b=>b.onclick = ()=>{ R.type = b.dataset.type; draw(); });
+  document.querySelectorAll("#rTypes [data-type]").forEach(b=>b.onclick = ()=>{ R.type = b.dataset.type; draw(); });
   $("rDate").onchange = e=>{ if (e.target.value){ R.k = e.target.value; draw(); } };
   $("rStaff").onchange = e=>{ R.staff = e.target.value; draw(); };
-
   $("rPrint").onclick = ()=>window.print();
   if ($("rEach")) $("rEach").onclick = ()=>{
-    const staff = staffList(R.type, R.k);
+    const staff = staffList(R.type, R.k).filter(n=>n==="__none" || !isAbsent(n, R.k));
     if (!staff.length){ toast("No jobs in this report yet."); return; }
     $("rBody").innerHTML = staff.map(s=>reportDoc(R.type, R.k, s, R.AR)).join(`<div class="page-break"></div>`);
-    R.multi = true;
-    setTimeout(()=>window.print(), 100);
+    R.multi = true; setTimeout(()=>window.print(), 100);
     toast(`${staff.length} ${staff.length===1?"report":"reports"}, one page per staff.`);
   };
   window.addEventListener("afterprint", function ap(){ if (R.multi && $("rBody")) draw(); if (!$("rBody")) window.removeEventListener("afterprint", ap); });
@@ -1598,9 +1941,11 @@ async function openReport(){
     catch(e){ const ta=document.createElement("textarea"); ta.value=txt; document.body.appendChild(ta); ta.select();
       try{ document.execCommand("copy"); toast("Report copied."); }catch(_){ toast("Couldn't copy on this device."); } ta.remove(); }
   };
-  S.onData = ()=>{ if ($("rBody") && !R.multi) { $("rBody").innerHTML = reportDoc(R.type, R.k, R.staff, R.AR); drawAlloc(); } };
+  S.onData = ()=>{ if ($("rBody") && !R.multi){ fillStaff(); drawStays(); drawAtt(); $("rBody").innerHTML = reportDoc(R.type, R.k, R.staff, R.AR); drawAlloc(); } };
   draw();
 }
+/* Re-open the dashboard on the same date after uploading stays */
+function openReportAgain(R){ const keep = S.sel; S.sel = R.k; openReport(); S.sel = keep; }
 
 /* ---------- Events ---------- */
 $("grid").addEventListener("click", e=>{
@@ -1687,21 +2032,25 @@ $("noAccOut").onclick = ()=>firebase.auth().signOut();
     if (key==="none") return;
     let q = S.db.collection("tasks");
     // Maintenance workers only load the jobs allocated to them (also enforced by the Firestore rules)
-    q = isWorker() ? q.where("assignee","==",S.me.name) : q.limit(5000);
+    q = isWorker() ? q.where("assignees","array-contains",S.me.name) : q.limit(5000);
     unsubTasks = q.onSnapshot(snap=>{
-      const raw = snap.docs.map(d=>({id:d.id, ...d.data()})).filter(d=>d.id!==TEAM_ID && d.kind!=="team");
-      if (isAdmin()) labelOldTasks(raw);
-      S.tasks = raw.map(norm).filter(t=>!isWorker() || t.assignee===(S.me&&S.me.name));
+      const raw = snap.docs.map(d=>({id:d.id, ...d.data()})).filter(d=>!isMetaDoc(d.id) && !["team","occupancy","attendance"].includes(d.kind));
+      if (isAdmin()) migrateOld(raw);
+      S.tasks = raw.map(norm).filter(t=>!isWorker() || assigneesOf(t).includes(S.me&&S.me.name));
       S.ready = true; render(); renderTeamList(); maybeCarryPopup();
     }, err=>{ S.ready=true; render(); toast(err.code==="permission-denied" ? "Your account can't see these tasks. Ask your manager." : "Live updates paused. Reload the page."); });
   }
+  let unsubMeta = [];
   firebase.auth().onAuthStateChanged(u=>{
     stopTasks(); if (unsubTeam){ unsubTeam(); unsubTeam=null; }
-    if (!u){ Object.assign(S,{uid:null,email:"",tasks:[],workers:[],legacy:[],members:{},role:null,me:null,who:"",ready:false,carryShown:""});
+    unsubMeta.forEach(f=>f()); unsubMeta = [];
+    if (!u){ Object.assign(S,{uid:null,email:"",tasks:[],workers:[],legacy:[],members:{},role:null,me:null,who:"",ready:false,carryShown:"",occ:{days:{}},att:{days:{}}});
       closeSheet(); $("app").classList.add("hidden"); $("gate").classList.remove("hidden"); return; }
     S.uid=u.uid; S.email=(u.email||"").toLowerCase(); S.name=u.displayName || S.email.split("@")[0];
     $("gate").classList.add("hidden"); $("app").classList.remove("hidden"); window.scrollTo(0,0);
     $("noAcc").classList.add("hidden"); $("mainArea").classList.remove("hidden");
+    unsubMeta.push(S.db.collection("tasks").doc(OCC_ID).onSnapshot(doc=>{ S.occ = doc.exists ? doc.data() : {days:{}}; if (S.ready) render(); }, ()=>{}));
+    unsubMeta.push(S.db.collection("tasks").doc(ATT_ID).onSnapshot(doc=>{ S.att = doc.exists ? doc.data() : {days:{}}; if (S.ready) render(); }, ()=>{}));
     unsubTeam = S.db.collection("tasks").doc(TEAM_ID).onSnapshot(doc=>{
       applyTeam(doc.exists ? doc.data() : {});
       if (isWorker()) S.who = S.me.name; else if (S.who===(S.me&&S.me.name) && !isAdmin()) S.who="";
