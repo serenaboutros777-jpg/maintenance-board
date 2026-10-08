@@ -371,6 +371,12 @@ details.alloc summary{cursor:pointer;padding:10px 12px;font-weight:700;font-size
 .sel-pick{flex:none;display:flex;align-items:center;justify-content:center;width:28px;height:28px;cursor:pointer;margin-top:1px}
 .task.is-picked{background:#F6E3DF}
 .btn.del:disabled{opacity:.45;cursor:default}
+
+/* v10: required fields */
+.req{color:var(--red);font-weight:800;margin-left:2px}
+.f.is-missing > span{color:var(--red)}
+.f.is-missing input,.f.is-missing select,.f.is-missing .loc-btn{border-color:var(--red)!important;box-shadow:0 0 0 2px #F6E3DF}
+.form-req-note{font-size:12px;color:var(--muted);margin:-8px 0 14px}
 </style>
 </head>
 <body>
@@ -698,7 +704,6 @@ function taskRow(t, k){
     anyHk(t) ? `<span class="pill urg">Housekeeping hours${Array.isArray(t.hkRooms) && t.hkRooms.length && t.hkRooms.length<locsOf(t).length ? ": "+t.hkRooms.map(shortLoc).join(", ") : ""} (urgent)</span>` : (isUrgent(t) && !isCritical(t)) ? `<span class="pill urg">Urgent · عاجل</span>` : "", status,
     t.roomClosed && !closed ? `<span class="pill oos">Room out of service</span>` : "",
     isPrev(t) ? `<span class="pill prev">${esc((FREQ_PREV[freqOf(t)]||"").split(" ")[0])} preventive</span>` : "",
-    t.time ? `<span>${esc(t.time)}</span>` : "",
     !isPrev(t) && locsOf(t).length ? `<span>${esc(locSummary(locsOf(t)))}</span>` : "",
     `<span class="tag"><b style="background:${color(t.category)}"></b>${esc(catLabel(t.category))}</span>`,
     !isPrev(t) && t.repeat && t.repeat!=="none" ? `<span>${esc(REPEAT_LABEL[t.repeat]||"")}</span>` : ""
@@ -972,10 +977,10 @@ function openSheet(task, kind){
     (t.title && !PREV_MAP[t.title] ? `<option value="${esc(t.title)}" selected>${esc(t.title)}</option>` : "") +
     PREVENTIVE.map(g=>`<optgroup label="${esc(g.group)}">${g.items.map(([en,ar,cat,crit])=>`<option value="${esc(en)}" ${en===t.title?"selected":""}>${esc(en)}${crit?"  —  CRITICAL DELAY":""}</option>`).join("")}</optgroup>`).join("");
   const titleField = prev
-    ? `<label class="f"><span>Preventive check</span><select name="title" required ${dis}>${prevOpts}</select></label>
+    ? `<label class="f" data-req="title"><span>Preventive check <b class="req" title="Required">*</b></span><select name="title" required ${dis}>${prevOpts}</select></label>
        <p class="note" id="prevAr" dir="rtl" style="margin:-6px 0 6px;text-align:right">${t.title&&PREV_MAP[t.title]?esc(PREV_MAP[t.title].ar):""}</p>
        <p class="crit-note ${t.title&&PREV_MAP[t.title]&&PREV_MAP[t.title].critical?"":"hidden"}" id="critNote"><b>Critical delay</b> — super urgent. If this is late it can cause damage or a loss of service, so it is always shown first.</p>`
-    : `<label class="f"><span>What needs doing? <small>English or العربية</small></span><input name="title" dir="auto" required maxlength="120" value="${esc(t.title)}" placeholder="e.g. Fix shower drain / تصليح مصرف الدوش" ${dis}></label>
+    : `<label class="f" data-req="title"><span>What needs doing? <b class="req" title="Required">*</b> <small>English or العربية</small></span><input name="title" dir="auto" required maxlength="120" value="${esc(t.title)}" placeholder="e.g. Fix shower drain / تصليح مصرف الدوش" ${dis}></label>
        <div class="f ar-box ${hasArabic(t.title)?"hidden":""}" id="titleArBox"><span>Arabic for the report <small>— filled in automatically, correct it if needed</small></span>
          <div class="ar-row"><input name="titleAr" dir="rtl" maxlength="160" value="${esc(t.titleAr||"")}" placeholder="الترجمة العربية" ${dis}>${ro?"":`<button type="button" class="btn" id="trTitle" title="Suggest Arabic again">↻</button>`}</div>
          <small class="ar-hint" id="titleArHint"></small></div>`;
@@ -983,33 +988,31 @@ function openSheet(task, kind){
   $("sheetHost").innerHTML = `<div class="scrim" id="scrim"><form class="sheet" id="form" novalidate>
     <div class="eyebrow">${prev?"Preventive maintenance":"Maintenance task"}</div>
     <h3>${heading}</h3>
+    ${ro ? "" : `<p class="form-req-note"><b class="req">*</b> Required</p>`}
     ${titleField}
     <label class="urg-toggle"><input type="checkbox" name="urgent" ${isUrgent(t)?"checked":""} ${dis}><span><b>Mark as urgent · عاجل</b><br><small style="color:var(--muted)">Shown in red at the top of the board and the daily report</small></span></label>
     <label class="urg-toggle opt"><input type="checkbox" name="hkHours" ${anyHk(t)?"checked":""} ${dis}><span><b>During housekeeping hours (urgent)</b><br><small style="color:var(--muted)">Optional. Applies to all chosen rooms — choose per room in Reports › Allocate jobs</small></span></label>
     <label class="urg-toggle opt"><input type="checkbox" name="roomClosed" ${t.roomClosed?"checked":""} ${dis}><span><b>Room out of service while this job is open</b><br><small style="color:var(--muted)">For bigger jobs: the room shows as closed on the board until the job is closed</small></span></label>
-    <div class="f"><span>Where <small>— ${prev ? (task ? "extra places become separate checks" : "each place becomes its own check") : "choose one or more places"}</small></span>
+    <div class="f" data-req="where"><span>Where <b class="req" title="Required">*</b> <small>— ${prev ? (task ? "extra places become separate checks" : "each place becomes its own check") : "choose one or more places"}</small></span>
       <button type="button" class="loc-btn" id="locBtn" ${dis}><span id="locSum"></span><i>▾</i></button>
       ${locPicker}
     </div>
     <div class="row">
-      <label class="f"><span>Type</span><select name="category" ${dis}>${opts(CATS,t.category,"label")}</select></label>
-      <label class="f"><span>Priority</span><select name="priority" ${dis}>${opts(PRIO,t.priority||"normal")}</select></label>
+      <label class="f" data-req="category"><span>Type <b class="req" title="Required">*</b></span><select name="category" required ${dis}>${task?"":`<option value="" selected>Choose a type…</option>`}${opts(CATS,task?t.category:"","label")}</select></label>
+      <label class="f" data-req="priority"><span>Priority <b class="req" title="Required">*</b></span><select name="priority" required ${dis}>${task?"":`<option value="" selected>Choose a priority…</option>`}${opts(PRIO,task?(t.priority||"normal"):"")}</select></label>
     </div>
     <div class="row">
       ${task ? `<label class="f"><span>Recommended date</span><input type="date" value="${esc(t.recDate||t.date)}" disabled title="The recommended date never changes"></label>`
-             : `<label class="f"><span>Recommended date</span><input type="date" name="date" required value="${esc(t.date)}" ${dis}></label>`}
-      ${task ? `<label class="f"><span>Reallocated date <small>(move it)</small></span><input type="date" name="date" required value="${esc(t.date)}" ${dis}></label>` : ""}
+             : `<label class="f" data-req="date"><span>Recommended date <b class="req" title="Required">*</b></span><input type="date" name="date" required value="${esc(t.date)}" ${dis}></label>`}
+      ${task ? `<label class="f" data-req="date"><span>Reallocated date <b class="req" title="Required">*</b> <small>(move it)</small></span><input type="date" name="date" required value="${esc(t.date)}" ${dis}></label>` : ""}
     </div>
-    <div class="row">
-      <label class="f"><span>Time <small>(optional)</small></span><input type="time" name="time" value="${esc(t.time)}" ${dis}></label>
-      <label class="f"><span>${prev?"Frequency":"Repeat"}</span><select name="repeat" ${dis}>${prev ? opts(FREQ_PREV, freqOf(t)) : opts(REPEAT_TASK, REPEAT_TASK[t.repeat]?t.repeat:"none")}</select></label>
-    </div>
+    ${prev ? `<label class="f"><span>Frequency <b class="req" title="Required">*</b></span><select name="repeat" ${dis}>${opts(FREQ_PREV, freqOf(t))}</select></label>` : ""}
     <label class="f"><span>Notes</span><textarea name="notes" dir="auto" rows="3" maxlength="600" placeholder="Details, parts needed… / تفاصيل" ${dis}>${esc(t.notes)}</textarea></label>
     <div class="f ar-box ${t.notes&&!hasArabic(t.notes)?"":"hidden"}" id="notesArBox"><span>Notes in Arabic for the report</span>
       <div class="ar-row"><textarea name="notesAr" dir="rtl" rows="2" maxlength="800" placeholder="الملاحظات بالعربية" ${dis}>${esc(t.notesAr||"")}</textarea>${ro?"":`<button type="button" class="btn" id="trNotes" title="Suggest Arabic again">↻</button>`}</div>
       <small class="ar-hint" id="notesArHint"></small></div>
     <div class="sec-label">Allocation</div>
-    <label class="f"><span>Allocated to <small>— the maintenance person who will execute it</small></span><input name="assignee" list="dlExec" dir="auto" maxlength="60" autocomplete="off" value="${esc(t.assignee||"")}" placeholder="Type a name…" ${dis}></label>
+    <label class="f" data-req="assignee"><span>Allocated to <b class="req" title="Required">*</b> <small>— the maintenance person who will execute it</small></span><input name="assignee" required list="dlExec" dir="auto" maxlength="60" autocomplete="off" value="${esc(t.assignee||"")}" placeholder="Type a name…" ${dis}></label>
     ${dl("dlExec", S.workers)}
     <p class="note" style="margin:-4px 0 12px">“Inspected by” is added when you close the job.</p>
     ${task ? statusBlock(t) : ""}
@@ -1026,8 +1029,11 @@ function openSheet(task, kind){
   $("cancel").onclick = closeSheet;
   setTimeout(()=>{ if(!ro) f.title.focus(); }, 50);
   // Urgent tick box and Priority stay in sync
-  f.hkHours.onchange = ()=>{ if (f.hkHours.checked){ f.urgent.checked = true; f.priority.value = "urgent"; } };
-  f.urgent.onchange = ()=>{ f.priority.value = f.urgent.checked ? "urgent" : (f.priority.value==="urgent" ? "normal" : f.priority.value); };
+  const clearMiss = el => { const w = el && el.closest && el.closest("[data-req]"); if (w) w.classList.remove("is-missing"); };
+  f.addEventListener("input", e=>clearMiss(e.target)); f.addEventListener("change", e=>clearMiss(e.target));
+  $("locPanel").addEventListener("change", ()=>{ const w = f.querySelector('[data-req="where"]'); if (w) w.classList.remove("is-missing"); });
+  f.hkHours.onchange = ()=>{ if (f.hkHours.checked){ f.urgent.checked = true; f.priority.value = "urgent"; clearMiss(f.priority); } };
+  f.urgent.onchange = ()=>{ f.priority.value = f.urgent.checked ? "urgent" : (f.priority.value==="urgent" ? "normal" : f.priority.value); clearMiss(f.priority); };
   f.priority.onchange = ()=>{ f.urgent.checked = f.priority.value==="urgent"; };
   // Where: multi-place picker
   const panel = $("locPanel"), boxes = [...panel.querySelectorAll('input[type=checkbox]')];
@@ -1046,7 +1052,7 @@ function openSheet(task, kind){
   panel.addEventListener("change", syncLoc);
   panel.querySelectorAll('[data-grp]').forEach(btn=>btn.onclick = ()=>{ const gb = boxes.filter(b=>b.dataset.g===btn.dataset.grp), all = gb.every(b=>b.checked); gb.forEach(b=>b.checked=!all); syncLoc(); });
   // Preventive checks fill in the Type automatically
-  if (prev && !ro) f.title.onchange = ()=>{ const p = PREV_MAP[f.title.value]; if (p){ f.category.value = p.cat; $("prevAr").textContent = p.ar; } $("critNote").classList.toggle("hidden", !(p && p.critical)); };
+  if (prev && !ro) f.title.onchange = ()=>{ const p = PREV_MAP[f.title.value]; if (p){ f.category.value = p.cat; clearMiss(f.category); $("prevAr").textContent = p.ar; } $("critNote").classList.toggle("hidden", !(p && p.critical)); };
   // Arabic suggestions for the report (dictionary first, machine translation as a fallback)
   if (!prev && !ro){
     const auto = {title: t.titleAr||"", notes: t.notesAr||""};
@@ -1082,15 +1088,26 @@ function openSheet(task, kind){
   f.onsubmit = async e=>{
     e.preventDefault();
     const title = f.title.value.trim();
-    if (!title){ f.title.focus(); toast(prev ? "Choose a preventive check." : "Give the task a name."); return; }
-    if (!f.date.value){ f.date.focus(); toast("Pick a date."); return; }
+    // Required: what needs doing, where, type, priority, date, allocated to
+    const missing = [];
+    if (!title) missing.push(["title", prev ? "Preventive check" : "What needs doing"]);
+    if (!picked().length) missing.push(["where", "Where"]);
+    if (!f.category.value) missing.push(["category", "Type"]);
+    if (!f.priority.value) missing.push(["priority", "Priority"]);
+    if (!f.date.value) missing.push(["date", "Date"]);
+    if (!f.assignee.value.trim()) missing.push(["assignee", "Allocated to"]);
+    f.querySelectorAll("[data-req]").forEach(el=>el.classList.toggle("is-missing", missing.some(m=>m[0]===el.dataset.req)));
+    if (missing.length){
+      const first = f.querySelector(".is-missing"); if (first){ first.scrollIntoView({block:"center", behavior:"smooth"}); const inp = first.querySelector("input:not([type=checkbox]),select,button"); if (inp) inp.focus(); }
+      toast(`Please fill in: ${missing.map(m=>m[1]).join(", ")}.`); return;
+    }
     const places = picked(), assignee = canonName(f.assignee.value, S.workers), now = new Date().toISOString();
     const body = { title, taskType: prev?"preventive":"task", category:f.category.value, priority:f.priority.value, assignee,
       hkHours: f.hkHours.checked, roomClosed: f.roomClosed.checked,
       hkRooms: (task && f.hkHours.checked===anyHk(task) && Array.isArray(task.hkRooms)) ? task.hkRooms.filter(r=>places.includes(r)) : (f.hkHours.checked ? places.slice() : []),
       titleAr: (!prev && f.titleAr && !hasArabic(title)) ? f.titleAr.value.trim() : "",
       notesAr: (!prev && f.notesAr && f.notes.value.trim() && !hasArabic(f.notes.value)) ? f.notesAr.value.trim() : "",
-      time:f.time.value, repeat:f.repeat.value, notes:f.notes.value.trim() };
+      time:"", repeat: prev ? f.repeat.value : "none", notes:f.notes.value.trim() };
     const fresh = (k, locs) => ({ ...body, hkRooms: body.hkRooms.filter(r=>locs.includes(r)), locations:locs, location:locSummary(locs), recDate:k, date:k, status:"open", execution:null, realloc:[], done:{}, createdBy:S.uid, createdAt:now });
     try{
       const batch = S.db.batch(); let added = 0;
@@ -1366,7 +1383,6 @@ function reportDoc(type, k, staff, AR){
     const others = locsOf(t).filter(r=>r!==room);
     const facts = [
       isPrev(t) ? `Preventive (${(FREQ_PREV[freqOf(t)]||"").split(" ")[0]})` : "",
-      t.time ? `Time ${t.time}` : "",
       !staff ? (t.assignee ? `Allocated to ${t.assignee}` : "Not allocated") : "",
       `Recommended ${fmtD(t.recDate)||"—"}`, t.date!==t.recDate ? `Reallocated to ${fmtD(t.date)}` : "",
       others.length ? `Also in ${others.map(shortLoc).join(", ")}` : "",
