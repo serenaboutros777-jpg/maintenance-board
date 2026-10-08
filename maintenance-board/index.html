@@ -360,6 +360,17 @@ details.alloc summary{cursor:pointer;padding:10px 12px;font-weight:700;font-size
 .al-tab td.al-room{font-size:12px;white-space:nowrap}
 .al-tab td small.al-crit{color:#7A1E14;font-weight:700;text-transform:uppercase;letter-spacing:.3px}
 .al-tab th:nth-child(1){width:30%}.al-tab th:nth-child(2){width:14%}.al-tab th:nth-child(3){width:14%}.al-tab th:nth-child(4){width:17%}.al-tab th:nth-child(5){width:25%}
+
+/* v9: multi-select delete */
+.sel-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 16px 10px;font-size:13px}
+.sel-bar .grow{flex:1}.sel-bar .btn{padding:7px 12px;font-size:13px}
+.sel-hint{color:var(--muted)}
+.sel-bar.on{padding:8px 10px;border:1.5px solid var(--ink);border-radius:10px;position:sticky;top:76px;z-index:3;background:var(--panel)}
+.sel-all{display:inline-flex;align-items:center;gap:6px;font-weight:600;cursor:pointer}
+.sel-all input,.sel-pick input{width:18px;height:18px;accent-color:var(--red)}
+.sel-pick{flex:none;display:flex;align-items:center;justify-content:center;width:28px;height:28px;cursor:pointer;margin-top:1px}
+.task.is-picked{background:#F6E3DF}
+.btn.del:disabled{opacity:.45;cursor:default}
 </style>
 </head>
 <body>
@@ -435,6 +446,7 @@ details.alloc summary{cursor:pointer;padding:10px 12px;font-weight:700;font-size
         <button data-f="closed" aria-pressed="false">Closed</button>
         <select class="who-sel" id="whoSel" aria-label="Show jobs allocated to"></select>
       </div>
+      <div class="sel-bar hidden" id="selBar"></div>
       <ul class="tasks" id="list"></ul>
     </section>
   </main>
@@ -551,7 +563,7 @@ const ROLES = {
 };
 
 const S = { db:null, uid:null, email:"", name:"", tasks:[], workers:[], legacy:[], members:{}, role:null, me:null,
-  month:null, sel:null, kind:"task", filter:"all", who:"", ready:false, carryShown:"", onData:null };
+  month:null, sel:null, kind:"task", filter:"all", who:"", ready:false, carryShown:"", onData:null, selMode:false, selected:new Set() };
 
 /* ----- Permissions ----- */
 const isAdmin    = () => S.role==="admin";
@@ -702,8 +714,10 @@ function taskRow(t, k){
   else if (canExec(t)) { act = `data-exec="${t.id}"`; label = isExecuted(t) ? "Undo executed" : "Mark executed"; }
   const box = `<button class="chk ${closed?"c-closed":isExecuted(t)?"c-exec":""}" ${act||"disabled"} aria-label="${esc(label)}: ${esc(fullTitle(t))}" title="${esc(label)}">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></button>`;
-  return `<li class="task ${closed?"is-done":""} ${isUrgent(t)&&!closed?"urgent-row":""}">${box}
-    <button class="t-main" data-open="${t.id}"><span class="t-title" dir="auto">${esc(fullTitle(t))}</span><span class="t-meta">${meta}</span>
+  const picking = S.selMode && isAdmin(), picked = picking && S.selected.has(t.id);
+  const pick = picking ? `<label class="sel-pick" title="Select"><input type="checkbox" data-pick="${t.id}" ${picked?"checked":""} aria-label="Select ${esc(fullTitle(t))}"></label>` : "";
+  return `<li class="task ${closed?"is-done":""} ${isUrgent(t)&&!closed?"urgent-row":""} ${picked?"is-picked":""}">${pick}${picking?"":box}
+    <button class="t-main" ${picking?`data-pickrow="${t.id}"`:`data-open="${t.id}"`}><span class="t-title" dir="auto">${esc(fullTitle(t))}</span><span class="t-meta">${meta}</span>
       <span class="t-meta">${people}</span><span class="t-dates">${datesLine(t)}</span>
       ${t.notes?`<span class="t-notes" dir="auto">${esc(t.notes)}</span>`:""}</button></li>`;
 }
@@ -737,19 +751,50 @@ function renderDay(){
   document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-pressed", b.dataset.f===S.filter));
   const pass = t => S.filter==="all" || (S.filter==="closed" ? isClosed(t) : S.filter==="urgent" ? isUrgent(t)&&!isClosed(t) : S.filter==="awaiting" ? isExecuted(t) : !isClosed(t));
   const lc = carry.filter(pass), lm = main.filter(pass);
-  if (!S.ready){ $("list").innerHTML = `<li class="empty">Loading…</li>`; return; }
+  if (!S.ready){ $("list").innerHTML = `<li class="empty">Loading…</li>`; renderSelBar([]); return; }
   if (!lc.length && !lm.length){
     const what = S.kind==="preventive" ? "preventive checks" : "tasks";
     const msg = all.length ? (S.filter==="closed" ? "<strong>Nothing closed yet</strong>Close a job once it has been inspected." : "<strong>Nothing here</strong>No jobs match this filter.")
       : (canAdd() ? `<strong>No ${what} on this day</strong>Use “${S.kind==="preventive"?"+ Add preventive":"+ Add task"}” to schedule ${S.kind==="preventive"?"a check":"a job"}.` : `<strong>No ${what} for you on this day</strong>`);
-    $("list").innerHTML = `<li class="empty">${msg}</li>`; return;
+    $("list").innerHTML = `<li class="empty">${msg}</li>`; renderSelBar([]); return;
   }
+  renderSelBar([...lc, ...lm]);
   $("list").innerHTML =
     (lc.length ? `<li class="sec-li late">Carried over · not closed on time (${lc.length})</li>` + lc.map(t=>taskRow(t,k)).join("") : "") +
     (lc.length && lm.length ? `<li class="sec-li">Scheduled for ${rel ? rel.toLowerCase() : fmtD(k)} (${lm.length})</li>` : "") +
     lm.map(t=>taskRow(t,k)).join("");
 }
 function render(){ renderCalendar(); renderDay(); if (S.onData) S.onData(); }
+
+/* ---------- Select several jobs and delete them (manager only) ---------- */
+let _visible = [];
+function renderSelBar(visible){
+  _visible = visible;
+  const bar = $("selBar");
+  if (!isAdmin()){ bar.classList.add("hidden"); S.selMode = false; S.selected.clear(); return; }
+  // only keep jobs that are still on screen
+  const ids = new Set(visible.map(t=>t.id)); [...S.selected].forEach(id=>{ if (!ids.has(id)) S.selected.delete(id); });
+  bar.classList.toggle("hidden", !visible.length && !S.selMode);
+  if (!S.selMode){ bar.innerHTML = `<button type="button" class="btn sel-btn" id="selStart">Select jobs</button><span class="sel-hint">to delete several at once</span>`; bar.classList.remove("on"); return; }
+  const n = S.selected.size, all = visible.length && n===visible.length;
+  bar.classList.add("on");
+  bar.innerHTML = `<label class="sel-all"><input type="checkbox" id="selAll" ${all?"checked":""} ${visible.length?"":"disabled"}> Select all (${visible.length})</label>
+    <span class="sel-count"><b>${n}</b> selected</span><span class="grow"></span>
+    <button type="button" class="btn" id="selCancel">Cancel</button>
+    <button type="button" class="btn del" id="selDelete" ${n?"":"disabled"}>Delete selected${n?` (${n})`:""}</button>`;
+}
+async function deleteSelected(){
+  if (!isAdmin()) return;
+  const list = S.tasks.filter(t=>S.selected.has(t.id));
+  if (!list.length){ toast("Select at least one job."); return; }
+  const names = list.slice(0,6).map(t=>"• "+fullTitle(t)).join("\n") + (list.length>6 ? `\n… and ${list.length-6} more` : "");
+  if (!confirm(`Delete ${list.length} ${list.length===1?"job":"jobs"}? This can't be undone.\n\n${names}`)) return;
+  try{
+    for (let i=0;i<list.length;i+=400){ const b = S.db.batch(); list.slice(i,i+400).forEach(t=>b.delete(tasksCol().doc(t.id))); await b.commit(); }
+    S.selected.clear(); S.selMode = false; render();
+    toast(`${list.length} ${list.length===1?"job":"jobs"} deleted.`);
+  }catch(e){ writeFailed(e); }
+}
 
 /* ---------- Writes ---------- */
 function writeFailed(e){
@@ -1499,7 +1544,7 @@ async function openReport(){
 /* ---------- Events ---------- */
 $("grid").addEventListener("click", e=>{
   const c = e.target.closest(".cell"); if (!c) return;
-  S.sel = c.dataset.k; const d = fromKey(S.sel);
+  S.sel = c.dataset.k; S.selected.clear(); const d = fromKey(S.sel);
   if (d.getMonth()!==S.month.getMonth()) S.month = new Date(d.getFullYear(), d.getMonth(), 1);
   render();
   if (window.innerWidth < 920) document.querySelector(".day").scrollIntoView({behavior:"smooth",block:"start"});
@@ -1508,11 +1553,28 @@ $("prev").onclick = ()=>{ S.month = new Date(S.month.getFullYear(), S.month.getM
 $("next").onclick = ()=>{ S.month = new Date(S.month.getFullYear(), S.month.getMonth()+1, 1); renderCalendar(); };
 $("toToday").onclick = ()=>{ const n=new Date(); S.month=new Date(n.getFullYear(),n.getMonth(),1); S.sel=todayKey(); render(); };
 document.querySelector(".tabs").addEventListener("click", e=>{ const b=e.target.closest("button"); if(!b) return; S.filter=b.dataset.f; renderDay(); });
-document.querySelector(".kind-seg").addEventListener("click", e=>{ const b=e.target.closest("button"); if(!b) return; S.kind=b.dataset.kind; S.filter="all"; render(); });
+document.querySelector(".kind-seg").addEventListener("click", e=>{ const b=e.target.closest("button"); if(!b) return; S.kind=b.dataset.kind; S.filter="all"; S.selected.clear(); render(); });
 $("whoSel").onchange = e=>{ S.who = e.target.value; render(); };
 $("carryBanner").addEventListener("click", e=>{ if (e.target.closest("#carryOpen")) openCarry(); });
+$("selBar").addEventListener("click", e=>{
+  if (!isAdmin()) return;
+  if (e.target.closest("#selStart")){ S.selMode = true; S.selected.clear(); renderDay(); return; }
+  if (e.target.closest("#selCancel")){ S.selMode = false; S.selected.clear(); renderDay(); return; }
+  if (e.target.closest("#selDelete")){ deleteSelected(); return; }
+});
+$("selBar").addEventListener("change", e=>{
+  if (e.target.id!=="selAll") return;
+  if (e.target.checked) _visible.forEach(t=>S.selected.add(t.id)); else S.selected.clear();
+  renderDay();
+});
+$("list").addEventListener("change", e=>{
+  const p = e.target.closest("[data-pick]"); if (!p) return;
+  p.checked ? S.selected.add(p.dataset.pick) : S.selected.delete(p.dataset.pick); renderDay();
+});
 $("list").addEventListener("click", e=>{
   const find = id => S.tasks.find(t=>t.id===id);
+  const pr = e.target.closest("[data-pickrow]"); if (pr){ const id = pr.dataset.pickrow; S.selected.has(id) ? S.selected.delete(id) : S.selected.add(id); renderDay(); return; }
+  if (e.target.closest("[data-pick]") || e.target.closest(".sel-pick")) return;
   const x = e.target.closest("[data-exec]");   if (x){ toggleExec(x.dataset.exec); return; }
   const c = e.target.closest("[data-close]");  if (c){ const t = find(c.dataset.close); if (t) openClose(t); return; }
   const r = e.target.closest("[data-reopen]"); if (r){ const t = find(r.dataset.reopen); if (t) reopenTask(t); return; }
