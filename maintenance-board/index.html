@@ -435,6 +435,14 @@ table.pt .pt-mat{width:24%}
 /* v13 */
 .pill.slot{background:var(--ink);color:#fff}
 .task.is-crossed .t-title{text-decoration:line-through;color:var(--muted)}
+.pill.occ-t{cursor:pointer;background:var(--ink);color:#fff;border:1px solid var(--ink)}
+.pill.occ-t:hover{background:#fff;color:var(--ink)}
+.pill.occ-t.off{background:#fff;color:var(--ink)}
+.pill.occ-t.off:hover{background:var(--ink);color:#fff}
+.stays-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 16px 12px;padding:10px 12px;border-radius:10px;background:#fff;border:1px solid var(--line,#E4DFD5);font-size:13px}
+.stays-bar span{flex:1;min-width:160px}.stays-bar .btn{padding:7px 12px;font-size:13px}
+.stays-bar.due{background:#FBEFD9;border-color:#E7CF9E}
+.skip-lk{background:none;border:0;font-size:12px;color:var(--muted);text-decoration:underline;padding:4px}
 .ppl-chips{display:flex;flex-wrap:wrap;gap:6px}
 .f.is-missing .ppl-chips .chip span{border-color:var(--red)}
 .pp{position:fixed;z-index:60;width:240px;background:var(--panel);border:1.5px solid var(--ink);border-radius:10px;padding:10px;box-shadow:0 10px 30px rgba(0,0,0,.18);max-height:60vh;overflow:auto}
@@ -547,6 +555,7 @@ table.pt td.pt-mat i:last-child{border-bottom:1px solid #000}
         <button class="rep" id="reportBtn">Reports</button>
       </div>
       <div class="oos-bar hidden" id="oosBar"></div>
+      <div class="stays-bar hidden" id="staysBar"></div>
       <div class="carry-banner hidden" id="carryBanner"></div>
       <div class="meter"><i id="meter" style="width:0"></i></div>
       <div class="ro hidden" id="roNote"></div>
@@ -811,7 +820,10 @@ function taskRow(t, k){
     anyHk(t) ? `<span class="pill urg">Housekeeping hours${Array.isArray(t.hkRooms) && t.hkRooms.length && t.hkRooms.length<locsOf(t).length ? ": "+t.hkRooms.map(shortLoc).join(", ") : ""} (urgent)</span>` : (isUrgent(t) && !isCritical(t)) ? `<span class="pill urg">Urgent · عاجل</span>` : "", status,
     t.roomClosed && !closed ? `<span class="pill oos">Room out of service</span>` : "",
     isPrev(t) ? `<span class="pill prev">${esc((FREQ_PREV[freqOf(t)]||"").split(" ")[0])} preventive</span>` : "",
-    !closed ? (()=>{ const d = dayOf(t, k), o = occFor(locsOf(t)[0], d); return (isCrossed(t, k) ? `<span class="pill oos">Occupied · crossed off</span>` : `<span class="pill slot">${esc(SLOTS[slotOf(t, k)[0]].label)}</span>`) + (o && !isCrossed(t,k) ? `<span>${esc(OCC[o].label)}</span>` : ""); })() : "",
+    !closed ? (()=>{ const d = dayOf(t, k), o = occFor(locsOf(t)[0], d); const x = isCrossed(t, k), mgr = isAdmin() && !S.selMode;
+      return (x ? (mgr ? `<span class="pill occ-t" role="button" tabindex="0" data-occt="${t.id}" data-day="${d}" title="Tap to make this job active again">Occupied</span>` : `<span class="pill oos">Occupied</span>`)
+        : `<span class="pill slot">${esc(SLOTS[slotOf(t, k)[0]].label)}</span>`) + (o && !x ? `<span>${esc(OCC[o].label)}</span>` : "")
+        + (!x && mgr ? `<span class="pill occ-t off" role="button" tabindex="0" data-occt="${t.id}" data-day="${d}" title="Strike this job off for this day">Mark occupied</span>` : ""); })() : "",
     `<span class="tag"><b style="background:${color(t.category)}"></b>${esc(catLabel(t.category))}</span>`,
     !isPrev(t) && t.repeat && t.repeat!=="none" ? `<span>${esc(REPEAT_LABEL[t.repeat]||"")}</span>` : ""
   ].join("");
@@ -858,6 +870,7 @@ function renderDay(){
   if (oos.length) $("oosBar").innerHTML = `<b>Out of service:</b> ${oos.map(r=>`<span>${esc(r)}</span>`).join("")}`;
   // Carry-over banner for the manager
   const od = isAdmin() ? overdue(today) : [];
+  renderStaysBar();
   $("carryBanner").classList.toggle("hidden", !od.length);
   if (od.length) $("carryBanner").innerHTML = `<span><b>${od.length}</b> ${od.length===1?"job":"jobs"} from earlier days ${od.length===1?"wasn't":"weren't"} closed.</span><button class="btn btn-y" id="carryOpen">Review &amp; reallocate</button>`;
   document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-pressed", b.dataset.f===S.filter));
@@ -1034,8 +1047,32 @@ function openCarry(){
     catch(e){ writeFailed(e); }
   };
 }
+/* The day the stays file was last uploaded (local date) */
+const staysDay = () => { const u = S.occ && S.occ.updatedAt; return u ? keyOf(new Date(u)) : ""; };
+const canUpload = () => isAdmin() || isReporter();
+const staysDue = () => canUpload() && S.occLoaded && staysDay()!==todayKey();
+/* Every morning: the first person to sign in (manager or staff) is asked for today's Aiosell file */
+function maybeDailyUpload(){
+  const today = todayKey();
+  if (!S.ready || !S.occLoaded || !canUpload() || S.dailyAsked===today) return false;
+  if (!staysDue()) return false;
+  if ($("sheetHost").innerHTML) return true;
+  S.dailyAsked = today;
+  openImport(today, ()=>{ render(); maybeCarryPopup(); }, true);
+  return true;
+}
+function renderStaysBar(){
+  const b = $("staysBar"); if (!b) return;
+  const show = canUpload() && S.occLoaded; b.classList.toggle("hidden", !show); if (!show) return;
+  const due = staysDue(), u = S.occ && S.occ.updatedAt;
+  b.classList.toggle("due", due);
+  b.innerHTML = `<span>${due ? `<b>Today's stays file isn't uploaded yet.</b>${u ? ` Last one: ${esc(fmtD(staysDay()))}.` : ""}`
+      : `Stays file uploaded today${S.occ.by ? ` by <b>${esc(S.occ.by)}</b>` : ""}${S.occ.file ? ` · ${esc(S.occ.file)}` : ""}`}</span>
+    <button class="btn ${due?"btn-y":""}" id="staysUp">${due ? "Upload Aiosell file" : "Upload again"}</button>`;
+}
 function maybeCarryPopup(){
   const today = todayKey();
+  if (maybeDailyUpload()) return;
   if (!isAdmin() || !S.ready || S.carryShown===today || $("sheetHost").innerHTML) return;
   S.carryShown = today;
   if (overdue(today).length) openCarry();
@@ -1291,8 +1328,29 @@ function renderTeamList(){
   };
 }
 /* Read the team document and work out names + this user's role */
+/* One-time clean-up (v14): keep only these maintenance staff; other worker names are removed
+   and taken off open jobs. Staff / reception and manager accounts are not touched. */
+const KEEP_WORKERS = ["Tamer", "Mahmoud", "Ghazi"];
+let _cleaning = false;
+async function maybeCleanupTeam(){
+  if (_cleaning || !isAdmin() || !S.ready || !S.teamLoaded || (S.teamData && S.teamData.cleanup14)) return;
+  _cleaning = true;
+  const keep = n => KEEP_WORKERS.some(k=>k.toLowerCase()===String(n||"").trim().toLowerCase());
+  const canon = n => KEEP_WORKERS.find(k=>k.toLowerCase()===String(n||"").trim().toLowerCase()) || n;
+  const data = S.teamData || {}, members = {...(data.members||{})}, removed = new Set();
+  Object.entries(members).forEach(([em, m])=>{ if (m && m.role==="worker"){ if (keep(m.name)) members[em] = {...m, name:canon(m.name)}; else { removed.add(m.name); delete members[em]; } } });
+  (data.workers||[]).forEach(w=>{ if (!keep(w)) removed.add(w); });
+  const memberNames = Object.values(members).filter(m=>m.role==="worker").map(m=>m.name);
+  const workers = KEEP_WORKERS.filter(k=>!memberNames.includes(k));
+  try{
+    const ops = S.tasks.filter(t=>!isClosed(t) && assigneesOf(t).some(n=>removed.has(n))).map(t=>{ const a = assigneesOf(t).filter(n=>!removed.has(n)); return [t.id, {assignees:a, assignee:a[0]||""}]; });
+    for (let i=0;i<ops.length;i+=400){ const b = S.db.batch(); ops.slice(i,i+400).forEach(([id,d])=>b.update(tasksCol().doc(id), d)); await b.commit(); }
+    await S.db.collection("tasks").doc(TEAM_ID).set({...data, kind:"team", workers, members, cleanup14:true});
+    if (removed.size) toast(`Team cleaned: removed ${[...removed].join(", ")}. Kept ${KEEP_WORKERS.join(", ")}.`);
+  }catch(e){ _cleaning = false; }
+}
 function applyTeam(data){
-  data = data || {};
+  data = data || {}; S.teamData = data;
   S.legacy = Array.isArray(data.workers) ? data.workers : [];
   S.members = (data.members && typeof data.members==="object") ? data.members : {};
   const memberWorkers = Object.values(S.members).filter(m=>m.role==="worker").map(m=>m.name);
@@ -1447,7 +1505,16 @@ const hasOccData = k => !!(S.occ && S.occ.days && S.occ.days[k]);
 /* The day a job is looked at: carried-over jobs use today's stays */
 const dayOf = (t, k) => (k && t.date < k) ? k : t.date;
 /* Occupied rooms are crossed off for that day, unless the manager chose "Do anyway" */
-const isCrossed = (t, k) => { const d = dayOf(t, k); return !isClosed(t) && occFor(locsOf(t)[0], d)==="stayover" && t.occOverride!==d; };
+const isCrossed = (t, k) => { const d = dayOf(t, k); if (isClosed(t)) return false;
+  if (t.occStrike===d) return true;
+  return occFor(locsOf(t)[0], d)==="stayover" && t.occOverride!==d; };
+/* Manager taps "Occupied" to make a job active again, or "Mark occupied" to strike it for that day */
+async function toggleCrossed(t, d){
+  if (!isAdmin() || !t) return;
+  const now = isCrossed(t, d);
+  const data = now ? {occStrike:"", occOverride:d} : {occStrike:d, occOverride:""};
+  try{ await tasksCol().doc(t.id).update(data); toast(now ? "Active again – the job is back on the list" : "Marked occupied – struck off for this day"); }catch(e){ writeFailed(e); }
+}
 
 function autoSlot(t, k){
   const room = locsOf(t)[0] || "", occ = occFor(room, k), title = (t.title||"").toLowerCase();
@@ -1630,17 +1697,18 @@ function buildOccupancy(rows, map){
   }
   return {days, bookings: bookings.length, rooms: new Set(bookings.map(b=>b.room)).size, last: bookings.reduce((m,b)=>b.d>m?b.d:m, "")};
 }
-function openImport(k, after){
+function openImport(k, after, daily){
   if (!(isAdmin() || isReporter())) return;
   let rows = [], header = [], map = null, fileName = "";
-  $("sheetHost").innerHTML = `<div class="scrim" id="scrim"><div class="sheet wide">
-    <div class="eyebrow">Step 1 · Guest stays</div><h3>Upload the stays file from Aiosell</h3>
+  $("sheetHost").innerHTML = `<div class="scrim" id="${daily?"scrimDaily":"scrim"}"><div class="sheet wide">
+    <div class="eyebrow">${daily ? "Good morning · first step of the day" : "Step 1 · Guest stays"}</div><h3>${daily ? "Upload today's stays file from Aiosell" : "Upload the stays file from Aiosell"}</h3>
+    ${daily ? `<p class="lead"><b>Today's file hasn't been uploaded yet.</b> Upload it before opening the board, so occupied rooms and time slots are right for today.</p>` : ""}
     <p class="lead">In Aiosell, export the bookings / stays list (Excel or CSV) and choose the file here. The board reads only the <b>room number</b>, <b>arrival</b> and <b>departure</b> dates (and status, to skip cancellations). Guest names are not saved.</p>
     <label class="imp-drop"><input type="file" id="impFile" accept=".csv,.xlsx,.xls,.txt"><span id="impName">Choose the file…</span></label>
     <div id="impBody"></div>
-    <div class="actions"><span class="grow"></span><button type="button" class="btn" id="cancel">Close</button><button type="button" class="btn btn-y hidden" id="impSave">Save stays</button></div>
+    <div class="actions">${daily ? `<button type="button" class="skip-lk" id="cancel">Skip for now (I'll be asked again next time)</button>` : ""}<span class="grow"></span>${daily ? "" : `<button type="button" class="btn" id="cancel">Close</button>`}<button type="button" class="btn btn-y hidden" id="impSave">Save stays</button></div>
   </div></div>`;
-  wireSheet(); $("cancel").onclick = ()=>{ closeSheet(); if (after) after(); };
+  if (!daily) wireSheet(); $("cancel").onclick = ()=>{ closeSheet(); if (after) after(); };
   const draw = () => {
     const opts = sel => `<option value="-1">— not in file —</option>` + header.map((h,i)=>`<option value="${i}" ${i===sel?"selected":""}>${esc(String(h||`Column ${i+1}`))}</option>`).join("");
     const data = rows.slice(findHeader(rows)+1);
@@ -1655,7 +1723,7 @@ function openImport(k, after){
         <label class="f"><span>Status <small>(optional)</small></span><select data-m="status">${opts(map.status)}</select></label>
       </div>
       ${res ? `<div class="imp-res"><b>${res.bookings}</b> bookings read for <b>${res.rooms}</b> rooms${res.last?`, up to ${esc(fmtDY(res.last))}`:""}.
-          <div class="imp-day">For <b>${esc(fmtDY(k))}</b>: ${cnt("stayover")} occupied (crossed off) · ${cnt("departure")} check-outs (PM) · ${cnt("arrival")} check-ins (AM) · ${cnt("turnover")} check-out + check-in (housekeeping hours)</div>
+          <div class="imp-day">For <b>${esc(fmtDY(k))}</b>: ${cnt("stayover")} occupied · ${cnt("departure")} check-outs (PM) · ${cnt("arrival")} check-ins (AM) · ${cnt("turnover")} check-out + check-in (housekeeping hours)</div>
           ${res.bookings ? "" : `<p class="note" style="color:var(--red)">No bookings could be read. Check that the right columns are chosen above.</p>`}</div>`
         : `<p class="note" style="color:var(--red)">Choose the room, arrival and departure columns.</p>`}
       <div class="imp-prev"><table><thead><tr>${header.map(h=>`<th>${esc(String(h||""))}</th>`).join("")}</tr></thead><tbody>${data.slice(0,5).map(r=>`<tr>${header.map((_,i)=>`<td>${esc(String(r[i] instanceof Date ? keyOf(r[i]) : (r[i] ?? "")))}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
@@ -1668,7 +1736,7 @@ function openImport(k, after){
       Object.assign(days, res.days);
       try{ await tasksCol().doc(OCC_ID).set({kind:"occupancy", days, file:fileName, updatedAt:new Date().toISOString(), by:S.name});
            S.occ = {...S.occ, days, file:fileName, updatedAt:new Date().toISOString(), by:S.name};
-           toast("Stays saved. Occupied rooms are crossed off and time slots updated."); closeSheet(); if (after) after(); }
+           toast("Stays saved. Occupied rooms and time slots are updated."); closeSheet(); if (after) after(); }
       catch(e){ writeFailed(e); }
     };
   };
@@ -1736,7 +1804,8 @@ function reportDoc(type, k, staff, AR){
   const all = [...carry, ...items];
   const ar = s => (AR && AR[s]) || "";
   const dk = t => type==="daily" ? k : t.date;
-  const crossed = all.filter(t=>isCrossed(t, dk(t))), active = all.filter(t=>!isCrossed(t, dk(t)));
+  // Per-staff reports never show the occupied (struck) jobs – only the all-staff report does
+  const crossed = staff ? [] : all.filter(t=>isCrossed(t, dk(t))), active = all.filter(t=>!isCrossed(t, dk(t)));
   const [tEn, tAr] = REPORT_TITLE[type], [sEn] = staffLabel(staff);
   const urgentCount = active.filter(t=>!isClosed(t) && isUrgent(t)).length, critCount = active.filter(t=>!isClosed(t) && isCritical(t)).length;
   const row = (t, room, first, span, struck) => {
@@ -1772,7 +1841,7 @@ function reportDoc(type, k, staff, AR){
       ${s==="hk" ? `<div class="pr-slot-note">${esc(HK_NOTE[0])} <span dir="rtl">${esc(HK_NOTE[1])}</span></div>` : ""}${table(list)}</div>`;
   }).join("");
   const crossedSec = crossed.length ? `<div class="pr-slot"><div class="pr-slot-h"><span>Occupied rooms – not today <small>(${crossed.length})</small></span><span dir="rtl">غرف مشغولة – ليس اليوم</span></div>
-      <div class="pr-slot-note">Crossed off because a guest is staying. They move to the next day automatically.</div>${table(crossed, true)}</div>` : "";
+      <div class="pr-slot-note">A guest is staying, so these are not done today.</div>${table(crossed, true)}</div>` : "";
   return `<div class="report pr">
     <div class="pr-top">
       <img class="pr-logo" src="${LOGO_INK}" alt="${esc(HOTEL)}">
@@ -1780,7 +1849,7 @@ function reportDoc(type, k, staff, AR){
         <div class="pr-date">${esc(periodLabel(type,k))}</div></div>
       <div class="pr-right">Maintenance Work<div dir="rtl">أعمال الصيانة</div></div>
     </div>
-    <div class="pr-counts"><span>Number of jobs: <b>${active.length}</b> <small dir="rtl">عدد المهام</small>${crossed.length?` <small>· ${crossed.length} occupied, crossed off</small>`:""}</span><span><small dir="rtl">المهام العاجلة</small> Urgent jobs: <b>${urgentCount}</b>${critCount?` <small>(incl. ${critCount} critical delay)</small>`:""}</span></div>
+    <div class="pr-counts"><span>Number of jobs: <b>${active.length}</b> <small dir="rtl">عدد المهام</small>${crossed.length?` <small>· ${crossed.length} occupied</small>`:""}</span><span><small dir="rtl">المهام العاجلة</small> Urgent jobs: <b>${urgentCount}</b>${critCount?` <small>(incl. ${critCount} critical delay)</small>`:""}</span></div>
     ${sections || (crossed.length ? "" : `<p class="pr-none">No jobs. · لا توجد مهام</p>`)}
     ${crossedSec}
     <div class="pr-foot"><span>Executed by: ____________________</span><span>Inspected by: ____________________</span></div>
@@ -1790,7 +1859,7 @@ function reportText(type, k, staff, AR){
   const {items, carry} = scope(type, k, staff), all = [...carry, ...items], ar = s => (AR && AR[s]) || "";
   const dk = t => type==="daily" ? k : t.date;
   const [tEn] = REPORT_TITLE[type], [sEn] = staffLabel(staff);
-  const active = all.filter(t=>!isCrossed(t, dk(t))), crossed = all.filter(t=>isCrossed(t, dk(t)));
+  const active = all.filter(t=>!isCrossed(t, dk(t))), crossed = staff ? [] : all.filter(t=>isCrossed(t, dk(t)));
   const L = [`*${tEn} – ${sEn}*`, `${HOTEL} · ${periodLabel(type,k)}`, `Number of jobs: ${active.length} | Urgent jobs: ${active.filter(t=>!isClosed(t)&&isUrgent(t)).length}`];
   const line = t => { const typ = jobLabels(t).map(l=>l[0]).join(", "), arT = hasArabic(t.title) ? "" : (t.titleAr || (PREV_MAP[t.title]&&PREV_MAP[t.title].ar) || ar(t.title) || glossaryAr(t.title));
     const others = staff && staff!=="__none" ? assigneesOf(t).filter(n=>n!==staff) : [];
@@ -1842,7 +1911,7 @@ async function openReport(){
     const has = hasOccData(R.k), day = has ? S.occ.days[R.k] : {};
     const cnt = st => Object.values(day).filter(v=>v===st).length;
     $("msStays").innerHTML = `<div class="ms-h"><b>Step 1 · Guest stays</b>${S.occ && S.occ.updatedAt ? `<small>Uploaded ${esc(new Date(S.occ.updatedAt).toLocaleString(undefined,{day:"numeric",month:"short",hour:"numeric",minute:"2-digit"}))}${S.occ.by?` by ${esc(S.occ.by)}`:""}${S.occ.file?` · ${esc(S.occ.file)}`:""}</small>`:""}</div>
-      <div class="ms-b">${has ? `${fmtD(R.k)}: <b>${cnt("stayover")}</b> occupied (crossed off) · <b>${cnt("departure")}</b> check-outs · <b>${cnt("arrival")}</b> check-ins · <b>${cnt("turnover")}</b> check-out + check-in`
+      <div class="ms-b">${has ? `${fmtD(R.k)}: <b>${cnt("stayover")}</b> occupied · <b>${cnt("departure")}</b> check-outs · <b>${cnt("arrival")}</b> check-ins · <b>${cnt("turnover")}</b> check-out + check-in`
         : `<span style="color:var(--red)">No stays uploaded for ${esc(fmtD(R.k))}.</span> Time slots are guessed from the job only.`}
         <button type="button" class="btn" id="msUpload">Upload Aiosell file</button></div>`;
     $("msUpload").onclick = ()=>openImport(R.k, reopen);
@@ -1879,9 +1948,9 @@ async function openReport(){
     const slotSel = (t) => { const [auto, why] = autoSlot(t, dayOf(t, R.type==="daily"?R.k:t.date)), cur = t.slotManual && SLOTS[t.slot] ? t.slot : "";
       return `<select data-slot="${t.id}" title="${esc(why)}"><option value="" ${cur?"":"selected"}>Auto · ${esc(SLOTS[auto].short||SLOTS[auto].label)}</option>${SLOT_ORDER.map(s=>`<option value="${s}" ${cur===s?"selected":""}>${esc(SLOTS[s].short||SLOTS[s].label)}</option>`).join("")}</select>`; };
     const occCell = t => { const d = dayOf(t, R.type==="daily"?R.k:t.date), occ = occFor(locsOf(t)[0], d);
-      if (!occ) return hasOccData(d) ? `<small>Vacant</small>` : `<small>—</small>`;
-      if (occ==="stayover") return `<span class="occ-tag ${isCrossed(t, d)?"x":""}">${isCrossed(t, d)?"Occupied · crossed off":"Occupied · doing anyway"}</span><button type="button" class="lk" data-occ="${t.id}" data-day="${d}">${isCrossed(t, d)?"Do anyway":"Cross off"}</button>`;
-      return `<span class="occ-tag">${esc(OCC[occ].label)}</span>`; };
+      const x = isCrossed(t, d), lab = occ ? OCC[occ].label : (hasOccData(d) ? "Vacant" : "—");
+      if (x) return `<span class="occ-tag x">Occupied</span><button type="button" class="lk" data-occ="${t.id}" data-day="${d}">Do anyway</button>`;
+      return `<span class="occ-tag">${esc(occ==="stayover" ? "Occupied · doing anyway" : lab)}</span><button type="button" class="lk" data-occ="${t.id}" data-day="${d}">Mark occupied</button>`; };
     $("allocBody").innerHTML = !list.length ? `<p class="note">No open jobs in this report.</p>` : `
       <div class="al-bulk"><button type="button" class="btn btn-y" id="alAuto">Auto-allocate</button>
         <span>Gives every job that has nobody (or only absent staff) to the present maintenance staff, most urgent first, keeping a job's rooms together. You can change anything afterwards.</span></div>
@@ -1902,8 +1971,7 @@ async function openReport(){
       pickPeople(b, [], names=>setAssigneesMany(g, names, `${g.length} rooms allocated to ${names.join(", ")||"nobody"}`), R.k); });
     $("allocBody").querySelectorAll("[data-slot]").forEach(s=>s.onchange = ()=>{ const t = find(s.dataset.slot); if (!t) return;
       upd(t.id, s.value ? {slot:s.value, slotManual:true} : {slot:"", slotManual:false}, s.value ? `Time slot: ${SLOTS[s.value].label}` : "Time slot set back to automatic"); });
-    $("allocBody").querySelectorAll("[data-occ]").forEach(b=>b.onclick = ()=>{ const t = find(b.dataset.occ); if (!t) return; const d = b.dataset.day;
-      upd(t.id, {occOverride: t.occOverride===d ? "" : d}, t.occOverride===d ? "Crossed off – the room is occupied" : "Doing it anyway – housekeeping hours"); });
+    $("allocBody").querySelectorAll("[data-occ]").forEach(b=>b.onclick = ()=>toggleCrossed(find(b.dataset.occ), b.dataset.day));
     $("allocBody").querySelectorAll("[data-dt]").forEach(inp=>inp.onchange = ()=>{ const t = find(inp.dataset.dt); if (!t || !inp.value || inp.value===t.date) return;
       upd(t.id, {date:inp.value, recDate:t.recDate||t.date, realloc:[...(t.realloc||[]), reallocEntry("date", t.date, inp.value)]}, `Moved to ${fmtDY(inp.value)}`); });
   }
@@ -1962,6 +2030,7 @@ document.querySelector(".tabs").addEventListener("click", e=>{ const b=e.target.
 document.querySelector(".kind-seg").addEventListener("click", e=>{ const b=e.target.closest("button"); if(!b) return; S.kind=b.dataset.kind; S.filter="all"; S.selected.clear(); render(); });
 $("whoSel").onchange = e=>{ S.who = e.target.value; render(); };
 $("carryBanner").addEventListener("click", e=>{ if (e.target.closest("#carryOpen")) openCarry(); });
+$("staysBar").addEventListener("click", e=>{ if (e.target.closest("#staysUp")) openImport(todayKey(), ()=>render()); });
 $("selBar").addEventListener("click", e=>{
   if (!isAdmin()) return;
   if (e.target.closest("#selStart")){ S.selMode = true; S.selected.clear(); renderDay(); return; }
@@ -1981,6 +2050,7 @@ $("list").addEventListener("click", e=>{
   const find = id => S.tasks.find(t=>t.id===id);
   const pr = e.target.closest("[data-pickrow]"); if (pr){ const id = pr.dataset.pickrow; S.selected.has(id) ? S.selected.delete(id) : S.selected.add(id); renderDay(); return; }
   if (e.target.closest("[data-pick]") || e.target.closest(".sel-pick")) return;
+  const oc = e.target.closest("[data-occt]");  if (oc){ e.preventDefault(); e.stopPropagation(); toggleCrossed(find(oc.dataset.occt), oc.dataset.day); return; }
   const x = e.target.closest("[data-exec]");   if (x){ toggleExec(x.dataset.exec); return; }
   const c = e.target.closest("[data-close]");  if (c){ const t = find(c.dataset.close); if (t) openClose(t); return; }
   const r = e.target.closest("[data-reopen]"); if (r){ const t = find(r.dataset.reopen); if (t) reopenTask(t); return; }
@@ -2037,24 +2107,24 @@ $("noAccOut").onclick = ()=>firebase.auth().signOut();
       const raw = snap.docs.map(d=>({id:d.id, ...d.data()})).filter(d=>!isMetaDoc(d.id) && !["team","occupancy","attendance"].includes(d.kind));
       if (isAdmin()) migrateOld(raw);
       S.tasks = raw.map(norm).filter(t=>!isWorker() || assigneesOf(t).includes(S.me&&S.me.name));
-      S.ready = true; render(); renderTeamList(); maybeCarryPopup();
+      S.ready = true; render(); renderTeamList(); maybeCarryPopup(); maybeCleanupTeam();
     }, err=>{ S.ready=true; render(); toast(err.code==="permission-denied" ? "Your account can't see these tasks. Ask your manager." : "Live updates paused. Reload the page."); });
   }
   let unsubMeta = [];
   firebase.auth().onAuthStateChanged(u=>{
     stopTasks(); if (unsubTeam){ unsubTeam(); unsubTeam=null; }
     unsubMeta.forEach(f=>f()); unsubMeta = [];
-    if (!u){ Object.assign(S,{uid:null,email:"",tasks:[],workers:[],legacy:[],members:{},role:null,me:null,who:"",ready:false,carryShown:"",occ:{days:{}},att:{days:{}}});
+    if (!u){ Object.assign(S,{uid:null,email:"",tasks:[],workers:[],legacy:[],members:{},role:null,me:null,who:"",ready:false,carryShown:"",dailyAsked:"",teamLoaded:false,teamData:null,occLoaded:false,occ:{days:{}},att:{days:{}}});
       closeSheet(); $("app").classList.add("hidden"); $("gate").classList.remove("hidden"); return; }
     S.uid=u.uid; S.email=(u.email||"").toLowerCase(); S.name=u.displayName || S.email.split("@")[0];
     $("gate").classList.add("hidden"); $("app").classList.remove("hidden"); window.scrollTo(0,0);
     $("noAcc").classList.add("hidden"); $("mainArea").classList.remove("hidden");
-    unsubMeta.push(S.db.collection("tasks").doc(OCC_ID).onSnapshot(doc=>{ S.occ = doc.exists ? doc.data() : {days:{}}; if (S.ready) render(); }, ()=>{}));
+    unsubMeta.push(S.db.collection("tasks").doc(OCC_ID).onSnapshot(doc=>{ S.occ = doc.exists ? doc.data() : {days:{}}; S.occLoaded = true; if (S.ready){ render(); maybeDailyUpload(); } }, ()=>{ S.occLoaded = true; }));
     unsubMeta.push(S.db.collection("tasks").doc(ATT_ID).onSnapshot(doc=>{ S.att = doc.exists ? doc.data() : {days:{}}; if (S.ready) render(); }, ()=>{}));
     unsubTeam = S.db.collection("tasks").doc(TEAM_ID).onSnapshot(doc=>{
-      applyTeam(doc.exists ? doc.data() : {});
+      S.teamLoaded = true; applyTeam(doc.exists ? doc.data() : {});
       if (isWorker()) S.who = S.me.name; else if (S.who===(S.me&&S.me.name) && !isAdmin()) S.who="";
-      showArea(); listenTasks(); render();
+      showArea(); listenTasks(); render(); maybeCarryPopup(); maybeCleanupTeam();
     }, err=>{
       // Team document unreadable: the owner still gets in, everyone else waits for access.
       applyTeam({}); showArea(); listenTasks();
