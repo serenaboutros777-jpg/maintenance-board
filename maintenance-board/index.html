@@ -477,6 +477,8 @@ table.pt .pt-mat{width:24%}
 .imp-drop input{position:absolute;inset:0;opacity:0;cursor:pointer}
 .imp-map{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
 @media (max-width:640px){.imp-map{grid-template-columns:1fr 1fr}}
+.imp-dayf{max-width:240px}
+#impText{width:100%;box-sizing:border-box;font:inherit;font-size:14px;padding:8px 10px;border:1.5px solid var(--ink);border-radius:10px;resize:vertical}
 .imp-res{border:1.5px solid var(--ink);border-radius:10px;padding:10px 12px;font-size:13px;margin:4px 0 10px}.imp-day{margin-top:4px}
 .imp-prev{overflow:auto;max-height:200px;border:1px solid var(--line);border-radius:8px}
 .imp-prev table{border-collapse:collapse;font-size:11px;white-space:nowrap}.imp-prev th,.imp-prev td{border-bottom:1px solid var(--line);padding:3px 8px;text-align:left}
@@ -1333,7 +1335,7 @@ function renderTeamList(){
 const KEEP_WORKERS = ["Tamer", "Mahmoud", "Ghazi"];
 let _cleaning = false;
 async function maybeCleanupTeam(){
-  if (_cleaning || !isAdmin() || !S.ready || !S.teamLoaded || (S.teamData && S.teamData.cleanup14)) return;
+  if (_cleaning || !isAdmin() || !S.ready || !S.teamLoaded || (S.teamData && S.teamData.cleanup15)) return;
   _cleaning = true;
   const keep = n => KEEP_WORKERS.some(k=>k.toLowerCase()===String(n||"").trim().toLowerCase());
   const canon = n => KEEP_WORKERS.find(k=>k.toLowerCase()===String(n||"").trim().toLowerCase()) || n;
@@ -1343,9 +1345,12 @@ async function maybeCleanupTeam(){
   const memberNames = Object.values(members).filter(m=>m.role==="worker").map(m=>m.name);
   const workers = KEEP_WORKERS.filter(k=>!memberNames.includes(k));
   try{
-    const ops = S.tasks.filter(t=>!isClosed(t) && assigneesOf(t).some(n=>removed.has(n))).map(t=>{ const a = assigneesOf(t).filter(n=>!removed.has(n)); return [t.id, {assignees:a, assignee:a[0]||""}]; });
+    // every open job: split combined names, keep only Tamer / Mahmoud / Ghazi
+    const fix = t => [...new Set((Array.isArray(t.assignees) && t.assignees.length ? t.assignees : (t.assignee ? [t.assignee] : [])).flatMap(splitNames).filter(keep).map(canon))];
+    const ops = S.tasks.filter(t=>!isClosed(t)).map(t=>[t, fix(t)]).filter(([t,a])=>JSON.stringify(a)!==JSON.stringify(t.assignees||[]) || (a[0]||"")!==(t.assignee||""))
+      .map(([t,a])=>{ (t.assignees||[]).concat(t.assignee||[]).flatMap(splitNames).forEach(n=>{ if (!keep(n)) removed.add(n); }); return [t.id, {assignees:a, assignee:a[0]||""}]; });
     for (let i=0;i<ops.length;i+=400){ const b = S.db.batch(); ops.slice(i,i+400).forEach(([id,d])=>b.update(tasksCol().doc(id), d)); await b.commit(); }
-    await S.db.collection("tasks").doc(TEAM_ID).set({...data, kind:"team", workers, members, cleanup14:true});
+    await S.db.collection("tasks").doc(TEAM_ID).set({...data, kind:"team", workers, members, cleanup14:true, cleanup15:true});
     if (removed.size) toast(`Team cleaned: removed ${[...removed].join(", ")}. Kept ${KEEP_WORKERS.join(", ")}.`);
   }catch(e){ _cleaning = false; }
 }
@@ -1479,7 +1484,15 @@ async function translateMany(texts){
    ====================================================================================== */
 const OCC_ID = "_occupancy", ATT_ID = "_attendance";
 const isMetaDoc = id => id===TEAM_ID || id===OCC_ID || id===ATT_ID;
-const assigneesOf = t => Array.isArray(t.assignees) && t.assignees.length ? t.assignees.filter(Boolean) : (t.assignee ? [t.assignee] : []);
+/* Names on a job. Old entries like "Ghazi, Tamer & Mahmoud" are split into people, and only
+   current maintenance staff (Team) are kept – anyone else (e.g. "m") counts as not allocated. */
+const splitNames = v => String(v||"").split(/\s*(?:,|&|\/|\+|،|\band\b|\sو\s)\s*/i).map(x=>x.trim()).filter(Boolean);
+const assigneesOf = t => {
+  const raw = (Array.isArray(t.assignees) && t.assignees.length ? t.assignees : (t.assignee ? [t.assignee] : [])).flatMap(splitNames);
+  const team = (S.workers||[]);
+  const list = team.length ? raw.map(n=>team.find(w=>w.toLowerCase()===n.toLowerCase())).filter(Boolean) : raw;
+  return [...new Set(list)];
+};
 const groupOf = t => t.groupId || t.id;
 const addDays = (k, n) => { const d = fromKey(k); d.setDate(d.getDate()+n); return keyOf(d); };
 
@@ -1697,19 +1710,103 @@ function buildOccupancy(rows, map){
   }
   return {days, bookings: bookings.length, rooms: new Set(bookings.map(b=>b.room)).size, last: bookings.reduce((m,b)=>b.d>m?b.d:m, "")};
 }
+/* ----- Reading any file: pictures (OCR), PDF, Word, text ----- */
+const loadScript = src => new Promise((res, rej)=>{ const s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = ()=>rej(new Error("load")); document.head.appendChild(s); });
+async function ocrImage(file, onProgress){
+  if (!window.Tesseract) await loadScript("https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js");
+  const r = await Tesseract.recognize(file, "eng", {logger: m=>{ if (m.status==="recognizing text" && onProgress) onProgress(Math.round(m.progress*100)); }});
+  return (r && r.data && r.data.text) || "";
+}
+async function pdfText(file){
+  if (!window.pdfjsLib) await loadScript("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js");
+  pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+  const pdf = await pdfjsLib.getDocument({data: await file.arrayBuffer()}).promise, out = [];
+  for (let p=1; p<=Math.min(pdf.numPages, 30); p++){
+    const tc = await (await pdf.getPage(p)).getTextContent(), lines = new Map();
+    tc.items.forEach(it=>{ const y = Math.round(it.transform[5]); if (!lines.has(y)) lines.set(y, []); lines.get(y).push([it.transform[4], it.str]); });
+    [...lines.entries()].sort((a,b)=>b[0]-a[0]).forEach(([,cells])=>out.push(cells.sort((a,b)=>a[0]-b[0]).map(c=>c[1]).join("\t")));
+  }
+  return out.join("\n");
+}
+async function docxText(file){
+  if (!window.mammoth) await loadScript("https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js");
+  const r = await mammoth.extractRawText({arrayBuffer: await file.arrayBuffer()});
+  return r.value || "";
+}
+/* Text that is really a table (pasted from Excel, CSV, PDF columns) → rows */
+function textToRows(txt){
+  const lines = String(txt||"").split(/\r?\n/);
+  const tab = lines.some(l=>l.includes("\t"));
+  return lines.map(l=>{
+    if (tab) return l.split("\t");
+    if ((l.match(/,/g)||[]).length >= 2){ const out = []; let cur = "", q = false; for (const ch of l){ if (ch=='"') q = !q; else if (ch==',' && !q){ out.push(cur); cur = ""; } else cur += ch; } out.push(cur); return out; }
+    return [l];
+  });
+}
+/* A table with room + arrival + departure columns? */
+function tableInfo(rows){
+  if (!rows || !rows.length) return null;
+  const h = findHeader(rows), header = rows[h] || [], map = guessMap(header);
+  return map.room>=0 && map.arr>=0 && map.dep>=0 && header.length>2 ? {h, header, map} : null;
+}
+/* Free text: "Occupied: 101, 203" · "105 check-out" · "302 check in" · "Available 104-106" … */
+const TXT_RE = new RegExp([
+  "(turn\\s*-?\\s*over|back[\\s-]*to[\\s-]*back|check[\\s-]*out\\s*(?:&|and|\\/|\\+)\\s*check[\\s-]*in|out\\s*(?:&|and|\\/|\\+)\\s*in\\b|c\\/o\\s*(?:&|and|\\/|\\+)\\s*c\\/i|due out\\s*(?:&|and|\\/|\\+)\\s*due in|مغادرة\\s*و\\s*وصول)",
+  "(un[\\s-]?occupied|not\\s+occupied|vacant|available|free|empty|ready|\\bv\\/?c\\b|\\bv\\/?d\\b|\\bvacant\\b|فارغة?|متاحة?|شاغرة?)",
+  "(not\\s+available|unavailable|occupied|stay\\s*-?\\s*over|in[\\s-]*house|staying|busy|guest\\s+in|booked|sold|\\bo\\/?c\\b|\\bo\\/?d\\b|\\bocc\\b|مشغولة?)",
+  "(check[\\s-]*out|checkout|\\bc\\/o\\b|\\bdep(?:art(?:ure|ing)?)?\\b|leaving|due\\s*out|مغادرة)",
+  "(check[\\s-]*in|checkin|\\bc\\/i\\b|\\barr(?:iv(?:al|ing))?\\b|due\\s*in|expected|وصول)"
+].join("|"), "gi");
+const TXT_ST = ["turnover", "vacant", "stayover", "departure", "arrival"];
+function roomsInText(s){
+  const out = [];
+  s = s.replace(/\b([1-3])(\d\d)\s*(?:-|–|—|to|→)\s*([1-3])(\d\d)\b/gi, (m, f1, a, f2, b)=>{ if (f1===f2 && +a<=+b) for (let i=+a;i<=+b;i++) out.push([s.indexOf(m), "Room "+f1+pad(i)]); return " ".repeat(m.length); });
+  const re = /\b([1-3](?:0[1-9]|10))\b|\bspa\b/gi; let m;
+  while ((m = re.exec(s))) out.push([m.index, m[1] ? "Room "+m[1] : "Spa Room M"]);
+  return out.filter(([,r])=>LOC_ORDER.includes(r)).sort((a,b)=>a[0]-b[0]);
+}
+function parseRoomText(txt){
+  const res = {}, noStatus = new Set(); let ctx = "";
+  String(txt||"").split(/\r?\n|;/).forEach(line=>{
+    const kws = []; let m; TXT_RE.lastIndex = 0;
+    while ((m = TXT_RE.exec(line))){ const g = m.slice(1).findIndex(Boolean); kws.push([m.index, TXT_ST[g], "kw"]); }
+    const ev = [...kws, ...roomsInText(line).map(([i,r])=>[i, r, "room"])].sort((a,b)=>a[0]-b[0]);
+    let cur = "", pending = [];
+    const give = (rooms, st) => rooms.forEach(r=>{ res[r] = st; noStatus.delete(r); });
+    ev.forEach(([, v, kind])=>{
+      if (kind==="room"){ pending.push(v); return; }
+      if (pending.length){ if (cur){ give(pending, cur); cur = v; } else { give(pending, v); cur = ""; } pending = []; }
+      else cur = v;
+    });
+    if (pending.length){ const st = cur || ctx; if (st) give(pending, st); else pending.forEach(r=>{ if (!(r in res)) noStatus.add(r); }); }
+    if (cur) ctx = cur; else if (!ev.some(e=>e[2]==="room") && kws.length) ctx = kws[kws.length-1][1];
+  });
+  return {rooms: res, noStatus: [...noStatus]};
+}
 function openImport(k, after, daily){
   if (!(isAdmin() || isReporter())) return;
-  let rows = [], header = [], map = null, fileName = "";
+  let rows = [], header = [], map = null, fileName = "", mode = "", textDay = k, parsed = null;
   $("sheetHost").innerHTML = `<div class="scrim" id="${daily?"scrimDaily":"scrim"}"><div class="sheet wide">
-    <div class="eyebrow">${daily ? "Good morning · first step of the day" : "Step 1 · Guest stays"}</div><h3>${daily ? "Upload today's stays file from Aiosell" : "Upload the stays file from Aiosell"}</h3>
+    <div class="eyebrow">${daily ? "Good morning · first step of the day" : "Step 1 · Guest stays"}</div><h3>${daily ? "Upload today's stays file" : "Upload the stays file"}</h3>
     ${daily ? `<p class="lead"><b>Today's file hasn't been uploaded yet.</b> Upload it before opening the board, so occupied rooms and time slots are right for today.</p>` : ""}
-    <p class="lead">In Aiosell, export the bookings / stays list (Excel or CSV) and choose the file here. The board reads only the <b>room number</b>, <b>arrival</b> and <b>departure</b> dates (and status, to skip cancellations). Guest names are not saved.</p>
-    <label class="imp-drop"><input type="file" id="impFile" accept=".csv,.xlsx,.xls,.txt"><span id="impName">Choose the file…</span></label>
+    <p class="lead">Choose <b>any file</b>: the Aiosell export (Excel / CSV), a PDF, a Word file, or even a <b>photo or screenshot</b> of the room list. Or paste the list as text below. Guest names are not saved.</p>
+    <label class="imp-drop"><input type="file" id="impFile"><span id="impName">Choose a file or photo…</span></label>
+    <label class="f"><span>Or paste the rooms as text</span>
+      <textarea id="impText" rows="5" dir="auto" placeholder="Examples:&#10;Occupied: 101, 203, 305&#10;Check-out: 102, 206&#10;Check-in 104, 302&#10;105 check-out and check-in&#10;Available 106-110"></textarea></label>
     <div id="impBody"></div>
     <div class="actions">${daily ? `<button type="button" class="skip-lk" id="cancel">Skip for now (I'll be asked again next time)</button>` : ""}<span class="grow"></span>${daily ? "" : `<button type="button" class="btn" id="cancel">Close</button>`}<button type="button" class="btn btn-y hidden" id="impSave">Save stays</button></div>
   </div></div>`;
   if (!daily) wireSheet(); $("cancel").onclick = ()=>{ closeSheet(); if (after) after(); };
-  const draw = () => {
+  const failMsg = msg => { $("impBody").innerHTML = `<p class="note" style="color:var(--red)">${msg}</p>`; $("impSave").classList.add("hidden"); };
+  const save = async days => {
+    try{ const at = new Date().toISOString();
+         await tasksCol().doc(OCC_ID).set({kind:"occupancy", days, file:fileName || "Pasted text", updatedAt:at, by:S.name});
+         S.occ = {...S.occ, days, file:fileName || "Pasted text", updatedAt:at, by:S.name};
+         toast("Stays saved. Occupied rooms and time slots are updated."); closeSheet(); if (after) after(); }
+    catch(e){ writeFailed(e); }
+  };
+  // ---- A booking table (room + arrival + departure dates) ----
+  const drawTable = () => {
     const opts = sel => `<option value="-1">— not in file —</option>` + header.map((h,i)=>`<option value="${i}" ${i===sel?"selected":""}>${esc(String(h||`Column ${i+1}`))}</option>`).join("");
     const data = rows.slice(findHeader(rows)+1);
     const res = map.room>=0 && map.arr>=0 && map.dep>=0 ? buildOccupancy(data, map) : null;
@@ -1727,31 +1824,78 @@ function openImport(k, after, daily){
           ${res.bookings ? "" : `<p class="note" style="color:var(--red)">No bookings could be read. Check that the right columns are chosen above.</p>`}</div>`
         : `<p class="note" style="color:var(--red)">Choose the room, arrival and departure columns.</p>`}
       <div class="imp-prev"><table><thead><tr>${header.map(h=>`<th>${esc(String(h||""))}</th>`).join("")}</tr></thead><tbody>${data.slice(0,5).map(r=>`<tr>${header.map((_,i)=>`<td>${esc(String(r[i] instanceof Date ? keyOf(r[i]) : (r[i] ?? "")))}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
-    $("impBody").querySelectorAll("[data-m]").forEach(s=>s.onchange = ()=>{ map[s.dataset.m] = +s.value; try{ localStorage.setItem("mb_imp_map", JSON.stringify({header:header.join("|"), map})); }catch(e){} draw(); });
+    $("impBody").querySelectorAll("[data-m]").forEach(s=>s.onchange = ()=>{ map[s.dataset.m] = +s.value; try{ localStorage.setItem("mb_imp_map", JSON.stringify({header:header.join("|"), map})); }catch(e){} drawTable(); });
     $("impSave").classList.toggle("hidden", !(res && res.bookings));
-    $("impSave").onclick = async ()=>{
+    $("impSave").onclick = ()=>{
       // keep the last 14 days already saved, replace the rest with the new file
       const keepFrom = addDays(todayKey(), -14), old = (S.occ && S.occ.days) || {}, days = {};
       Object.keys(old).forEach(d=>{ if (d >= keepFrom && !(d in res.days)) days[d] = old[d]; });
-      Object.assign(days, res.days);
-      try{ await tasksCol().doc(OCC_ID).set({kind:"occupancy", days, file:fileName, updatedAt:new Date().toISOString(), by:S.name});
-           S.occ = {...S.occ, days, file:fileName, updatedAt:new Date().toISOString(), by:S.name};
-           toast("Stays saved. Occupied rooms and time slots are updated."); closeSheet(); if (after) after(); }
-      catch(e){ writeFailed(e); }
+      Object.assign(days, res.days); save(days);
     };
   };
+  const useTable = (r, info) => {
+    mode = "table"; rows = r; header = info.header; map = info.map;
+    try{ const saved = JSON.parse(localStorage.getItem("mb_imp_map")||"null"); if (saved && saved.header===header.join("|")) map = saved.map; }catch(_){}
+    drawTable();
+  };
+  // ---- A plain list of rooms and their status, for one day ----
+  const drawText = () => {
+    const txt = $("impText").value; parsed = parseRoomText(txt);
+    const by = st => Object.entries(parsed.rooms).filter(([,v])=>v===st).map(([r])=>r).sort((a,b)=>locRank(a)-locRank(b));
+    const row = (st, label, note) => { const l = by(st); return l.length ? `<div class="imp-day"><b>${label}</b> (${l.length})${note?` <small>${note}</small>`:""}: ${l.map(r=>esc(shortLoc(r))).join(", ")}</div>` : ""; };
+    const n = Object.keys(parsed.rooms).length;
+    $("impBody").innerHTML = `
+      <label class="f imp-dayf"><span>These room statuses are for</span><input type="date" id="impDay" value="${esc(textDay)}"></label>
+      <div class="imp-res">${n ? `<b>${n}</b> rooms read.` : `<span style="color:var(--red)">No rooms with a status found yet. Write the room number and its status, e.g. “203 occupied” or “Check-out: 101, 102”.</span>`}
+        ${row("stayover","Occupied","not done today")}${row("departure","Check-out","PM")}${row("arrival","Check-in","AM")}${row("turnover","Check-out + check-in","housekeeping hours")}${row("vacant","Vacant / available","")}
+        ${parsed.noStatus.length ? `<div class="imp-day" style="color:var(--red)">No status found for: ${parsed.noStatus.map(shortLoc).join(", ")}. Add a word like occupied, check-out, check-in or vacant next to them.</div>` : ""}
+        ${n ? `<p class="note">Rooms not listed are treated as vacant for that day. You can correct the text above and the result updates.</p>` : ""}</div>`;
+    $("impDay").onchange = e=>{ textDay = e.target.value || k; };
+    $("impSave").classList.toggle("hidden", !n);
+    $("impSave").onclick = ()=>{
+      const old = (S.occ && S.occ.days) || {}, keepFrom = addDays(todayKey(), -14), days = {}, day = {};
+      Object.keys(old).forEach(d=>{ if (d >= keepFrom) days[d] = old[d]; });
+      Object.entries(parsed.rooms).forEach(([r, st])=>{ if (st!=="vacant") day[r] = st; });
+      days[textDay] = day; save(days);
+    };
+  };
+  const useText = (txt, from) => {
+    const r = textToRows(txt), info = tableInfo(r);
+    if (info) { fileName = from || fileName; useTable(r, info); return; }
+    mode = "text"; if (from) fileName = from;
+    if ($("impText").value !== txt) $("impText").value = txt;
+    drawText();
+  };
+  let tmr = null;
+  $("impText").addEventListener("input", ()=>{ clearTimeout(tmr); tmr = setTimeout(()=>{ fileName = ""; $("impName").textContent = "Choose a file or photo…"; useText($("impText").value); }, 250); });
   $("impFile").onchange = async e=>{
     const file = e.target.files[0]; if (!file) return;
-    fileName = file.name; $("impName").textContent = file.name; $("impBody").innerHTML = `<p class="note">Reading the file…</p>`;
+    const name = file.name || "file", ext = (name.split(".").pop()||"").toLowerCase(), type = file.type || "";
+    fileName = name; $("impName").textContent = name; $("impSave").classList.add("hidden");
+    const busy = msg => { $("impBody").innerHTML = `<p class="note">${msg}</p>`; };
     try{
-      await loadXLSX();
-      const wb = XLSX.read(await file.arrayBuffer(), {type:"array", cellDates:true});
-      rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header:1, raw:true, defval:""});
-      header = rows[findHeader(rows)] || [];
-      map = guessMap(header);
-      try{ const saved = JSON.parse(localStorage.getItem("mb_imp_map")||"null"); if (saved && saved.header===header.join("|")) map = saved.map; }catch(_){}
-      draw();
-    }catch(err){ $("impBody").innerHTML = `<p class="note" style="color:var(--red)">Couldn't read this file. Export it from Aiosell as Excel (.xlsx) or CSV and try again.</p>`; }
+      if (/^image\//.test(type) || /^(png|jpe?g|webp|bmp|gif|heic|heif|tiff?)$/.test(ext)){
+        busy("Reading the picture… this can take up to a minute the first time.");
+        const txt = await ocrImage(file, p=>busy(`Reading the picture… ${p}%`));
+        if (!txt.trim()) return failMsg("No text could be read from this picture. Try a clearer photo, or type the rooms in the box above.");
+        useText(txt, name);
+        $("impBody").insertAdjacentHTML("afterbegin", `<p class="note"><b>Read from the picture.</b> Check the text in the box above and correct anything that was misread.</p>`);
+        return;
+      }
+      if (ext==="pdf" || type==="application/pdf"){ busy("Reading the PDF…"); const txt = await pdfText(file);
+        if (!txt.trim()) return failMsg("This PDF has no readable text (it may be a scan). Take a screenshot of it and upload the picture instead.");
+        return useText(txt, name); }
+      if (ext==="docx"){ busy("Reading the Word file…"); return useText(await docxText(file), name); }
+      if (/^(xlsx|xlsm|xls|ods|numbers|csv|tsv)$/.test(ext) || /sheet|excel|csv/.test(type)){
+        busy("Reading the file…"); await loadXLSX();
+        const wb = XLSX.read(await file.arrayBuffer(), {type:"array", cellDates:true});
+        const r = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header:1, raw:true, defval:""});
+        const info = tableInfo(r);
+        if (info) return useTable(r, info);
+        return useText(r.map(x=>x.map(c=>c instanceof Date ? keyOf(c) : String(c??"")).join("\t")).join("\n"), name);
+      }
+      busy("Reading the file…"); useText(await file.text(), name);
+    }catch(err){ failMsg("Couldn't read this file here. Try the Aiosell Excel / CSV export, a screenshot, or paste the rooms as text in the box above."); }
   };
 }
 
