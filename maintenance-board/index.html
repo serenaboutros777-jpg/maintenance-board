@@ -478,6 +478,7 @@ table.pt .pt-mat{width:24%}
 .imp-map{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
 @media (max-width:640px){.imp-map{grid-template-columns:1fr 1fr}}
 .imp-dayf{max-width:240px}
+.cl-rooms{margin:4px 0}.cl-tools{display:flex;gap:6px;flex-wrap:wrap}
 #impText{width:100%;box-sizing:border-box;font:inherit;font-size:14px;padding:8px 10px;border:1.5px solid var(--ink);border-radius:10px;resize:vertical}
 .imp-res{border:1.5px solid var(--ink);border-radius:10px;padding:10px 12px;font-size:13px;margin:4px 0 10px}.imp-day{margin-top:4px}
 .imp-prev{overflow:auto;max-height:200px;border:1px solid var(--line);border-radius:8px}
@@ -986,25 +987,37 @@ const dl = (id, list) => `<datalist id="${id}">${list.map(w=>`<option value="${e
 function openClose(t){
   if (!isAdmin()) return;
   const today = todayKey();
+  // other open rooms of the same job (each room is its own job and is closed by itself)
+  const sibs = S.tasks.filter(x=>groupOf(x)===groupOf(t) && (!isClosed(x) || x.id===t.id)).sort((a,b)=>locRank(locsOf(a)[0])-locRank(locsOf(b)[0]));
   $("sheetHost").innerHTML = `<div class="scrim" id="scrim"><form class="sheet" id="cForm" novalidate>
     <div class="eyebrow">${isPrev(t)?"Close preventive check":"Close task"}</div>
-    <h3 dir="auto">${esc(fullTitle(t))}</h3>
+    <h3 dir="auto">${esc(sibs.length>1 ? t.title : fullTitle(t))}</h3>
     <p class="lead">${datesLine(t)}${assigneesOf(t).length?` · Allocated to <b>${esc(assigneesOf(t).join(", "))}</b>`:""}</p>
     <label class="f"><span>Executed by <small>(optional)</small></span><input name="exec" list="dlExec" dir="auto" maxlength="60" autocomplete="off" value="${esc((t.execution&&t.execution.name)||assigneesOf(t).join(", ")||"")}" placeholder="Who did the job"></label>
     <label class="f"><span>Inspected by <small style="color:var(--red)">— required to close</small></span><input name="insp" list="dlInsp" dir="auto" maxlength="60" autocomplete="off" placeholder="Type who inspected it" required></label>
     <label class="f"><span>Closing date</span><input type="date" name="cdate" value="${today}" max="${today}" required></label>
+    ${sibs.length>1 ? `<div class="f"><span>Which rooms are done? <small>— only the ticked rooms are closed, the others stay open</small></span>
+      <div class="loc-items cl-rooms">${sibs.map(x=>`<label class="chip"><input type="checkbox" name="clRoom" value="${x.id}" ${x.id===t.id?"checked":""}><span>${esc(shortLoc(locsOf(x)[0]||"No room"))}${isExecuted(x)?" ✓":""}</span></label>`).join("")}</div>
+      <div class="cl-tools"><button type="button" class="lk" id="clAll">All rooms</button><button type="button" class="lk" id="clExec">Rooms marked executed</button><button type="button" class="lk" id="clNone">None</button></div></div>` : ""}
     ${t.repeat && t.repeat!=="none" && !t.nextId ? `<p class="note">This repeats (${esc(REPEAT_LABEL[t.repeat]||t.repeat)}). The next one will be scheduled automatically${isPrev(t)?", counted from the closing date":""}.</p>` : ""}
     ${dl("dlExec", S.workers)}${dl("dlInsp", checkers())}
     <div class="actions"><span class="grow"></span><button type="button" class="btn" id="cancel">Cancel</button><button type="submit" class="btn btn-y">Close job</button></div>
   </form></div>`;
   wireSheet(); $("cancel").onclick = closeSheet;
   const f = $("cForm"); setTimeout(()=>f.insp.focus(), 50);
+  const boxes = () => [...f.querySelectorAll("input[name=clRoom]")];
+  if ($("clAll")) { $("clAll").onclick = ()=>boxes().forEach(b=>b.checked = true);
+    $("clNone").onclick = ()=>boxes().forEach(b=>b.checked = false);
+    $("clExec").onclick = ()=>boxes().forEach(b=>{ const x = S.tasks.find(y=>y.id===b.value); b.checked = !!(x && isExecuted(x)); }); }
   f.onsubmit = async e=>{
     e.preventDefault();
     const insp = canonName(f.insp.value, checkers()), exec = f.exec.value.split(",").map(x=>canonName(x, S.workers)).filter(Boolean).join(", "), cd = f.cdate.value || today;
     if (!insp){ f.insp.focus(); toast("Add who inspected it. A job can't be closed without an inspector."); return; }
-    try{ const next = await closeTask(t, {executedBy:exec, inspectedBy:insp, closedDate:cd}); closeSheet();
-         toast(next ? `Closed. Next one scheduled for ${fmtDY(next)}.` : "Closed"); }
+    const list = sibs.length>1 ? boxes().filter(b=>b.checked).map(b=>S.tasks.find(x=>x.id===b.value)).filter(Boolean) : [t];
+    if (!list.length){ toast("Tick at least one room that is done."); return; }
+    try{ let next = ""; for (const x of list){ const n = await closeTask(x, {executedBy:exec, inspectedBy:insp, closedDate:cd}); next = next || n; }
+         closeSheet(); const left = sibs.filter(x=>!isClosed(x) && !list.includes(x)).length;
+         toast((list.length>1 ? `${list.length} rooms closed.` : "Closed.") + (left ? ` ${left} ${left===1?"room stays":"rooms stay"} open.` : "") + (next ? ` Next one scheduled for ${fmtDY(next)}.` : "")); }
     catch(err){ writeFailed(err); }
   };
 }
@@ -1128,6 +1141,7 @@ function openSheet(task, kind){
     <label class="urg-toggle opt"><input type="checkbox" name="hkHours" ${anyHk(t)?"checked":""} ${dis}><span><b>During housekeeping hours (urgent)</b><br><small style="color:var(--muted)">Optional. Applies to all chosen rooms — choose per room in Reports › Allocate jobs</small></span></label>
     <label class="urg-toggle opt"><input type="checkbox" name="roomClosed" ${t.roomClosed?"checked":""} ${dis}><span><b>Room out of service while this job is open</b><br><small style="color:var(--muted)">For bigger jobs: the room shows as closed on the board until the job is closed</small></span></label>
     <div class="f" data-req="where"><span>Where <b class="req" title="Required">*</b> <small>— ${task ? "extra rooms become separate jobs" : "each room becomes its own job"}</small></span>
+      ${task ? (()=>{ const o = S.tasks.filter(x=>groupOf(x)===groupOf(task) && x.id!==task.id); return o.length ? `<small class="note" style="display:block;margin:2px 0 4px">Same job in ${o.length} other ${o.length===1?"room":"rooms"}: ${o.map(x=>esc(shortLoc(locsOf(x)[0]||""))+(isClosed(x)?" (closed)":"")).join(", ")} — each room has its own tick and is closed separately.</small>` : ""; })() : ""}
       <button type="button" class="loc-btn" id="locBtn" ${dis}><span id="locSum"></span><i>▾</i></button>
       ${locPicker}
     </div>
